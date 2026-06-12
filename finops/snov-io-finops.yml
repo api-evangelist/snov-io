@@ -1,0 +1,130 @@
+name: Snov.io FinOps Framework
+specificationVersion: '1.0'
+description: >-
+  FOCUS-aligned FinOps reference for Snov.io API consumption. Snov.io uses a
+  credit-based consumption model where each API operation (email find, domain
+  search, email verification) deducts credits from the monthly account balance.
+  Recipients represent a second consumption dimension charged when a prospect
+  is first contacted in a given billing period.
+source: https://snov.io/pricing
+
+provider: Snov.io
+providerURL: https://snov.io/
+
+billingModel: credit-based
+billingPeriod: monthly
+currency: USD
+
+costCategories:
+  - name: Subscription Fee
+    description: >-
+      Fixed monthly or annual fee for the chosen plan tier. Covers the baseline
+      credit and recipient allotment plus platform features.
+    type: fixed
+    pricingURL: https://snov.io/pricing
+    tiers:
+      - tier: Trial
+        monthlyCost: 0
+        credits: 50
+        recipients: 100
+      - tier: Starter
+        monthlyCost: 39
+        annualMonthlyCost: 29.25
+        credits: 1000
+        recipients: 5000
+      - tier: Pro S
+        monthlyCost: 99
+        annualMonthlyCost: 74.25
+        credits: 5000
+        recipients: 25000
+      - tier: Pro M
+        monthlyCost: 189
+        annualMonthlyCost: 141.75
+        credits: 20000
+        recipients: 25000
+      - tier: Pro L
+        monthlyCost: 369
+        annualMonthlyCost: 276.75
+        credits: 50000
+        recipients: 50000
+      - tier: Pro Ultra
+        monthlyCost: 738
+        annualMonthlyCost: 553.50
+        credits: 100000
+        recipients: 100000
+      - tier: Custom Ultra
+        monthlyCost: custom
+        credits: 200000+
+        recipients: 400000+
+
+  - name: Credit Consumption
+    description: >-
+      Variable cost component driven by API usage volume. Each successful
+      email find, domain search, LinkedIn enrichment, or email verification
+      consumes one credit from the account balance. Credits do not carry over
+      between billing periods except on Custom Ultra plans.
+    type: variable
+    unit: credit
+    costPerUnit: varies by plan
+    rollover: false
+    rolloverException: Custom Ultra plan includes unused credit rollover
+
+  - name: Recipient Usage
+    description: >-
+      Each unique prospect contacted via campaign or direct send consumes one
+      recipient slot per billing month. Follow-up messages to the same prospect
+      within the same month are free.
+    type: variable
+    unit: recipient
+    rollover: false
+
+  - name: Add-on Services
+    description: Optional add-on services billed in addition to the base subscription.
+    type: addon
+    items:
+      - name: LinkedIn Automation Slot
+        monthlyRate: 69
+        discountedRate: 59
+        note: Discounted rate applies when purchased alongside a paid plan
+      - name: Phone and Data Enrichment Tokens
+        ratePerToken: 0.02
+        tokenValidity: 90 days
+
+costOptimization:
+  - recommendation: Annual billing discount
+    description: Purchasing an annual subscription reduces monthly cost by 25% across all plan tiers.
+    savingsPercent: 25
+
+  - recommendation: Right-size credit plan
+    description: >-
+      Monitor credit consumption via GET /v1/check-user-balance before each
+      billing renewal. Downgrade or upgrade to the plan tier whose credit
+      allotment best matches observed monthly usage to avoid over-provisioning.
+
+  - recommendation: Leverage free endpoints
+    description: >-
+      The domain email count endpoint (POST /v1/get-domain-emails-count) and
+      list email accounts endpoint (GET /v2/sender-accounts/emails) are free
+      and do not consume credits. Use these for pre-flight checks before
+      committing credits to full searches.
+
+  - recommendation: Batch email verification
+    description: >-
+      The email verification API accepts up to 10 addresses per request,
+      reducing API call volume and simplifying credit tracking for bulk
+      verification workflows.
+
+  - recommendation: Token refresh strategy
+    description: >-
+      OAuth 2.0 Bearer tokens expire after 3600 seconds. Implementing proactive
+      token refresh (e.g., refresh at 3000 seconds) avoids failed requests and
+      unnecessary retry overhead that could count against the 60 req/min rate limit.
+
+focusAlignment:
+  version: '1.0'
+  chargeCategory: SaaS
+  chargeType: Usage
+  pricingCategory: Credit-based consumption
+  serviceCategory: Sales Automation / Lead Generation
+  provider: Snov.io
+  invoiceCurrency: USD

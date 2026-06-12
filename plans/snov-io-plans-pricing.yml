@@ -1,0 +1,147 @@
+name: Snov.io Plans and Pricing
+specificationVersion: '0.1'
+description: >-
+  Snov.io offers credit-based pricing tiers for sales automation and email
+  outreach. Credits are consumed by prospect search, email finding, and email
+  verification (1 credit per operation). Recipients are contacts reached via
+  campaign; each unique contact costs 1 recipient slot per month with free
+  follow-ups. API access is available on Starter and higher plans.
+plans:
+  - name: Trial
+    description: >-
+      Free plan with limited monthly credits and recipients. Suitable for
+      evaluating core features including domain search, email verifier, campaigns,
+      email warm-up, and Sales CRM.
+    url: https://snov.io/pricing
+    free: true
+    credits: 50
+    recipients: 100
+    warmUpSlots: 1
+    apiAccess: false
+    price:
+      unit: month
+      amount: 0
+      currency: USD
+
+  - name: Starter
+    description: >-
+      Entry-level paid plan with REST API access, bulk prospecting, LinkedIn
+      automation, HubSpot/Pipedrive/Zapier/Make integrations, data export,
+      and 24-hour support.
+    url: https://snov.io/pricing
+    free: false
+    credits: 1000
+    recipients: 5000
+    warmUpSlots: 3
+    apiAccess: true
+    price:
+      unit: month
+      amount: 39
+      currency: USD
+    annualDiscount: 25
+
+  - name: Pro S
+    description: >-
+      Entry-level Pro plan with unlimited warm-up slots, A/B testing, dynamic
+      personalization, spintax, campaign priority and volume controls, full
+      teamwork features, and all integrations. 24-hour priority support.
+    url: https://snov.io/pricing
+    free: false
+    credits: 5000
+    recipients: 25000
+    warmUpSlots: unlimited
+    apiAccess: true
+    price:
+      unit: month
+      amount: 99
+      currency: USD
+    annualDiscount: 25
+
+  - name: Pro M
+    description: >-
+      Mid-tier Pro plan for growing teams requiring higher search and
+      verification volume. Includes all Pro S features with higher credit
+      and recipient quotas.
+    url: https://snov.io/pricing
+    free: false
+    credits: 20000
+    recipients: 25000
+    warmUpSlots: unlimited
+    apiAccess: true
+    price:
+      unit: month
+      amount: 189
+      currency: USD
+    annualDiscount: 25
+
+  - name: Pro L
+    description: >-
+      Large-scale Pro plan for high-volume outreach teams. Includes 50,000
+      credits, 50,000 recipients, and up to 200 warm-up messages per mailbox
+      alongside all Pro features.
+    url: https://snov.io/pricing
+    free: false
+    credits: 50000
+    recipients: 50000
+    warmUpSlots: unlimited
+    apiAccess: true
+    price:
+      unit: month
+      amount: 369
+      currency: USD
+    annualDiscount: 25
+
+  - name: Pro Ultra
+    description: >-
+      Maximum off-the-shelf Pro plan offering up to 100,000 credits and scaled
+      recipient limits. Designed for enterprise outreach teams with high-volume
+      automation requirements.
+    url: https://snov.io/pricing
+    free: false
+    credits: 100000
+    recipients: 100000
+    warmUpSlots: unlimited
+    apiAccess: true
+    price:
+      unit: month
+      amount: 738
+      currency: USD
+    annualDiscount: 25
+
+  - name: Custom Ultra
+    description: >-
+      Fully customized enterprise plan starting at 200,000 credits and 400,000
+      recipients. Includes unused credit rollover, unlimited team seats, unlimited
+      storage, personal implementation manager, and priority support.
+    url: https://snov.io/pricing
+    free: false
+    credits: 200000
+    recipients: 400000
+    warmUpSlots: unlimited
+    apiAccess: true
+    price:
+      unit: month
+      amount: custom
+      currency: USD
+    features:
+      - Unused credit rollover
+      - Unlimited team seats
+      - Unlimited storage
+      - Personal implementation manager
+      - Priority support
+
+addons:
+  - name: LinkedIn Automation
+    description: Additional LinkedIn automation slot for outreach campaigns
+    price:
+      unit: month
+      amount: 69
+      currency: USD
+    discountedWithPlan: 59
+
+  - name: Phone and Data Enrichment
+    description: Token-based phone number and additional data enrichment. Tokens valid for 90 days.
+    price:
+      unit: token
+      amount: 0.02
+      currency: USD

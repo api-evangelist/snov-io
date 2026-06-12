@@ -1,0 +1,70 @@
+name: Snov.io API Rate Limits
+specificationVersion: '0.1'
+description: >-
+  Snov.io enforces a global rate limit of 60 requests per minute across all
+  API methods. Authentication tokens (OAuth 2.0 Bearer) expire after 3600
+  seconds (1 hour) and must be refreshed. Operations also consume account
+  credits; credit quotas are determined by the active subscription plan.
+source: https://snov.io/api
+
+limits:
+  - name: Global Request Rate Limit
+    description: >-
+      Maximum number of API requests allowed per minute across all endpoints
+      and all API methods for a given account.
+    scope: account
+    window: 60
+    windowUnit: seconds
+    requests: 60
+    enforcement: hard
+
+  - name: Access Token Expiry
+    description: >-
+      OAuth 2.0 Bearer tokens issued via POST /v1/oauth/access_token expire
+      after 3600 seconds. Callers must request a new token before the current
+      one expires to maintain uninterrupted API access.
+    scope: token
+    window: 3600
+    windowUnit: seconds
+    enforcement: hard
+
+  - name: Email Verification Batch Size
+    description: >-
+      A single POST /v2/email-verification/start request accepts a maximum of
+      10 email addresses per call.
+    scope: request
+    maxItems: 10
+    enforcement: hard
+
+creditCosts:
+  description: >-
+    Most API operations consume account credits. Credit balances are set by the
+    active subscription plan and do not carry over between billing periods
+    except on Custom Ultra plans.
+  operations:
+    - operation: Domain Search (initial lookup)
+      credits: 1
+    - operation: Prospect profile with email found
+      credits: 1
+      note: Per result returned
+    - operation: Email Finder by name and domain (valid/unknown)
+      credits: 1
+      note: Per valid or unknown result
+    - operation: Company domain lookup
+      credits: 1
+      note: Per domain found
+    - operation: LinkedIn profile enrichment
+      credits: 1
+      note: Per profile
+    - operation: Email verification (valid/unknown result)
+      credits: 1
+      note: Free if unverifiable
+    - operation: Profile enrichment by email
+      credits: 1
+      note: Free if no results returned
+    - operation: Check email count for domain
+      credits: 0
+      note: FREE endpoint
+    - operation: Get email accounts list
+      credits: 0
+      note: FREE endpoint
