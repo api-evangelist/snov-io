@@ -5,6 +5,11 @@ image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
 url: https://raw.githubusercontent.com/api-evangelist/snov-io/refs/heads/main/apis.yml
 created: '2026-06-12'
 modified: '2026-06-12'
+artifacts:
+  - type: OpenAPI
+    url: openapi/snov-io-openapi.yml
+  - type: JSONLDContext
+    url: json-ld/snov-io-context.jsonld
 specificationVersion: '0.19'
 description: >-
   Snov.io is a sales automation and lead generation platform serving over
@@ -46,7 +51,7 @@ apis:
       - type: Documentation
         url: https://snov.io/api
       - type: OpenAPI
-        url: https://snov.io/api
+        url: openapi/snov-io-openapi.yml
 
   - name: Snov.io Email Verification API
     description: >-

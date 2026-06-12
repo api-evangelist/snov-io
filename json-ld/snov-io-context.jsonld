@@ -1,0 +1,154 @@
+{
+  "@context": {
+    "@vocab": "https://schema.org/",
+    "snov": "https://snov.io/api#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+
+    "EmailFinder": "snov:EmailFinder",
+    "DomainSearch": "snov:DomainSearch",
+    "EmailVerification": "snov:EmailVerification",
+    "Campaign": "snov:Campaign",
+    "WarmUpCampaign": "snov:WarmUpCampaign",
+    "Prospect": "snov:Prospect",
+    "ProspectList": "snov:ProspectList",
+    "Pipeline": "snov:Pipeline",
+    "PipelineStage": "snov:PipelineStage",
+    "Webhook": "snov:Webhook",
+    "SenderAccount": "snov:SenderAccount",
+
+    "taskHash": {
+      "@id": "snov:taskHash",
+      "@type": "xsd:string"
+    },
+    "domain": {
+      "@id": "snov:domain",
+      "@type": "xsd:string"
+    },
+    "emailAddress": {
+      "@id": "schema:email",
+      "@type": "xsd:string"
+    },
+    "firstName": {
+      "@id": "schema:givenName",
+      "@type": "xsd:string"
+    },
+    "lastName": {
+      "@id": "schema:familyName",
+      "@type": "xsd:string"
+    },
+    "position": {
+      "@id": "schema:jobTitle",
+      "@type": "xsd:string"
+    },
+    "company": {
+      "@id": "schema:Organization",
+      "@type": "xsd:string"
+    },
+    "location": {
+      "@id": "schema:location",
+      "@type": "xsd:string"
+    },
+    "industry": {
+      "@id": "schema:industry",
+      "@type": "xsd:string"
+    },
+    "confidence": {
+      "@id": "snov:confidence",
+      "@type": "xsd:integer"
+    },
+    "status": {
+      "@id": "schema:status",
+      "@type": "xsd:string"
+    },
+    "creditsUsed": {
+      "@id": "snov:creditsUsed",
+      "@type": "xsd:integer"
+    },
+    "balance": {
+      "@id": "snov:balance",
+      "@type": "xsd:integer"
+    },
+    "campaignName": {
+      "@id": "schema:name",
+      "@type": "xsd:string"
+    },
+    "webhookUrl": {
+      "@id": "snov:webhookUrl",
+      "@type": "xsd:anyURI"
+    },
+    "event": {
+      "@id": "snov:event",
+      "@type": "xsd:string"
+    },
+    "smtpHost": {
+      "@id": "snov:smtpHost",
+      "@type": "xsd:string"
+    },
+    "smtpPort": {
+      "@id": "snov:smtpPort",
+      "@type": "xsd:integer"
+    },
+    "imapHost": {
+      "@id": "snov:imapHost",
+      "@type": "xsd:string"
+    },
+    "imapPort": {
+      "@id": "snov:imapPort",
+      "@type": "xsd:integer"
+    },
+    "perDay": {
+      "@id": "snov:perDay",
+      "@type": "xsd:integer"
+    },
+    "replyRate": {
+      "@id": "snov:replyRate",
+      "@type": "xsd:integer"
+    },
+    "deliverabilityScore": {
+      "@id": "snov:deliverabilityScore",
+      "@type": "xsd:float"
+    },
+    "openRate": {
+      "@id": "snov:openRate",
+      "@type": "xsd:float"
+    },
+    "clickRate": {
+      "@id": "snov:clickRate",
+      "@type": "xsd:float"
+    },
+    "createdAt": {
+      "@id": "schema:dateCreated",
+      "@type": "xsd:dateTime"
+    },
+    "updatedAt": {
+      "@id": "schema:dateModified",
+      "@type": "xsd:dateTime"
+    },
+    "linkedinUrl": {
+      "@id": "schema:sameAs",
+      "@type": "xsd:anyURI"
+    }
+  },
+  "@graph": [
+    {
+      "@type": "WebAPI",
+      "@id": "https://api.snov.io",
+      "name": "Snov.io API",
+      "description": "Sales automation and lead generation REST API providing email finding, verification, campaign management, and prospect enrichment.",
+      "url": "https://snov.io/api",
+      "documentation": "https://snov.io/api",
+      "provider": {
+        "@type": "Organization",
+        "name": "Snov.io",
+        "url": "https://snov.io/",
+        "sameAs": [
+          "https://www.linkedin.com/company/snovio",
+          "https://x.com/snov_io",
+          "https://github.com/snovio"
+        ]
+      },
+      "termsOfService": "https://snov.io/terms-of-service/",
+      "license": "https://snov.io/terms-of-service/"
+    }
+  ]
+}
