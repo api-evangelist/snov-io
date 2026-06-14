@@ -1,0 +1,862 @@
+"""
+Snov.io GraphQL Schema
+Sales automation and lead generation platform covering email finding,
+email verification, prospect management, drip campaigns, and CRM pipeline.
+"""
+
+# ─── Scalars ────────────────────────────────────────────────────────────────
+
+scalar DateTime
+scalar URL
+scalar EmailAddress
+
+# ─── Enums ──────────────────────────────────────────────────────────────────
+
+enum Seniority {
+  C_LEVEL
+  DIRECTOR
+  MANAGER
+  SENIOR
+  ENTRY
+  INTERN
+  OWNER
+  PARTNER
+  VP
+  UNKNOWN
+}
+
+enum Department {
+  ENGINEERING
+  MARKETING
+  SALES
+  FINANCE
+  LEGAL
+  OPERATIONS
+  HR
+  PRODUCT
+  DESIGN
+  CUSTOMER_SUCCESS
+  IT
+  RESEARCH
+  OTHER
+}
+
+enum CompanySize {
+  SELF_EMPLOYED
+  MICRO
+  SMALL
+  MEDIUM
+  LARGE
+  ENTERPRISE
+  UNKNOWN
+}
+
+enum ProspectStatus {
+  NEW
+  CONTACTED
+  REPLIED
+  INTERESTED
+  NOT_INTERESTED
+  UNSUBSCRIBED
+  BOUNCED
+  DO_NOT_EMAIL
+  ARCHIVED
+}
+
+enum CampaignStatus {
+  DRAFT
+  ACTIVE
+  PAUSED
+  COMPLETED
+  ARCHIVED
+}
+
+enum VerificationStatus {
+  VALID
+  INVALID
+  CATCH_ALL
+  UNKNOWN
+  UNVERIFIABLE
+}
+
+enum SequenceStepType {
+  EMAIL
+  LINKEDIN_VIEW
+  LINKEDIN_CONNECT
+  LINKEDIN_MESSAGE
+  CALL
+  TASK
+}
+
+enum EmailTrackEvent {
+  SENT
+  DELIVERED
+  OPENED
+  CLICKED
+  REPLIED
+  BOUNCED
+  UNSUBSCRIBED
+}
+
+enum WebhookEvent {
+  EMAIL_OPENED
+  EMAIL_CLICKED
+  EMAIL_REPLIED
+  EMAIL_BOUNCED
+  PROSPECT_UNSUBSCRIBED
+  PROSPECT_STATUS_CHANGED
+  CAMPAIGN_COMPLETED
+}
+
+# ─── Domain & Email Discovery ────────────────────────────────────────────────
+
+"""A registered internet domain used for email and company discovery."""
+type Domain {
+  id: ID!
+  name: String!
+  domain: String!
+  stats: DomainStats
+  emailPattern: EmailPattern
+  emails: [DomainEmails!]
+  company: Company
+  createdAt: DateTime
+}
+
+"""Aggregated discovery results for a full domain search."""
+type DomainSearch {
+  domain: String!
+  totalResults: Int!
+  currentPage: Int!
+  pageSize: Int!
+  emails: [Email!]!
+  domainStats: DomainStats
+}
+
+"""Collection of email addresses discovered for a domain."""
+type DomainEmails {
+  domain: String!
+  emails: [Email!]!
+  total: Int!
+}
+
+"""Statistical summary of email discovery coverage for a domain."""
+type DomainStats {
+  domain: String!
+  totalFound: Int!
+  personalEmails: Int!
+  genericEmails: Int!
+  verifiedCount: Int!
+  confidenceAverage: Float
+  lastCrawledAt: DateTime
+}
+
+"""Detected email naming pattern used within a domain."""
+type EmailPattern {
+  domain: String!
+  pattern: String!
+  example: String
+  confidence: Float!
+}
+
+# ─── Email Details ───────────────────────────────────────────────────────────
+
+"""A discovered or stored email address with metadata."""
+type Email {
+  id: ID!
+  email: EmailAddress!
+  firstName: String
+  lastName: String
+  fullName: FullName
+  position: Position
+  confidence: EmailConfidence
+  verification: VerificationResult
+  sources: [String!]
+  sourceCount: Int
+  pattern: Boolean
+  smtp: SmtpCheck
+  createdAt: DateTime
+}
+
+"""Email address associated with a prospect record."""
+type ProspectEmail {
+  email: EmailAddress!
+  isPrimary: Boolean!
+  confidence: EmailConfidence
+  verification: VerificationResult
+  addedAt: DateTime
+}
+
+"""Confidence scoring for a discovered email address."""
+type EmailConfidence {
+  score: Float!
+  label: String!
+  isVerified: Boolean!
+}
+
+"""Complete email details including all enrichment fields."""
+type EmailDetails {
+  id: ID!
+  email: EmailAddress!
+  firstName: String
+  lastName: String
+  fullName: FullName
+  position: Position
+  department: Department
+  seniority: Seniority
+  company: Company
+  social: Social
+  phones: [Phone!]
+  confidence: EmailConfidence
+  verification: VerificationResult
+  sources: [String!]
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+# ─── Email Verification ──────────────────────────────────────────────────────
+
+"""Full verification result for a single email address."""
+type VerificationResult {
+  email: EmailAddress!
+  status: VerificationStatus!
+  deliverable: Deliverable
+  acceptAll: AcceptAll
+  smtp: SmtpCheck
+  disposable: Disposable
+  mxFound: Boolean!
+  mxRecord: String
+  verifiedAt: DateTime
+}
+
+"""Deliverability assessment for an email address."""
+type Deliverable {
+  result: String!
+  isDeliverable: Boolean!
+  reason: String
+}
+
+"""Catch-all domain detection result."""
+type AcceptAll {
+  isAcceptAll: Boolean!
+  confidence: Float
+}
+
+"""SMTP-level check result for email deliverability."""
+type SmtpCheck {
+  connected: Boolean!
+  validFormat: Boolean!
+  mxFound: Boolean!
+  smtpResponse: String
+  checkedAt: DateTime
+}
+
+"""Disposable / temporary email address detection result."""
+type Disposable {
+  isDisposable: Boolean!
+  provider: String
+}
+
+# ─── Name & Identity ─────────────────────────────────────────────────────────
+
+"""Combined full name representation."""
+type FullName {
+  first: String!
+  last: String!
+  full: String!
+}
+
+"""First name data point."""
+type FirstName {
+  value: String!
+  source: String
+}
+
+"""Last name data point."""
+type LastName {
+  value: String!
+  source: String
+}
+
+"""Job position / title held by a person."""
+type Position {
+  title: String
+  seniority: Seniority
+  department: Department
+  startDate: DateTime
+  endDate: DateTime
+  isCurrent: Boolean
+}
+
+# ─── Company ─────────────────────────────────────────────────────────────────
+
+"""Company or organisation associated with prospects and domains."""
+type Company {
+  id: ID!
+  name: String!
+  domain: String
+  industry: Industry
+  size: CompanySize
+  location: String
+  country: String
+  state: String
+  city: String
+  website: URL
+  linkedin: LinkedIn
+  twitter: Twitter
+  phone: String
+  description: String
+  foundedYear: Int
+  employeeCount: Int
+  details: CompanyDetails
+}
+
+"""Extended details for a company record."""
+type CompanyDetails {
+  companyId: ID!
+  legalName: String
+  alternateNames: [String!]
+  naicsCode: String
+  sicCode: String
+  techStack: [String!]
+  fundingTotal: String
+  lastFundingRound: String
+  revenueRange: String
+  updatedAt: DateTime
+}
+
+"""Industry classification for a company."""
+type Industry {
+  id: ID!
+  name: String!
+  category: String
+}
+
+# ─── Social & Contact Channels ───────────────────────────────────────────────
+
+"""LinkedIn profile reference."""
+type LinkedIn {
+  profileUrl: URL
+  username: String
+  connectionsCount: Int
+}
+
+"""Twitter / X profile reference."""
+type Twitter {
+  profileUrl: URL
+  handle: String
+  followersCount: Int
+}
+
+"""Phone number record."""
+type Phone {
+  number: String!
+  type: String
+  countryCode: String
+  isVerified: Boolean
+}
+
+"""Aggregated social profiles for a person or company."""
+type Social {
+  linkedin: LinkedIn
+  twitter: Twitter
+  facebook: URL
+  github: URL
+  website: URL
+}
+
+# ─── Prospects ───────────────────────────────────────────────────────────────
+
+"""A sales prospect stored in Snov.io."""
+type Prospect {
+  id: ID!
+  firstName: String
+  lastName: String
+  fullName: FullName
+  emails: [ProspectEmail!]!
+  primaryEmail: EmailAddress
+  position: Position
+  company: Company
+  social: Social
+  phones: [Phone!]
+  status: ProspectStatus
+  lists: [ProspectList!]
+  customFields: [CustomField!]
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+"""Detailed view of a prospect including campaign history."""
+type ProspectDetails {
+  prospect: Prospect!
+  campaigns: [Campaign!]
+  emailHistory: [EmailMessage!]
+  notes: String
+  lastContacted: DateTime
+}
+
+"""List (segment) containing multiple prospects."""
+type ProspectList {
+  id: ID!
+  name: String!
+  description: String
+  prospectCount: Int!
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+"""Paginated collection of prospects within a list."""
+type ListProspects {
+  listId: ID!
+  listName: String!
+  prospects: [Prospect!]!
+  total: Int!
+  page: Int!
+  pageSize: Int!
+}
+
+"""Custom field key-value pair on a prospect."""
+type CustomField {
+  key: String!
+  value: String
+}
+
+# ─── Campaigns ───────────────────────────────────────────────────────────────
+
+"""An outreach campaign managing multi-step sequences to prospects."""
+type Campaign {
+  id: ID!
+  name: String!
+  status: CampaignStatus!
+  subject: String
+  sender: Sender
+  sequence: Sequence
+  schedule: SendingSchedule
+  recipientCount: Int
+  stats: CampaignStats
+  createdAt: DateTime
+  updatedAt: DateTime
+  startedAt: DateTime
+  completedAt: DateTime
+}
+
+"""Aggregate performance statistics for a campaign."""
+type CampaignStats {
+  sent: Int!
+  delivered: Int!
+  opens: Int!
+  uniqueOpens: Int!
+  clicks: Int!
+  replies: Int!
+  bounces: Int!
+  unsubscribes: Int!
+  openRate: Float
+  clickRate: Float
+  replyRate: Float
+  bounceRate: Float
+}
+
+"""Email in a campaign associated with a recipient."""
+type CampaignEmail {
+  id: ID!
+  campaign: Campaign!
+  prospect: Prospect!
+  step: SequenceStep
+  subject: MessageSubject!
+  body: MessageBody!
+  sentAt: DateTime
+  tracks: [EmailTrack!]
+}
+
+# ─── Sequences & Steps ───────────────────────────────────────────────────────
+
+"""Ordered sequence of outreach steps within a campaign."""
+type Sequence {
+  id: ID!
+  campaignId: ID!
+  steps: [SequenceStep!]!
+  totalSteps: Int!
+}
+
+"""A single step within an outreach sequence."""
+type SequenceStep {
+  id: ID!
+  sequenceId: ID!
+  stepNumber: Int!
+  type: SequenceStepType!
+  delayDays: Int!
+  subject: MessageSubject
+  body: MessageBody
+  attachments: [Attachment!]
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+# ─── Email Content ────────────────────────────────────────────────────────────
+
+"""An outbound email message record."""
+type EmailMessage {
+  id: ID!
+  from: EmailAddress!
+  to: EmailAddress!
+  subject: MessageSubject!
+  body: MessageBody!
+  attachments: [Attachment!]
+  scheduledTime: ScheduledTime
+  sentAt: DateTime
+  tracks: [EmailTrack!]
+}
+
+"""Email message body with plain-text and HTML variants."""
+type MessageBody {
+  text: String
+  html: String
+}
+
+"""Email subject line."""
+type MessageSubject {
+  value: String!
+  personalized: Boolean!
+}
+
+"""File attachment on an email or sequence step."""
+type Attachment {
+  id: ID!
+  filename: String!
+  mimeType: String!
+  sizeBytes: Int
+  url: URL
+}
+
+"""Scheduled send time for a queued email."""
+type ScheduledTime {
+  scheduledAt: DateTime!
+  timezone: String!
+  sent: Boolean!
+}
+
+"""Sending schedule configuration for a campaign."""
+type SendingSchedule {
+  id: ID!
+  campaignId: ID!
+  timezone: String!
+  startTime: String!
+  endTime: String!
+  days: [String!]!
+  dailyLimit: Int!
+}
+
+# ─── Email Tracking ───────────────────────────────────────────────────────────
+
+"""Tracking event recorded for a sent email."""
+type EmailTrack {
+  id: ID!
+  emailId: ID!
+  event: EmailTrackEvent!
+  occurredAt: DateTime!
+  ipAddress: String
+  userAgent: String
+  url: URL
+}
+
+"""Email open event detail."""
+type Open {
+  id: ID!
+  emailId: ID!
+  openedAt: DateTime!
+  ipAddress: String
+  userAgent: String
+  isFirst: Boolean!
+}
+
+"""Link click event detail."""
+type Click {
+  id: ID!
+  emailId: ID!
+  url: URL!
+  clickedAt: DateTime!
+  ipAddress: String
+}
+
+"""Reply received event."""
+type Reply {
+  id: ID!
+  emailId: ID!
+  from: EmailAddress!
+  subject: String
+  body: String
+  receivedAt: DateTime!
+}
+
+"""Bounce event recorded for a sent email."""
+type Bounce {
+  id: ID!
+  emailId: ID!
+  bouncedAt: DateTime!
+  bounceType: String!
+  reason: String
+}
+
+"""Unsubscribe event for a prospect."""
+type Unsubscribe {
+  id: ID!
+  email: EmailAddress!
+  unsubscribedAt: DateTime!
+  campaignId: ID
+  reason: String
+}
+
+# ─── Senders & Accounts ──────────────────────────────────────────────────────
+
+"""Configured sender identity used in campaigns."""
+type Sender {
+  id: ID!
+  name: String!
+  email: EmailAddress!
+  account: SenderAccount
+  isDefault: Boolean!
+}
+
+"""Sender email account with SMTP/IMAP configuration."""
+type SenderAccount {
+  id: ID!
+  email: EmailAddress!
+  smtp: SMTP
+  imap: IMAP
+  dailySendLimit: Int
+  warmupEnabled: Boolean
+  createdAt: DateTime
+}
+
+"""Email account (alias for sender inbox)."""
+type EmailAccount {
+  id: ID!
+  address: EmailAddress!
+  displayName: String
+  smtp: SMTP
+  imap: IMAP
+  isVerified: Boolean!
+  createdAt: DateTime
+}
+
+"""SMTP server configuration."""
+type SMTP {
+  host: String!
+  port: Int!
+  useTLS: Boolean!
+  username: String!
+}
+
+"""IMAP server configuration."""
+type IMAP {
+  host: String!
+  port: Int!
+  useTLS: Boolean!
+  username: String!
+}
+
+# ─── Auth & Usage ─────────────────────────────────────────────────────────────
+
+"""API key used for authentication."""
+type APIKey {
+  id: ID!
+  key: String!
+  label: String
+  createdAt: DateTime
+  lastUsedAt: DateTime
+  isActive: Boolean!
+}
+
+"""OAuth 2.0 Bearer token with expiry."""
+type Token {
+  accessToken: String!
+  tokenType: String!
+  expiresIn: Int!
+  expiresAt: DateTime!
+  scope: String
+}
+
+"""Account-level API usage and credit statistics."""
+type UsageStats {
+  accountId: ID!
+  creditsTotal: Int!
+  creditsUsed: Int!
+  creditsRemaining: Int!
+  requestsThisMonth: Int!
+  domainSearchesThisMonth: Int!
+  emailFindsThisMonth: Int!
+  verificationsThisMonth: Int!
+  resetDate: DateTime
+}
+
+# ─── Webhooks ─────────────────────────────────────────────────────────────────
+
+"""Webhook subscription for real-time event delivery."""
+type WebhookSubscription {
+  id: ID!
+  url: URL!
+  event: WebhookEvent!
+  isActive: Boolean!
+  secret: String
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+# ─── Root Operations ──────────────────────────────────────────────────────────
+
+type Query {
+  """Search emails by domain."""
+  domainSearch(domain: String!, page: Int, pageSize: Int): DomainSearch
+
+  """Get all emails found for a domain."""
+  domainEmails(domain: String!): DomainEmails
+
+  """Get domain statistics."""
+  domainStats(domain: String!): DomainStats
+
+  """Get email pattern for a domain."""
+  emailPattern(domain: String!): EmailPattern
+
+  """Look up a specific email address."""
+  email(email: EmailAddress!): EmailDetails
+
+  """Get verification result for an email."""
+  verifyEmail(email: EmailAddress!): VerificationResult
+
+  """Verify multiple emails (up to 10)."""
+  verifyEmails(emails: [EmailAddress!]!): [VerificationResult!]
+
+  """Get a prospect by ID."""
+  prospect(id: ID!): ProspectDetails
+
+  """Search prospects by email or name."""
+  searchProspects(query: String!, page: Int, pageSize: Int): ListProspects
+
+  """Get all prospect lists."""
+  prospectLists: [ProspectList!]
+
+  """Get prospects in a list."""
+  listProspects(listId: ID!, page: Int, pageSize: Int): ListProspects
+
+  """Get a campaign by ID."""
+  campaign(id: ID!): Campaign
+
+  """List all campaigns."""
+  campaigns(status: CampaignStatus, page: Int, pageSize: Int): [Campaign!]
+
+  """Get campaign statistics."""
+  campaignStats(campaignId: ID!): CampaignStats
+
+  """Get a sequence for a campaign."""
+  sequence(campaignId: ID!): Sequence
+
+  """List senders."""
+  senders: [Sender!]
+
+  """Get current usage statistics."""
+  usageStats: UsageStats
+
+  """List API keys."""
+  apiKeys: [APIKey!]
+
+  """List webhook subscriptions."""
+  webhooks: [WebhookSubscription!]
+
+  """Get company details by domain."""
+  company(domain: String!): Company
+}
+
+type Mutation {
+  """Start a domain email search job."""
+  startDomainSearch(domain: String!, limit: Int): ID!
+
+  """Start a name-based email finder job."""
+  startEmailFinder(domain: String!, firstName: String!, lastName: String!): ID!
+
+  """Start an email verification job."""
+  startEmailVerification(emails: [EmailAddress!]!): ID!
+
+  """Create a new prospect."""
+  createProspect(input: ProspectInput!): Prospect
+
+  """Update an existing prospect."""
+  updateProspect(id: ID!, input: ProspectInput!): Prospect
+
+  """Delete a prospect."""
+  deleteProspect(id: ID!): Boolean!
+
+  """Create a prospect list."""
+  createProspectList(name: String!, description: String): ProspectList
+
+  """Add prospects to a list."""
+  addProspectsToList(listId: ID!, prospectIds: [ID!]!): Boolean!
+
+  """Create a campaign."""
+  createCampaign(input: CampaignInput!): Campaign
+
+  """Update campaign status."""
+  updateCampaignStatus(id: ID!, status: CampaignStatus!): Campaign
+
+  """Delete a campaign."""
+  deleteCampaign(id: ID!): Boolean!
+
+  """Add a sequence step to a campaign."""
+  addSequenceStep(campaignId: ID!, input: SequenceStepInput!): SequenceStep
+
+  """Update a sequence step."""
+  updateSequenceStep(stepId: ID!, input: SequenceStepInput!): SequenceStep
+
+  """Delete a sequence step."""
+  deleteSequenceStep(stepId: ID!): Boolean!
+
+  """Add recipients to a campaign."""
+  addCampaignRecipients(campaignId: ID!, prospectIds: [ID!]!): Boolean!
+
+  """Create a webhook subscription."""
+  createWebhook(url: URL!, event: WebhookEvent!): WebhookSubscription
+
+  """Update a webhook subscription."""
+  updateWebhook(id: ID!, url: URL, isActive: Boolean): WebhookSubscription
+
+  """Delete a webhook subscription."""
+  deleteWebhook(id: ID!): Boolean!
+
+  """Exchange client credentials for a Bearer token."""
+  authenticate(clientId: String!, clientSecret: String!): Token!
+
+  """Add email to do-not-email list."""
+  addDoNotEmail(email: EmailAddress!, reason: String): Boolean!
+}
+
+# ─── Input Types ──────────────────────────────────────────────────────────────
+
+input ProspectInput {
+  firstName: String
+  lastName: String
+  email: EmailAddress
+  position: String
+  company: String
+  domain: String
+  linkedinUrl: URL
+  phone: String
+  customFields: [CustomFieldInput!]
+  listIds: [ID!]
+}
+
+input CustomFieldInput {
+  key: String!
+  value: String!
+}
+
+input CampaignInput {
+  name: String!
+  senderId: ID!
+  scheduleId: ID
+  dailyLimit: Int
+}
+
+input SequenceStepInput {
+  type: SequenceStepType!
+  delayDays: Int!
+  subject: String
+  body: String
+}
