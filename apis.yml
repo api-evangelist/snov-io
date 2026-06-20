@@ -1,7 +1,7 @@
 aid: snov-io
 name: Snov.io
 type: Index
-image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
 url: https://raw.githubusercontent.com/api-evangelist/snov-io/refs/heads/main/apis.yml
 created: '2026-06-12'
 modified: '2026-06-12'
@@ -36,7 +36,7 @@ apis:
     LinkedIn profile URL. Supports domain search, name-based email lookup, LinkedIn
     profile enrichment, and generic company contact discovery. Operations follow an
     async start/result pattern.
-  image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
   humanURL: https://snov.io/email-finder-api
   baseURL: https://api.snov.io
   tags:
@@ -55,7 +55,7 @@ apis:
   description: Verify the deliverability and validity of up to 10 email addresses
     per request using a two-step async API. Returns validity status, MX record checks,
     and disposable email detection results.
-  image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
   humanURL: https://snov.io/email-verification-api
   baseURL: https://api.snov.io
   tags:
@@ -69,7 +69,7 @@ apis:
     programmatically. Supports email step content management, recipient management,
     campaign state changes, and full analytics reporting including opens, clicks,
     and replies.
-  image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
   humanURL: https://snov.io/api
   baseURL: https://api.snov.io
   tags:
@@ -84,7 +84,7 @@ apis:
   description: Add, search, and manage prospect records and lists within Snov.io.
     Supports custom fields, list creation, CRM pipeline management, and do-not-email
     suppression list operations.
-  image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
   humanURL: https://snov.io/api
   baseURL: https://api.snov.io
   tags:
@@ -98,7 +98,7 @@ apis:
   description: Create and manage email warm-up campaigns to improve deliverability
     scores. Supports full CRUD operations on warm-up campaigns and provides statistical
     reporting on warm-up progress.
-  image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
   humanURL: https://snov.io/api
   baseURL: https://api.snov.io
   tags:
@@ -111,7 +111,7 @@ apis:
   description: Subscribe to real-time event notifications from the Snov.io platform.
     Supports listing, creating, updating, and deleting webhook subscriptions for automated
     event-driven integrations.
-  image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
   humanURL: https://snov.io/api
   baseURL: https://api.snov.io
   tags:
