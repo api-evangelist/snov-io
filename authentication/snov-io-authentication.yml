@@ -1,0 +1,15 @@
+generated: '2026-07-11'
+method: derived
+source: openapi/snov-io-openapi.yml
+summary:
+  types:
+  - http
+schemes:
+- name: bearerAuth
+  type: http
+  scheme: bearer
+  bearerFormat: JWT
+  description: Obtain a Bearer token via POST /v1/oauth/access_token using client credentials.
+    Tokens expire after 3600 seconds.
+  sources:
+  - openapi/snov-io-openapi.yml

@@ -121,6 +121,10 @@ apis:
   - type: Documentation
     url: https://snov.io/api
 common:
+- type: DomainSecurity
+  url: security/snov-io-domain-security.yml
+- type: Authentication
+  url: authentication/snov-io-authentication.yml
 - type: Website
   url: https://snov.io/
 - type: Documentation
