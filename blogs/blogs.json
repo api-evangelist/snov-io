@@ -2,13 +2,11 @@
   "repo": "snov-io",
   "feeds": [
     {
-      "source": "https://snov.io/blog/",
-      "feed_url": "",
-      "saved": 1,
-      "method": "agent-scrape"
+      "source": "https://www.linkedin.com/company/snovio",
+      "error": "HTTPError"
     }
   ],
-  "post_count": 2,
-  "fetched": "2026-06-27T13:10:20Z",
-  "agent_pulled": "2026-06-27"
+  "post_count": 3,
+  "fetched": "2026-07-11T11:50:51Z",
+  "agent_pulled": "2026-07-04"
 }
