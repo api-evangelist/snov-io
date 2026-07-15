@@ -121,6 +121,8 @@ apis:
   - type: Documentation
     url: https://snov.io/api
 common:
+- type: AgenticAccess
+  url: agentic-access/snov-io-agentic-access.yml
 - type: DomainSecurity
   url: security/snov-io-domain-security.yml
 - type: Authentication
