@@ -1,0 +1,102 @@
+openapi: 3.0.3
+info:
+  title: Snov.io Authentication API
+  description: Snov.io is a sales automation and lead generation platform. The REST API enables programmatic access to email finding, domain search, email verification, drip campaign management, email warm-up, prospect management, CRM pipeline, and webhook subscriptions. Authentication uses OAuth 2.0 client credentials to obtain short-lived Bearer tokens. All API operations consume credits from the account balance.
+  version: '2.0'
+  contact:
+    name: Snov.io Support
+    url: https://snov.io/knowledgebase/
+  termsOfService: https://snov.io/terms-of-service/
+  license:
+    name: Proprietary
+    url: https://snov.io/terms-of-service/
+servers:
+- url: https://api.snov.io
+  description: Snov.io API server
+tags:
+- name: Authentication
+  description: OAuth 2.0 token management
+paths:
+  /v1/oauth/access_token:
+    post:
+      tags:
+      - Authentication
+      summary: Get access token
+      description: Obtain a short-lived Bearer token using OAuth 2.0 client credentials flow. Tokens expire after 3600 seconds.
+      operationId: getAccessToken
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - grant_type
+              - client_id
+              - client_secret
+              properties:
+                grant_type:
+                  type: string
+                  enum:
+                  - client_credentials
+                  example: client_credentials
+                client_id:
+                  type: string
+                  description: Client ID from account settings
+                client_secret:
+                  type: string
+                  description: Client secret from account settings
+      responses:
+        '200':
+          description: Access token issued
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessToken'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  responses:
+    BadRequest:
+      description: Bad request — missing or invalid parameters
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Unauthorized — missing or invalid Bearer token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    AccessToken:
+      type: object
+      properties:
+        access_token:
+          type: string
+          description: Bearer token for API authentication
+        token_type:
+          type: string
+          example: Bearer
+        expires_in:
+          type: integer
+          description: Token lifetime in seconds
+          example: 3600
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error code
+        message:
+          type: string
+          description: Human-readable error message
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Obtain a Bearer token via POST /v1/oauth/access_token using client credentials. Tokens expire after 3600 seconds.

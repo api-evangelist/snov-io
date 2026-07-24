@@ -1,0 +1,367 @@
+openapi: 3.0.3
+info:
+  title: Snov.io Authentication Email Finder API
+  description: Snov.io is a sales automation and lead generation platform. The REST API enables programmatic access to email finding, domain search, email verification, drip campaign management, email warm-up, prospect management, CRM pipeline, and webhook subscriptions. Authentication uses OAuth 2.0 client credentials to obtain short-lived Bearer tokens. All API operations consume credits from the account balance.
+  version: '2.0'
+  contact:
+    name: Snov.io Support
+    url: https://snov.io/knowledgebase/
+  termsOfService: https://snov.io/terms-of-service/
+  license:
+    name: Proprietary
+    url: https://snov.io/terms-of-service/
+servers:
+- url: https://api.snov.io
+  description: Snov.io API server
+tags:
+- name: Email Finder
+  description: Find email addresses by name, LinkedIn, or domain
+paths:
+  /v2/emails-by-domain-by-name/start:
+    post:
+      tags:
+      - Email Finder
+      summary: Start find emails by name and domain
+      description: Find email addresses by providing first name, last name, and domain. Costs 1 credit per valid or unknown email found.
+      operationId: startFindEmailsByName
+      security:
+      - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - rows
+              properties:
+                rows:
+                  type: array
+                  description: Array of name+domain rows to look up
+                  items:
+                    type: object
+                    required:
+                    - first_name
+                    - last_name
+                    - domain
+                    properties:
+                      first_name:
+                        type: string
+                        example: John
+                      last_name:
+                        type: string
+                        example: Doe
+                      domain:
+                        type: string
+                        example: example.com
+                webhook_url:
+                  type: string
+                  format: uri
+                  description: Optional webhook URL to receive results when ready
+      responses:
+        '200':
+          description: Task started
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskStarted'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v2/emails-by-domain-by-name/result:
+    get:
+      tags:
+      - Email Finder
+      summary: Get find emails by name results
+      operationId: getFindEmailsByNameResult
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: task_hash
+        in: query
+        required: true
+        schema:
+          type: string
+        description: Task hash returned from the start endpoint
+      responses:
+        '200':
+          description: Email finder results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailFinderResult'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v2/company-domain-by-name/start:
+    post:
+      tags:
+      - Email Finder
+      summary: Start find domain by company name
+      description: Find company domains by company name. Costs 1 credit per domain found.
+      operationId: startFindDomainByCompanyName
+      security:
+      - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - names
+              properties:
+                names:
+                  type: array
+                  items:
+                    type: string
+                  description: List of company names to look up
+                  example:
+                  - Acme Corp
+                  - Example Inc
+                webhook_url:
+                  type: string
+                  format: uri
+      responses:
+        '200':
+          description: Task started
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskStarted'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v2/company-domain-by-name/result:
+    get:
+      tags:
+      - Email Finder
+      summary: Get find domain by company name results
+      operationId: getFindDomainByCompanyNameResult
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: task_hash
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Company domain lookup results
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        domain:
+                          type: string
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v2/li-profiles-by-urls/start:
+    post:
+      tags:
+      - Email Finder
+      summary: Start LinkedIn profile enrichment
+      description: Enrich LinkedIn profiles by URL. Costs 1 credit per profile retrieved.
+      operationId: startLinkedInProfileEnrichment
+      security:
+      - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - urls
+              properties:
+                urls:
+                  type: array
+                  items:
+                    type: string
+                    format: uri
+                  description: LinkedIn profile URLs
+                  example:
+                  - https://www.linkedin.com/in/johndoe
+                webhook_url:
+                  type: string
+                  format: uri
+      responses:
+        '200':
+          description: Task started
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskStarted'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v2/li-profiles-by-urls/result:
+    get:
+      tags:
+      - Email Finder
+      summary: Get LinkedIn profile enrichment results
+      operationId: getLinkedInProfileEnrichmentResult
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: task_hash
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: LinkedIn profile enrichment results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProspectListResult'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v1/get-profile-by-email:
+    post:
+      tags:
+      - Email Finder
+      summary: Enrich profile by email
+      description: Retrieve prospect profile information by email address. Costs 1 credit per request; free if no results are found.
+      operationId: getProfileByEmail
+      security:
+      - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - email
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: john.doe@example.com
+      responses:
+        '200':
+          description: Prospect profile data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProspectProfile'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  responses:
+    Unauthorized:
+      description: Unauthorized — missing or invalid Bearer token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    TaskStarted:
+      type: object
+      properties:
+        task_hash:
+          type: string
+          description: Unique identifier for the async task; use to poll for results
+        status:
+          type: string
+          description: Current task status
+    EmailFinderResult:
+      type: object
+      properties:
+        status:
+          type: string
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              first_name:
+                type: string
+              last_name:
+                type: string
+              domain:
+                type: string
+              email:
+                type: string
+                format: email
+              confidence:
+                type: integer
+                description: Confidence score 0-100
+              status:
+                type: string
+                description: Email status (valid/unknown/not_valid)
+    ProspectProfile:
+      type: object
+      properties:
+        id:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+          format: email
+        position:
+          type: string
+        company:
+          type: string
+        location:
+          type: string
+        industry:
+          type: string
+        social:
+          type: object
+          properties:
+            linkedin:
+              type: string
+              format: uri
+            twitter:
+              type: string
+              format: uri
+        job_history:
+          type: array
+          items:
+            type: object
+            properties:
+              title:
+                type: string
+              company:
+                type: string
+              start_date:
+                type: string
+              end_date:
+                type: string
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error code
+        message:
+          type: string
+          description: Human-readable error message
+    ProspectListResult:
+      type: object
+      properties:
+        status:
+          type: string
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProspectProfile'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Obtain a Bearer token via POST /v1/oauth/access_token using client credentials. Tokens expire after 3600 seconds.

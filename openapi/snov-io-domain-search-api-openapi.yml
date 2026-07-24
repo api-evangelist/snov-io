@@ -1,0 +1,410 @@
+openapi: 3.0.3
+info:
+  title: Snov.io Authentication Domain Search API
+  description: Snov.io is a sales automation and lead generation platform. The REST API enables programmatic access to email finding, domain search, email verification, drip campaign management, email warm-up, prospect management, CRM pipeline, and webhook subscriptions. Authentication uses OAuth 2.0 client credentials to obtain short-lived Bearer tokens. All API operations consume credits from the account balance.
+  version: '2.0'
+  contact:
+    name: Snov.io Support
+    url: https://snov.io/knowledgebase/
+  termsOfService: https://snov.io/terms-of-service/
+  license:
+    name: Proprietary
+    url: https://snov.io/terms-of-service/
+servers:
+- url: https://api.snov.io
+  description: Snov.io API server
+tags:
+- name: Domain Search
+  description: Search for company information and email addresses by domain
+paths:
+  /v2/domain-search/start:
+    post:
+      tags:
+      - Domain Search
+      summary: Start domain search
+      description: Initiate an async domain search. Returns a task_hash to retrieve results. Costs 1 credit per unique domain request.
+      operationId: startDomainSearch
+      security:
+      - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - domain
+              properties:
+                domain:
+                  type: string
+                  description: Company domain name to search
+                  example: example.com
+      responses:
+        '200':
+          description: Task started
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskStarted'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v2/domain-search/result/{task_hash}:
+    get:
+      tags:
+      - Domain Search
+      summary: Get domain search results
+      description: Retrieve results of a previously started domain search task.
+      operationId: getDomainSearchResult
+      security:
+      - bearerAuth: []
+      parameters:
+      - $ref: '#/components/parameters/TaskHash'
+      responses:
+        '200':
+          description: Domain search results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DomainSearchResult'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /v2/domain-search/prospects/start:
+    post:
+      tags:
+      - Domain Search
+      summary: Start domain prospect search
+      description: Initiate an async search for prospect profiles associated with a domain.
+      operationId: startDomainProspectSearch
+      security:
+      - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - domain
+              properties:
+                domain:
+                  type: string
+                  example: example.com
+                positions:
+                  type: array
+                  items:
+                    type: string
+                  description: Filter by job positions
+                  example:
+                  - CEO
+                  - CTO
+                page:
+                  type: integer
+                  description: Page number for pagination
+                  default: 1
+      responses:
+        '200':
+          description: Task started
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskStarted'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v2/domain-search/prospects/result/{task_hash}:
+    get:
+      tags:
+      - Domain Search
+      summary: Get domain prospect search results
+      operationId: getDomainProspectSearchResult
+      security:
+      - bearerAuth: []
+      parameters:
+      - $ref: '#/components/parameters/TaskHash'
+      responses:
+        '200':
+          description: Prospect search results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProspectListResult'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v2/domain-search/domain-emails/start:
+    post:
+      tags:
+      - Domain Search
+      summary: Start domain emails search
+      description: Initiate an async search for all email addresses associated with a domain.
+      operationId: startDomainEmailsSearch
+      security:
+      - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - domain
+              properties:
+                domain:
+                  type: string
+                  example: example.com
+      responses:
+        '200':
+          description: Task started
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskStarted'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v2/domain-search/domain-emails/result/{task_hash}:
+    get:
+      tags:
+      - Domain Search
+      summary: Get domain emails search results
+      operationId: getDomainEmailsSearchResult
+      security:
+      - bearerAuth: []
+      parameters:
+      - $ref: '#/components/parameters/TaskHash'
+      responses:
+        '200':
+          description: Domain emails results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailListResult'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v2/domain-search/generic-contacts/start:
+    post:
+      tags:
+      - Domain Search
+      summary: Start generic contacts search
+      description: Initiate an async search for generic company contact addresses (e.g. info@, support@).
+      operationId: startGenericContactsSearch
+      security:
+      - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - domain
+              properties:
+                domain:
+                  type: string
+                  example: example.com
+      responses:
+        '200':
+          description: Task started
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskStarted'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v2/domain-search/generic-contacts/result/{task_hash}:
+    get:
+      tags:
+      - Domain Search
+      summary: Get generic contacts search results
+      operationId: getGenericContactsSearchResult
+      security:
+      - bearerAuth: []
+      parameters:
+      - $ref: '#/components/parameters/TaskHash'
+      responses:
+        '200':
+          description: Generic contacts results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailListResult'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v1/get-domain-emails-count:
+    post:
+      tags:
+      - Domain Search
+      summary: Check available emails count (free)
+      description: Returns the count of available email addresses for a domain. Free endpoint.
+      operationId: getDomainEmailsCount
+      security:
+      - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - domain
+              properties:
+                domain:
+                  type: string
+                  example: example.com
+      responses:
+        '200':
+          description: Email count for domain
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  domain:
+                    type: string
+                  result:
+                    type: integer
+                    description: Number of available emails
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  schemas:
+    EmailListResult:
+      type: object
+      properties:
+        status:
+          type: string
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              email:
+                type: string
+                format: email
+              first_name:
+                type: string
+              last_name:
+                type: string
+              position:
+                type: string
+              confidence:
+                type: integer
+    DomainSearchResult:
+      type: object
+      properties:
+        status:
+          type: string
+        data:
+          type: object
+          properties:
+            domain:
+              type: string
+            company_name:
+              type: string
+            industry:
+              type: string
+            size:
+              type: string
+            prospect_count:
+              type: integer
+            email_count:
+              type: integer
+            related_domains:
+              type: array
+              items:
+                type: string
+    TaskStarted:
+      type: object
+      properties:
+        task_hash:
+          type: string
+          description: Unique identifier for the async task; use to poll for results
+        status:
+          type: string
+          description: Current task status
+    ProspectListResult:
+      type: object
+      properties:
+        status:
+          type: string
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProspectProfile'
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error code
+        message:
+          type: string
+          description: Human-readable error message
+    ProspectProfile:
+      type: object
+      properties:
+        id:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+          format: email
+        position:
+          type: string
+        company:
+          type: string
+        location:
+          type: string
+        industry:
+          type: string
+        social:
+          type: object
+          properties:
+            linkedin:
+              type: string
+              format: uri
+            twitter:
+              type: string
+              format: uri
+        job_history:
+          type: array
+          items:
+            type: object
+            properties:
+              title:
+                type: string
+              company:
+                type: string
+              start_date:
+                type: string
+              end_date:
+                type: string
+  responses:
+    Unauthorized:
+      description: Unauthorized — missing or invalid Bearer token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  parameters:
+    TaskHash:
+      name: task_hash
+      in: path
+      required: true
+      schema:
+        type: string
+      description: Task hash returned from the corresponding start endpoint
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Obtain a Bearer token via POST /v1/oauth/access_token using client credentials. Tokens expire after 3600 seconds.

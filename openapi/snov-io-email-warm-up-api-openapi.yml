@@ -1,0 +1,299 @@
+openapi: 3.0.3
+info:
+  title: Snov.io Authentication Email Warm-up API
+  description: Snov.io is a sales automation and lead generation platform. The REST API enables programmatic access to email finding, domain search, email verification, drip campaign management, email warm-up, prospect management, CRM pipeline, and webhook subscriptions. Authentication uses OAuth 2.0 client credentials to obtain short-lived Bearer tokens. All API operations consume credits from the account balance.
+  version: '2.0'
+  contact:
+    name: Snov.io Support
+    url: https://snov.io/knowledgebase/
+  termsOfService: https://snov.io/terms-of-service/
+  license:
+    name: Proprietary
+    url: https://snov.io/terms-of-service/
+servers:
+- url: https://api.snov.io
+  description: Snov.io API server
+tags:
+- name: Email Warm-up
+  description: Manage email warm-up campaigns for improved deliverability
+paths:
+  /v2/warm-up:
+    get:
+      tags:
+      - Email Warm-up
+      summary: List warm-up campaigns
+      description: Returns a paginated list of all email warm-up campaigns.
+      operationId: listWarmUpCampaigns
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: page
+        in: query
+        schema:
+          type: integer
+          default: 1
+      - name: per_page
+        in: query
+        schema:
+          type: integer
+          enum:
+          - 20
+          - 50
+          - 100
+          default: 20
+      - name: status
+        in: query
+        schema:
+          type: string
+          description: Filter by campaign status
+      responses:
+        '200':
+          description: Paginated list of warm-up campaigns
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/WarmUpCampaign'
+                  total:
+                    type: integer
+                  page:
+                    type: integer
+                  per_page:
+                    type: integer
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      tags:
+      - Email Warm-up
+      summary: Create warm-up campaign
+      description: Create a new email warm-up campaign to improve deliverability scores.
+      operationId: createWarmUpCampaign
+      security:
+      - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WarmUpCampaignCreate'
+      responses:
+        '201':
+          description: Warm-up campaign created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WarmUpCampaign'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v2/warm-up/{id}:
+    get:
+      tags:
+      - Email Warm-up
+      summary: Get warm-up campaign
+      description: Retrieve full details of a specific warm-up campaign.
+      operationId: getWarmUpCampaign
+      security:
+      - bearerAuth: []
+      parameters:
+      - $ref: '#/components/parameters/CampaignId'
+      responses:
+        '200':
+          description: Warm-up campaign details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WarmUpCampaign'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      tags:
+      - Email Warm-up
+      summary: Update warm-up campaign
+      description: Update settings of an existing warm-up campaign.
+      operationId: updateWarmUpCampaign
+      security:
+      - bearerAuth: []
+      parameters:
+      - $ref: '#/components/parameters/CampaignId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WarmUpCampaignUpdate'
+      responses:
+        '200':
+          description: Warm-up campaign updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WarmUpCampaign'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  responses:
+    Unauthorized:
+      description: Unauthorized — missing or invalid Bearer token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    BadRequest:
+      description: Bad request — missing or invalid parameters
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    WarmUpCampaignUpdate:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+          - active
+          - paused
+          - stopped
+        strategy:
+          type: string
+          enum:
+          - progressive
+          - steady
+        per_day:
+          type: integer
+        from:
+          type: integer
+        increase:
+          type: integer
+        email_content:
+          type: string
+        reply_rate:
+          type: integer
+        campaign_deadline:
+          type: string
+          format: date
+        make_endless:
+          type: boolean
+        providers:
+          type: array
+          items:
+            type: string
+        enable_ctd:
+          type: boolean
+        enable_proxy:
+          type: boolean
+    WarmUpCampaignCreate:
+      type: object
+      required:
+      - email_account_id
+      - per_day
+      properties:
+        email_account_id:
+          type: string
+        per_day:
+          type: integer
+          description: Number of warm-up emails per day
+        strategy:
+          type: string
+          enum:
+          - progressive
+          - steady
+          default: progressive
+        from:
+          type: integer
+          description: Starting daily count for progressive strategy
+        increase:
+          type: integer
+          description: Daily increase amount for progressive strategy
+        email_content:
+          type: string
+          enum:
+          - default
+          - custom
+        subject:
+          type: string
+        body:
+          type: string
+        reply_rate:
+          type: integer
+          description: Percentage of warm-up emails to reply to (0-100)
+        campaign_deadline:
+          type: string
+          format: date
+        providers:
+          type: array
+          items:
+            type: string
+        send_to_paid_domain:
+          type: boolean
+        enable_ctd:
+          type: boolean
+        enable_proxy:
+          type: boolean
+        schedule_id:
+          type: integer
+        template_name:
+          type: string
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error code
+        message:
+          type: string
+          description: Human-readable error message
+    WarmUpCampaign:
+      type: object
+      properties:
+        id:
+          type: integer
+        email_account_id:
+          type: string
+        status:
+          type: string
+        strategy:
+          type: string
+          enum:
+          - progressive
+          - steady
+        per_day:
+          type: integer
+        reply_rate:
+          type: integer
+        campaign_deadline:
+          type: string
+          format: date
+        deliverability_score:
+          type: number
+          format: float
+  parameters:
+    CampaignId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: Campaign ID
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Obtain a Bearer token via POST /v1/oauth/access_token using client credentials. Tokens expire after 3600 seconds.

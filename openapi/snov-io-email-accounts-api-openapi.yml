@@ -1,0 +1,310 @@
+openapi: 3.0.3
+info:
+  title: Snov.io Authentication Email Accounts API
+  description: Snov.io is a sales automation and lead generation platform. The REST API enables programmatic access to email finding, domain search, email verification, drip campaign management, email warm-up, prospect management, CRM pipeline, and webhook subscriptions. Authentication uses OAuth 2.0 client credentials to obtain short-lived Bearer tokens. All API operations consume credits from the account balance.
+  version: '2.0'
+  contact:
+    name: Snov.io Support
+    url: https://snov.io/knowledgebase/
+  termsOfService: https://snov.io/terms-of-service/
+  license:
+    name: Proprietary
+    url: https://snov.io/terms-of-service/
+servers:
+- url: https://api.snov.io
+  description: Snov.io API server
+tags:
+- name: Email Accounts
+  description: Manage sender email accounts
+paths:
+  /v2/sender-accounts/emails:
+    get:
+      tags:
+      - Email Accounts
+      summary: List email accounts (free)
+      description: Returns all connected sender email accounts with status information.
+      operationId: listEmailAccounts
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: List of email accounts
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/EmailAccount'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      tags:
+      - Email Accounts
+      summary: Add email account
+      description: Connect a new sender email account with SMTP/IMAP configuration.
+      operationId: addEmailAccount
+      security:
+      - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmailAccountCreate'
+      responses:
+        '201':
+          description: Email account created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailAccount'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v2/sender-accounts/emails/{id}:
+    patch:
+      tags:
+      - Email Accounts
+      summary: Update email account
+      description: Update an existing sender email account configuration.
+      operationId: updateEmailAccount
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Email account ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmailAccountUpdate'
+      responses:
+        '200':
+          description: Email account updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailAccount'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /v2/sender-accounts/check-sender-status:
+    get:
+      tags:
+      - Email Accounts
+      summary: Check sender account status
+      description: Check SMTP and IMAP connection status for a sender account. Returns pending/valid/invalid status with error messages if applicable.
+      operationId: checkSenderStatus
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: sender_account_id
+        in: query
+        required: true
+        schema:
+          type: string
+        description: ID of the sender account to check
+      responses:
+        '200':
+          description: Sender account status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  smtp_status:
+                    type: string
+                    enum:
+                    - pending
+                    - valid
+                    - invalid
+                  imap_status:
+                    type: string
+                    enum:
+                    - pending
+                    - valid
+                    - invalid
+                  smtp_error:
+                    type: string
+                    nullable: true
+                  imap_error:
+                    type: string
+                    nullable: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  responses:
+    Unauthorized:
+      description: Unauthorized — missing or invalid Bearer token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    BadRequest:
+      description: Bad request — missing or invalid parameters
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    EmailAccountUpdate:
+      type: object
+      properties:
+        sender_name:
+          type: string
+        email_from:
+          type: string
+          format: email
+        password:
+          type: string
+        smtp:
+          type: object
+          properties:
+            host:
+              type: string
+            port:
+              type: integer
+            encryption:
+              type: string
+        imap:
+          type: object
+          properties:
+            host:
+              type: string
+            port:
+              type: integer
+            encryption:
+              type: string
+        delay:
+          type: integer
+        signature:
+          type: string
+        bcc_email:
+          type: string
+          format: email
+        tags:
+          type: array
+          items:
+            type: string
+    EmailAccountCreate:
+      type: object
+      required:
+      - sender_name
+      - email_from
+      - password
+      - smtp
+      properties:
+        sender_name:
+          type: string
+        email_from:
+          type: string
+          format: email
+        password:
+          type: string
+        smtp:
+          type: object
+          required:
+          - host
+          - port
+          - encryption
+          properties:
+            host:
+              type: string
+            port:
+              type: integer
+            encryption:
+              type: string
+              enum:
+              - ssl
+              - tls
+              - none
+        imap:
+          type: object
+          properties:
+            host:
+              type: string
+            port:
+              type: integer
+            encryption:
+              type: string
+              enum:
+              - ssl
+              - tls
+              - none
+        reply_to:
+          type: string
+          format: email
+        limitation:
+          type: integer
+        delay:
+          type: integer
+          description: Delay between sends in seconds
+        signature:
+          type: string
+        bcc_email:
+          type: string
+          format: email
+        tags:
+          type: array
+          items:
+            type: string
+        timezoneId:
+          type: string
+    EmailAccount:
+      type: object
+      properties:
+        id:
+          type: string
+        email_from:
+          type: string
+          format: email
+        sender_name:
+          type: string
+        smtp_status:
+          type: string
+          enum:
+          - pending
+          - valid
+          - invalid
+        imap_status:
+          type: string
+          enum:
+          - pending
+          - valid
+          - invalid
+        provider:
+          type: string
+        limitation:
+          type: integer
+          description: Daily sending limit
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error code
+        message:
+          type: string
+          description: Human-readable error message
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Obtain a Bearer token via POST /v1/oauth/access_token using client credentials. Tokens expire after 3600 seconds.

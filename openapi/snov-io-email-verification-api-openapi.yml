@@ -1,0 +1,141 @@
+openapi: 3.0.3
+info:
+  title: Snov.io Authentication Email Verification API
+  description: Snov.io is a sales automation and lead generation platform. The REST API enables programmatic access to email finding, domain search, email verification, drip campaign management, email warm-up, prospect management, CRM pipeline, and webhook subscriptions. Authentication uses OAuth 2.0 client credentials to obtain short-lived Bearer tokens. All API operations consume credits from the account balance.
+  version: '2.0'
+  contact:
+    name: Snov.io Support
+    url: https://snov.io/knowledgebase/
+  termsOfService: https://snov.io/terms-of-service/
+  license:
+    name: Proprietary
+    url: https://snov.io/terms-of-service/
+servers:
+- url: https://api.snov.io
+  description: Snov.io API server
+tags:
+- name: Email Verification
+  description: Verify email deliverability and validity
+paths:
+  /v2/email-verification/start:
+    post:
+      tags:
+      - Email Verification
+      summary: Start email verification
+      description: Initiate async verification of up to 10 email addresses. Returns a task_hash to poll for results.
+      operationId: startEmailVerification
+      security:
+      - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - emails
+              properties:
+                emails:
+                  type: array
+                  maxItems: 10
+                  items:
+                    type: string
+                    format: email
+                  example:
+                  - john@example.com
+                  - jane@example.com
+                webhook_url:
+                  type: string
+                  format: uri
+      responses:
+        '200':
+          description: Task started
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskStarted'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v2/email-verification/result:
+    get:
+      tags:
+      - Email Verification
+      summary: Get email verification results
+      operationId: getEmailVerificationResult
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: task_hash
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Email verification results
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/EmailVerificationResult'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  schemas:
+    TaskStarted:
+      type: object
+      properties:
+        task_hash:
+          type: string
+          description: Unique identifier for the async task; use to poll for results
+        status:
+          type: string
+          description: Current task status
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error code
+        message:
+          type: string
+          description: Human-readable error message
+    EmailVerificationResult:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        status:
+          type: string
+          enum:
+          - valid
+          - unknown
+          - not_valid
+        format_valid:
+          type: boolean
+        mx_valid:
+          type: boolean
+        disposable:
+          type: boolean
+        gibberish:
+          type: boolean
+  responses:
+    Unauthorized:
+      description: Unauthorized — missing or invalid Bearer token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Obtain a Bearer token via POST /v1/oauth/access_token using client credentials. Tokens expire after 3600 seconds.

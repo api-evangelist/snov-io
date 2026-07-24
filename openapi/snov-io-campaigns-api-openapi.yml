@@ -1,0 +1,883 @@
+openapi: 3.0.3
+info:
+  title: Snov.io Authentication Campaigns API
+  description: Snov.io is a sales automation and lead generation platform. The REST API enables programmatic access to email finding, domain search, email verification, drip campaign management, email warm-up, prospect management, CRM pipeline, and webhook subscriptions. Authentication uses OAuth 2.0 client credentials to obtain short-lived Bearer tokens. All API operations consume credits from the account balance.
+  version: '2.0'
+  contact:
+    name: Snov.io Support
+    url: https://snov.io/knowledgebase/
+  termsOfService: https://snov.io/terms-of-service/
+  license:
+    name: Proprietary
+    url: https://snov.io/terms-of-service/
+servers:
+- url: https://api.snov.io
+  description: Snov.io API server
+tags:
+- name: Campaigns
+  description: Create and manage multi-channel outreach campaigns
+paths:
+  /v1/user-campaigns:
+    get:
+      tags:
+      - Campaigns
+      summary: List campaigns
+      description: Returns all multi-channel outreach campaigns for the user.
+      operationId: listCampaigns
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: List of campaigns
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Campaign'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v1/create-campaign:
+    post:
+      tags:
+      - Campaigns
+      summary: Create campaign
+      description: Create a new multi-channel outreach campaign.
+      operationId: createCampaign
+      security:
+      - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CampaignCreate'
+      responses:
+        '201':
+          description: Campaign created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Campaign'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v1/campaign/{id}:
+    get:
+      tags:
+      - Campaigns
+      summary: Get campaign
+      description: Retrieve details of a specific campaign by ID.
+      operationId: getCampaign
+      security:
+      - bearerAuth: []
+      parameters:
+      - $ref: '#/components/parameters/CampaignId'
+      responses:
+        '200':
+          description: Campaign details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Campaign'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      tags:
+      - Campaigns
+      summary: Update campaign
+      description: Update an existing campaign's settings.
+      operationId: updateCampaign
+      security:
+      - bearerAuth: []
+      parameters:
+      - $ref: '#/components/parameters/CampaignId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CampaignCreate'
+      responses:
+        '200':
+          description: Campaign updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Campaign'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      tags:
+      - Campaigns
+      summary: Delete campaign
+      description: Permanently delete a campaign.
+      operationId: deleteCampaign
+      security:
+      - bearerAuth: []
+      parameters:
+      - $ref: '#/components/parameters/CampaignId'
+      responses:
+        '204':
+          description: Campaign deleted
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /v1/campaign/{id}/state:
+    post:
+      tags:
+      - Campaigns
+      summary: Change campaign state
+      description: Start, pause, or stop a campaign.
+      operationId: changeCampaignState
+      security:
+      - bearerAuth: []
+      parameters:
+      - $ref: '#/components/parameters/CampaignId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - state
+              properties:
+                state:
+                  type: string
+                  enum:
+                  - start
+                  - pause
+                  - stop
+      responses:
+        '200':
+          description: State changed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Campaign'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /v1/email-schedules:
+    get:
+      tags:
+      - Campaigns
+      summary: List email schedules
+      description: Returns all available email send schedules.
+      operationId: listEmailSchedules
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: List of email schedules
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        name:
+                          type: string
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v1/email-step-content:
+    post:
+      tags:
+      - Campaigns
+      summary: Create email step content
+      description: Create content for a campaign email step.
+      operationId: createEmailStepContent
+      security:
+      - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmailStepContent'
+      responses:
+        '201':
+          description: Email step content created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailStepContent'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v1/email-step-content/{id}:
+    get:
+      tags:
+      - Campaigns
+      summary: Get email step content
+      operationId: getEmailStepContent
+      security:
+      - bearerAuth: []
+      parameters:
+      - $ref: '#/components/parameters/ResourceId'
+      responses:
+        '200':
+          description: Email step content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailStepContent'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      tags:
+      - Campaigns
+      summary: Update email step content
+      operationId: updateEmailStepContent
+      security:
+      - bearerAuth: []
+      parameters:
+      - $ref: '#/components/parameters/ResourceId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmailStepContent'
+      responses:
+        '200':
+          description: Email step content updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailStepContent'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      tags:
+      - Campaigns
+      summary: Delete email step content
+      operationId: deleteEmailStepContent
+      security:
+      - bearerAuth: []
+      parameters:
+      - $ref: '#/components/parameters/ResourceId'
+      responses:
+        '204':
+          description: Email step content deleted
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /v1/recipient-status:
+    get:
+      tags:
+      - Campaigns
+      summary: Check recipient status
+      description: Check the campaign status of a specific recipient.
+      operationId: getRecipientStatus
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: campaign_id
+        in: query
+        required: true
+        schema:
+          type: integer
+      - name: email
+        in: query
+        required: true
+        schema:
+          type: string
+          format: email
+      responses:
+        '200':
+          description: Recipient status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  email:
+                    type: string
+                  status:
+                    type: string
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      tags:
+      - Campaigns
+      summary: Change recipient status
+      description: Update the campaign status of a recipient.
+      operationId: changeRecipientStatus
+      security:
+      - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - campaign_id
+              - email
+              - status
+              properties:
+                campaign_id:
+                  type: integer
+                email:
+                  type: string
+                  format: email
+                status:
+                  type: string
+      responses:
+        '200':
+          description: Status changed
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v1/finished-prospects:
+    get:
+      tags:
+      - Campaigns
+      summary: List completed prospects
+      description: Returns prospects who have completed all campaign steps.
+      operationId: listFinishedProspects
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: campaign_id
+        in: query
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Completed prospects list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Prospect'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v1/do-not-email-list:
+    post:
+      tags:
+      - Campaigns
+      summary: Add to do-not-email list
+      description: Add email addresses to a do-not-email suppression list.
+      operationId: addToDoNotEmailList
+      security:
+      - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - emails
+              properties:
+                emails:
+                  type: array
+                  items:
+                    type: string
+                    format: email
+                list_id:
+                  type: integer
+      responses:
+        '200':
+          description: Emails added to suppression list
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v1/do-not-email-lists:
+    get:
+      tags:
+      - Campaigns
+      summary: List do-not-email lists
+      description: Returns all do-not-email suppression lists for the account.
+      operationId: listDoNotEmailLists
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: List of suppression lists
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        name:
+                          type: string
+                        count:
+                          type: integer
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v1/campaign-analytics:
+    get:
+      tags:
+      - Campaigns
+      summary: Get campaign analytics
+      description: Returns aggregate analytics data for a campaign.
+      operationId: getCampaignAnalytics
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: campaign_id
+        in: query
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Campaign analytics
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CampaignAnalytics'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v1/campaign-progress:
+    get:
+      tags:
+      - Campaigns
+      summary: Get campaign progress
+      description: Returns progress statistics for a running campaign.
+      operationId: getCampaignProgress
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: campaign_id
+        in: query
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Campaign progress
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total:
+                    type: integer
+                  sent:
+                    type: integer
+                  pending:
+                    type: integer
+                  finished:
+                    type: integer
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v1/campaign-recipients-activity:
+    get:
+      tags:
+      - Campaigns
+      summary: Get recipients activity report
+      description: Returns detailed activity report for campaign recipients.
+      operationId: getCampaignRecipientsActivity
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: campaign_id
+        in: query
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Recipients activity report
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/RecipientActivity'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v1/emails-sent:
+    get:
+      tags:
+      - Campaigns
+      summary: Get sent emails
+      description: Returns list of emails sent in a campaign.
+      operationId: getSentEmails
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: campaign_id
+        in: query
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Sent emails
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/SentEmail'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v1/emails-opens:
+    get:
+      tags:
+      - Campaigns
+      summary: Get campaign opens
+      description: Returns email open events for a campaign.
+      operationId: getCampaignOpens
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: campaign_id
+        in: query
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Campaign opens
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/EmailEvent'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v1/emails-clicks:
+    get:
+      tags:
+      - Campaigns
+      summary: Get campaign link clicks
+      description: Returns link click events for a campaign.
+      operationId: getCampaignClicks
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: campaign_id
+        in: query
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Campaign link clicks
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/EmailEvent'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v1/campaign-replies:
+    get:
+      tags:
+      - Campaigns
+      summary: Get all campaign replies
+      description: Returns all reply events across all email steps in a campaign.
+      operationId: getCampaignReplies
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: campaign_id
+        in: query
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Campaign replies
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/EmailReply'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v1/campaign-email-replies:
+    get:
+      tags:
+      - Campaigns
+      summary: Get campaign email replies
+      description: Returns reply events scoped to a specific email step.
+      operationId: getCampaignEmailReplies
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: campaign_id
+        in: query
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Campaign email replies
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/EmailReply'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  schemas:
+    CampaignAnalytics:
+      type: object
+      properties:
+        total_recipients:
+          type: integer
+        sent:
+          type: integer
+        delivered:
+          type: integer
+        opened:
+          type: integer
+        clicked:
+          type: integer
+        replied:
+          type: integer
+        bounced:
+          type: integer
+        unsubscribed:
+          type: integer
+        open_rate:
+          type: number
+          format: float
+        click_rate:
+          type: number
+          format: float
+        reply_rate:
+          type: number
+          format: float
+    Campaign:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        status:
+          type: string
+          enum:
+          - draft
+          - active
+          - paused
+          - stopped
+          - finished
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    EmailEvent:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        occurred_at:
+          type: string
+          format: date-time
+        step_number:
+          type: integer
+    EmailReply:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        first_name:
+          type: string
+        last_name:
+          type: string
+        reply_text:
+          type: string
+        replied_at:
+          type: string
+          format: date-time
+    Prospect:
+      type: object
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+          format: email
+        first_name:
+          type: string
+        last_name:
+          type: string
+        position:
+          type: string
+        company:
+          type: string
+        location:
+          type: string
+        custom_fields:
+          type: object
+          additionalProperties: true
+    SentEmail:
+      type: object
+      properties:
+        id:
+          type: integer
+        recipient_email:
+          type: string
+          format: email
+        subject:
+          type: string
+        sent_at:
+          type: string
+          format: date-time
+    EmailStepContent:
+      type: object
+      properties:
+        id:
+          type: integer
+        campaign_id:
+          type: integer
+        subject:
+          type: string
+        body:
+          type: string
+        step_number:
+          type: integer
+        delay_days:
+          type: integer
+    RecipientActivity:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        first_name:
+          type: string
+        last_name:
+          type: string
+        status:
+          type: string
+        opened:
+          type: boolean
+        clicked:
+          type: boolean
+        replied:
+          type: boolean
+        last_activity:
+          type: string
+          format: date-time
+    CampaignCreate:
+      type: object
+      required:
+      - name
+      properties:
+        name:
+          type: string
+        schedule_id:
+          type: integer
+        sender_account_id:
+          type: string
+        track_opens:
+          type: boolean
+        track_clicks:
+          type: boolean
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error code
+        message:
+          type: string
+          description: Human-readable error message
+  responses:
+    Unauthorized:
+      description: Unauthorized — missing or invalid Bearer token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    BadRequest:
+      description: Bad request — missing or invalid parameters
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  parameters:
+    ResourceId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: Resource ID
+    CampaignId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: Campaign ID
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Obtain a Bearer token via POST /v1/oauth/access_token using client credentials. Tokens expire after 3600 seconds.
