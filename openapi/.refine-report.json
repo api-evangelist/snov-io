@@ -1,0 +1,34 @@
+{
+  "provider": "snov-io",
+  "sources": [
+    "snov-io-authentication-api-openapi.yml",
+    "snov-io-campaigns-api-openapi.yml",
+    "snov-io-crm-pipeline-api-openapi.yml",
+    "snov-io-domain-search-api-openapi.yml",
+    "snov-io-email-accounts-api-openapi.yml",
+    "snov-io-email-finder-api-openapi.yml",
+    "snov-io-email-verification-api-openapi.yml",
+    "snov-io-email-warm-up-api-openapi.yml",
+    "snov-io-prospects-api-openapi.yml",
+    "snov-io-user-api-openapi.yml",
+    "snov-io-webhooks-api-openapi.yml"
+  ],
+  "outputs": [
+    "snov-io-authentication-api-openapi.yml",
+    "snov-io-campaigns-api-openapi.yml",
+    "snov-io-crm-pipeline-api-openapi.yml",
+    "snov-io-domain-search-api-openapi.yml",
+    "snov-io-email-accounts-api-openapi.yml",
+    "snov-io-email-finder-api-openapi.yml",
+    "snov-io-email-verification-api-openapi.yml",
+    "snov-io-email-warm-up-api-openapi.yml",
+    "snov-io-prospects-api-openapi.yml",
+    "snov-io-user-api-openapi.yml",
+    "snov-io-webhooks-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}
