@@ -1,0 +1,90 @@
+aid: snov
+name: Snov.io
+review:
+  question: Does Snov.io expose a documented public WebSocket API?
+  answer: false
+  date: '2026-07-01'
+  reviewer: API Evangelist
+  asyncapiSpecCreated: false
+  asyncapiScopeNote: |
+    Snov.io does not document any WebSocket (ws:// or wss://) surface. Its
+    asynchronous behavior is delivered over plain HTTPS: a POST to a /start
+    endpoint returns a task_hash, and results are retrieved by polling the
+    matching GET /result endpoint or by registering an outbound webhook_url.
+    Webhooks are provider-to-consumer HTTP callbacks, not a bidirectional
+    WebSocket transport, so no AsyncAPI document was authored.
+findings:
+  summary: |
+    Snov.io publishes a REST (HTTPS) API only, at https://api.snov.io. It
+    combines synchronous form-encoded v1 endpoints (auth, balance,
+    profile-by-email, prospect lists, campaign reporting) with an asynchronous
+    v2 start/result pattern for domain search, email finding, and email
+    verification. Long-running results are delivered either by polling a
+    /result endpoint with the returned task_hash or via an optional outbound
+    webhook_url. No realtime, bidirectional, or streaming WebSocket endpoint is
+    documented.
+  transports:
+    - protocol: REST
+      scheme: https
+      baseURL: https://api.snov.io
+      documented: true
+    - protocol: Webhook
+      scheme: https
+      note: Optional outbound HTTP callbacks (webhook_url) deliver async task results provider-to-consumer. Not WebSocket.
+      documented: true
+    - protocol: WebSocket
+      scheme: wss
+      documented: false
+      note: No WebSocket endpoint is documented anywhere in the Snov.io API reference or knowledge base as of the review date.
+  authentication:
+    scheme: OAuth2
+    grant: client_credentials
+    tokenUrl: https://api.snov.io/v1/oauth/access_token
+    tokenLifetimeSeconds: 3600
+    note: client_id is the account API User ID and client_secret is the API Secret from account settings.
+  endpointsConfirmedRest:
+    - POST https://api.snov.io/v1/oauth/access_token
+    - POST https://api.snov.io/v2/emails-by-domain-by-name/start
+    - GET  https://api.snov.io/v2/emails-by-domain-by-name/result
+    - POST https://api.snov.io/v2/company-domain-by-name/start
+    - GET  https://api.snov.io/v2/company-domain-by-name/result
+    - POST https://api.snov.io/v2/domain-search/start
+    - GET  https://api.snov.io/v2/domain-search/result/{task_hash}
+    - POST https://api.snov.io/v2/domain-search/prospects/start
+    - GET  https://api.snov.io/v2/domain-search/prospects/result/{task_hash}
+    - POST https://api.snov.io/v2/domain-search/domain-emails/start
+    - GET  https://api.snov.io/v2/domain-search/domain-emails/result/{task_hash}
+    - POST https://api.snov.io/v2/domain-search/generic-contacts/start
+    - GET  https://api.snov.io/v2/domain-search/generic-contacts/result/{task_hash}
+    - POST https://api.snov.io/v1/get-domain-emails-count
+    - POST https://api.snov.io/v2/email-verification/start
+    - GET  https://api.snov.io/v2/email-verification/result
+    - POST https://api.snov.io/v1/get-profile-by-email
+    - POST https://api.snov.io/v2/li-profiles-by-urls/start
+    - GET  https://api.snov.io/v2/li-profiles-by-urls/result
+    - GET  https://api.snov.io/v1/get-user-lists
+    - POST https://api.snov.io/v1/add-prospect-to-list
+    - POST https://api.snov.io/v1/prospect-list
+    - GET  https://api.snov.io/v1/get-user-campaigns
+    - GET  https://api.snov.io/v2/sender-accounts/emails
+    - POST https://api.snov.io/v2/sender-accounts/emails
+    - GET  https://api.snov.io/v2/warm-up
+    - POST https://api.snov.io/v2/warm-up
+    - GET  https://api.snov.io/v1/get-balance
+sources:
+  - url: https://snov.io/api
+    type: APIReference
+    note: Full REST reference; documents OAuth2 client_credentials, 60 req/min limit, and the v1/v2 endpoint families. No WebSocket mentioned.
+  - url: https://snov.io/knowledgebase/how-to-use-snov-io-api/
+    type: Documentation
+    note: Explains access token generation and the POST-start / GET-result task_hash pattern.
+  - url: https://snov.io/knowledgebase/how-to-use-domain-search-api/
+    type: Documentation
+    note: Domain search start/result flow, all over HTTPS.
+actions:
+  asyncapiPath: null
+  apisYmlUpdated: true
+  reason: |
+    No WebSocket protocol surface exists. Asynchronous delivery is HTTP polling
+    plus optional outbound webhooks, both of which are ordinary HTTP and are
+    already represented in the REST OpenAPI. No AsyncAPI document was authored.

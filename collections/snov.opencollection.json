@@ -1,0 +1,387 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Snov.io API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{accessToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Authentication",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get an OAuth2 access token",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.snov.io/v1/oauth/access_token",
+            "body": {
+              "type": "urlencoded",
+              "data": [
+                { "key": "grant_type", "value": "client_credentials" },
+                { "key": "client_id", "value": "{{clientId}}" },
+                { "key": "client_secret", "value": "{{clientSecret}}" }
+              ]
+            }
+          },
+          "docs": "Exchange the API User ID and API Secret for a one-hour Bearer access token."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Email Finder",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": { "name": "Start finding emails by name and domain", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.snov.io/v2/emails-by-domain-by-name/start",
+            "body": { "type": "json", "data": "{}" }
+          },
+          "docs": "Find verified emails from prospect first name, last name, and company domain. Returns a task_hash."
+        },
+        {
+          "info": { "name": "Get emails-by-name result", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.snov.io/v2/emails-by-domain-by-name/result?task_hash={{taskHash}}"
+          },
+          "docs": "Retrieve the found emails and statuses for a task_hash."
+        },
+        {
+          "info": { "name": "Start company domain lookup by name", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.snov.io/v2/company-domain-by-name/start",
+            "body": { "type": "urlencoded", "data": [ { "key": "name", "value": "" } ] }
+          },
+          "docs": "Retrieve a company website domain from a business name."
+        },
+        {
+          "info": { "name": "Get company domain lookup result", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.snov.io/v2/company-domain-by-name/result?task_hash={{taskHash}}"
+          },
+          "docs": "Retrieve the resolved company domain for a task_hash."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Domain Search",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": { "name": "Start a domain search", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.snov.io/v2/domain-search/start",
+            "body": { "type": "urlencoded", "data": [ { "key": "domain", "value": "" } ] }
+          },
+          "docs": "Start a company info and prospect search by domain."
+        },
+        {
+          "info": { "name": "Get domain search result", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.snov.io/v2/domain-search/result/{{taskHash}}"
+          },
+          "docs": "Retrieve company information for the domain."
+        },
+        {
+          "info": { "name": "Start prospect profile search for a domain", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.snov.io/v2/domain-search/prospects/start",
+            "body": { "type": "urlencoded", "data": [ { "key": "domain", "value": "" }, { "key": "positions", "value": "" } ] }
+          },
+          "docs": "Find prospect profiles for a domain with optional job position filters."
+        },
+        {
+          "info": { "name": "Get domain prospects result", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.snov.io/v2/domain-search/prospects/result/{{taskHash}}"
+          },
+          "docs": "Retrieve prospect profiles for the domain."
+        },
+        {
+          "info": { "name": "Start domain emails search", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.snov.io/v2/domain-search/domain-emails/start",
+            "body": { "type": "urlencoded", "data": [ { "key": "domain", "value": "" } ] }
+          },
+          "docs": "Search for unverified email addresses from a company domain."
+        },
+        {
+          "info": { "name": "Get domain emails result", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.snov.io/v2/domain-search/domain-emails/result/{{taskHash}}"
+          },
+          "docs": "Retrieve emails found for the domain."
+        },
+        {
+          "info": { "name": "Start generic contacts search", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.snov.io/v2/domain-search/generic-contacts/start",
+            "body": { "type": "urlencoded", "data": [ { "key": "domain", "value": "" } ] }
+          },
+          "docs": "Find generic company email addresses (orders@, sales@, info@)."
+        },
+        {
+          "info": { "name": "Get generic contacts result", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.snov.io/v2/domain-search/generic-contacts/result/{{taskHash}}"
+          },
+          "docs": "Retrieve generic contacts found for the domain."
+        },
+        {
+          "info": { "name": "Get domain emails count (free)", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.snov.io/v1/get-domain-emails-count",
+            "body": { "type": "urlencoded", "data": [ { "key": "domain", "value": "" } ] }
+          },
+          "docs": "Get the total count of emails available for a domain without consuming credits."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Email Verifier",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": { "name": "Start email verification", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.snov.io/v2/email-verification/start",
+            "body": { "type": "urlencoded", "data": [ { "key": "emails[]", "value": "" } ] }
+          },
+          "docs": "Verify up to 10 emails at once. Optionally supply a webhook_url for async delivery."
+        },
+        {
+          "info": { "name": "Get email verification result", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.snov.io/v2/email-verification/result?task_hash={{taskHash}}"
+          },
+          "docs": "Retrieve verification results with SMTP and quality signals."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Enrichment",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": { "name": "Get profile by email", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.snov.io/v1/get-profile-by-email",
+            "body": { "type": "urlencoded", "data": [ { "key": "email", "value": "" } ] }
+          },
+          "docs": "Retrieve comprehensive profile data connected to an email address."
+        },
+        {
+          "info": { "name": "Start LinkedIn profile enrichment", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.snov.io/v2/li-profiles-by-urls/start",
+            "body": { "type": "urlencoded", "data": [ { "key": "urls[]", "value": "" } ] }
+          },
+          "docs": "Extract complete profile information from LinkedIn member URLs."
+        },
+        {
+          "info": { "name": "Get LinkedIn profile enrichment result", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.snov.io/v2/li-profiles-by-urls/result?task_hash={{taskHash}}"
+          },
+          "docs": "Retrieve enriched LinkedIn profiles."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Prospects",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": { "name": "List the user's prospect lists", "type": "http" },
+          "http": { "method": "GET", "url": "https://api.snov.io/v1/get-user-lists" },
+          "docs": "Retrieve the user's prospect lists."
+        },
+        {
+          "info": { "name": "Create a new prospect list", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.snov.io/v1/lists",
+            "body": { "type": "urlencoded", "data": [ { "key": "name", "value": "" } ] }
+          },
+          "docs": "Create a new prospect list."
+        },
+        {
+          "info": { "name": "View prospects in a list", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.snov.io/v1/prospect-list",
+            "body": { "type": "urlencoded", "data": [ { "key": "listId", "value": "" } ] }
+          },
+          "docs": "Return the prospects contained in a list."
+        },
+        {
+          "info": { "name": "Add a prospect to a list", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.snov.io/v1/add-prospect-to-list",
+            "body": { "type": "urlencoded", "data": [ { "key": "email", "value": "" }, { "key": "listId", "value": "" } ] }
+          },
+          "docs": "Add an individual prospect to an existing list."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Campaigns",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": { "name": "List the user's drip campaigns", "type": "http" },
+          "http": { "method": "GET", "url": "https://api.snov.io/v1/get-user-campaigns" },
+          "docs": "Retrieve the user's campaigns."
+        },
+        {
+          "info": { "name": "Get emails sent for a campaign", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.snov.io/v1/get-emails-sent",
+            "body": { "type": "urlencoded", "data": [ { "key": "campaignId", "value": "" } ] }
+          },
+          "docs": "Retrieve emails sent in a campaign."
+        },
+        {
+          "info": { "name": "Get emails opened for a campaign", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.snov.io/v1/get-emails-opened",
+            "body": { "type": "urlencoded", "data": [ { "key": "campaignId", "value": "" } ] }
+          },
+          "docs": "Retrieve emails opened in a campaign."
+        },
+        {
+          "info": { "name": "Get emails clicked for a campaign", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.snov.io/v1/get-emails-clicked",
+            "body": { "type": "urlencoded", "data": [ { "key": "campaignId", "value": "" } ] }
+          },
+          "docs": "Retrieve emails clicked in a campaign."
+        },
+        {
+          "info": { "name": "Get email replies for a campaign", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.snov.io/v1/get-emails-replies",
+            "body": { "type": "urlencoded", "data": [ { "key": "campaignId", "value": "" } ] }
+          },
+          "docs": "Retrieve email replies in a campaign."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Sender Accounts",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": { "name": "List connected email sender accounts (free)", "type": "http" },
+          "http": { "method": "GET", "url": "https://api.snov.io/v2/sender-accounts/emails" },
+          "docs": "Retrieve all connected email sender accounts in the workspace."
+        },
+        {
+          "info": { "name": "Connect a new email sender account", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.snov.io/v2/sender-accounts/emails",
+            "body": { "type": "json", "data": "{}" }
+          },
+          "docs": "Connect a new SMTP/IMAP email account for campaign sending."
+        },
+        {
+          "info": { "name": "Check SMTP/IMAP status of a sender account", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.snov.io/v2/sender-accounts/check-sender-status?sender_account_id={{senderAccountId}}"
+          },
+          "docs": "Verify current SMTP and IMAP connection validity and retrieve errors."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Warm-up",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": { "name": "List warm-up campaigns", "type": "http" },
+          "http": { "method": "GET", "url": "https://api.snov.io/v2/warm-up" },
+          "docs": "Retrieve a paginated list of warm-up campaigns."
+        },
+        {
+          "info": { "name": "Create a warm-up campaign", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.snov.io/v2/warm-up",
+            "body": { "type": "json", "data": "{}" }
+          },
+          "docs": "Initiate email warm-up to build sender reputation gradually."
+        },
+        {
+          "info": { "name": "Get warm-up campaign details", "type": "http" },
+          "http": { "method": "GET", "url": "https://api.snov.io/v2/warm-up/{{warmupId}}" },
+          "docs": "Access full warm-up campaign configuration and current statistics."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "User",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": { "name": "Check the account credit balance (free)", "type": "http" },
+          "http": { "method": "GET", "url": "https://api.snov.io/v1/get-balance" },
+          "docs": "Return the current credit balance and plan usage for the API account."
+        }
+      ]
+    }
+  ]
+}

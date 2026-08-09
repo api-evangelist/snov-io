@@ -1,0 +1,367 @@
+{
+  "info": {
+    "name": "Snov.io API",
+    "description": "Snov.io sales engagement REST API. OAuth2 client_credentials access token; v1 form-encoded endpoints plus v2 asynchronous start/result (task_hash) endpoints. Rate limited to 60 requests per minute.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "https://api.snov.io" },
+    { "key": "clientId", "value": "" },
+    { "key": "clientSecret", "value": "" },
+    { "key": "accessToken", "value": "" },
+    { "key": "taskHash", "value": "" }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [ { "key": "token", "value": "{{accessToken}}", "type": "string" } ]
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Get an OAuth2 access token",
+          "request": {
+            "method": "POST",
+            "auth": { "type": "noauth" },
+            "header": [ { "key": "Content-Type", "value": "application/x-www-form-urlencoded" } ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "grant_type", "value": "client_credentials" },
+                { "key": "client_id", "value": "{{clientId}}" },
+                { "key": "client_secret", "value": "{{clientSecret}}" }
+              ]
+            },
+            "url": { "raw": "{{baseUrl}}/v1/oauth/access_token", "host": [ "{{baseUrl}}" ], "path": [ "v1", "oauth", "access_token" ] },
+            "description": "Exchange the API User ID and API Secret for a one-hour Bearer access token."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Email Finder",
+      "item": [
+        {
+          "name": "Start finding emails by name and domain",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": { "mode": "raw", "raw": "{\n  \"rows\": [\n    { \"first_name\": \"Jane\", \"last_name\": \"Doe\", \"domain\": \"example.com\" }\n  ]\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/v2/emails-by-domain-by-name/start", "host": [ "{{baseUrl}}" ], "path": [ "v2", "emails-by-domain-by-name", "start" ] },
+            "description": "Find verified emails from prospect name and domain. Returns a task_hash."
+          }
+        },
+        {
+          "name": "Get emails-by-name result",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/v2/emails-by-domain-by-name/result?task_hash={{taskHash}}", "host": [ "{{baseUrl}}" ], "path": [ "v2", "emails-by-domain-by-name", "result" ], "query": [ { "key": "task_hash", "value": "{{taskHash}}" } ] }
+          }
+        },
+        {
+          "name": "Start company domain lookup by name",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/x-www-form-urlencoded" } ],
+            "body": { "mode": "urlencoded", "urlencoded": [ { "key": "name", "value": "" } ] },
+            "url": { "raw": "{{baseUrl}}/v2/company-domain-by-name/start", "host": [ "{{baseUrl}}" ], "path": [ "v2", "company-domain-by-name", "start" ] }
+          }
+        },
+        {
+          "name": "Get company domain lookup result",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/v2/company-domain-by-name/result?task_hash={{taskHash}}", "host": [ "{{baseUrl}}" ], "path": [ "v2", "company-domain-by-name", "result" ], "query": [ { "key": "task_hash", "value": "{{taskHash}}" } ] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Domain Search",
+      "item": [
+        {
+          "name": "Start a domain search",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/x-www-form-urlencoded" } ],
+            "body": { "mode": "urlencoded", "urlencoded": [ { "key": "domain", "value": "" } ] },
+            "url": { "raw": "{{baseUrl}}/v2/domain-search/start", "host": [ "{{baseUrl}}" ], "path": [ "v2", "domain-search", "start" ] }
+          }
+        },
+        {
+          "name": "Get domain search result",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/v2/domain-search/result/{{taskHash}}", "host": [ "{{baseUrl}}" ], "path": [ "v2", "domain-search", "result", "{{taskHash}}" ] }
+          }
+        },
+        {
+          "name": "Start prospect profile search for a domain",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/x-www-form-urlencoded" } ],
+            "body": { "mode": "urlencoded", "urlencoded": [ { "key": "domain", "value": "" }, { "key": "positions", "value": "" } ] },
+            "url": { "raw": "{{baseUrl}}/v2/domain-search/prospects/start", "host": [ "{{baseUrl}}" ], "path": [ "v2", "domain-search", "prospects", "start" ] }
+          }
+        },
+        {
+          "name": "Get domain prospects result",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/v2/domain-search/prospects/result/{{taskHash}}", "host": [ "{{baseUrl}}" ], "path": [ "v2", "domain-search", "prospects", "result", "{{taskHash}}" ] }
+          }
+        },
+        {
+          "name": "Start domain emails search",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/x-www-form-urlencoded" } ],
+            "body": { "mode": "urlencoded", "urlencoded": [ { "key": "domain", "value": "" } ] },
+            "url": { "raw": "{{baseUrl}}/v2/domain-search/domain-emails/start", "host": [ "{{baseUrl}}" ], "path": [ "v2", "domain-search", "domain-emails", "start" ] }
+          }
+        },
+        {
+          "name": "Get domain emails result",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/v2/domain-search/domain-emails/result/{{taskHash}}", "host": [ "{{baseUrl}}" ], "path": [ "v2", "domain-search", "domain-emails", "result", "{{taskHash}}" ] }
+          }
+        },
+        {
+          "name": "Start generic contacts search",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/x-www-form-urlencoded" } ],
+            "body": { "mode": "urlencoded", "urlencoded": [ { "key": "domain", "value": "" } ] },
+            "url": { "raw": "{{baseUrl}}/v2/domain-search/generic-contacts/start", "host": [ "{{baseUrl}}" ], "path": [ "v2", "domain-search", "generic-contacts", "start" ] }
+          }
+        },
+        {
+          "name": "Get generic contacts result",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/v2/domain-search/generic-contacts/result/{{taskHash}}", "host": [ "{{baseUrl}}" ], "path": [ "v2", "domain-search", "generic-contacts", "result", "{{taskHash}}" ] }
+          }
+        },
+        {
+          "name": "Get domain emails count (free)",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/x-www-form-urlencoded" } ],
+            "body": { "mode": "urlencoded", "urlencoded": [ { "key": "domain", "value": "" } ] },
+            "url": { "raw": "{{baseUrl}}/v1/get-domain-emails-count", "host": [ "{{baseUrl}}" ], "path": [ "v1", "get-domain-emails-count" ] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Email Verifier",
+      "item": [
+        {
+          "name": "Start email verification",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/x-www-form-urlencoded" } ],
+            "body": { "mode": "urlencoded", "urlencoded": [ { "key": "emails[]", "value": "" } ] },
+            "url": { "raw": "{{baseUrl}}/v2/email-verification/start", "host": [ "{{baseUrl}}" ], "path": [ "v2", "email-verification", "start" ] },
+            "description": "Verify up to 10 emails at once. Optionally supply webhook_url for async delivery."
+          }
+        },
+        {
+          "name": "Get email verification result",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/v2/email-verification/result?task_hash={{taskHash}}", "host": [ "{{baseUrl}}" ], "path": [ "v2", "email-verification", "result" ], "query": [ { "key": "task_hash", "value": "{{taskHash}}" } ] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Enrichment",
+      "item": [
+        {
+          "name": "Get profile by email",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/x-www-form-urlencoded" } ],
+            "body": { "mode": "urlencoded", "urlencoded": [ { "key": "email", "value": "" } ] },
+            "url": { "raw": "{{baseUrl}}/v1/get-profile-by-email", "host": [ "{{baseUrl}}" ], "path": [ "v1", "get-profile-by-email" ] }
+          }
+        },
+        {
+          "name": "Start LinkedIn profile enrichment",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/x-www-form-urlencoded" } ],
+            "body": { "mode": "urlencoded", "urlencoded": [ { "key": "urls[]", "value": "" } ] },
+            "url": { "raw": "{{baseUrl}}/v2/li-profiles-by-urls/start", "host": [ "{{baseUrl}}" ], "path": [ "v2", "li-profiles-by-urls", "start" ] }
+          }
+        },
+        {
+          "name": "Get LinkedIn profile enrichment result",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/v2/li-profiles-by-urls/result?task_hash={{taskHash}}", "host": [ "{{baseUrl}}" ], "path": [ "v2", "li-profiles-by-urls", "result" ], "query": [ { "key": "task_hash", "value": "{{taskHash}}" } ] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Prospects",
+      "item": [
+        {
+          "name": "List the user's prospect lists",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/v1/get-user-lists", "host": [ "{{baseUrl}}" ], "path": [ "v1", "get-user-lists" ] }
+          }
+        },
+        {
+          "name": "Create a new prospect list",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/x-www-form-urlencoded" } ],
+            "body": { "mode": "urlencoded", "urlencoded": [ { "key": "name", "value": "" } ] },
+            "url": { "raw": "{{baseUrl}}/v1/lists", "host": [ "{{baseUrl}}" ], "path": [ "v1", "lists" ] }
+          }
+        },
+        {
+          "name": "View prospects in a list",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/x-www-form-urlencoded" } ],
+            "body": { "mode": "urlencoded", "urlencoded": [ { "key": "listId", "value": "" } ] },
+            "url": { "raw": "{{baseUrl}}/v1/prospect-list", "host": [ "{{baseUrl}}" ], "path": [ "v1", "prospect-list" ] }
+          }
+        },
+        {
+          "name": "Add a prospect to a list",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/x-www-form-urlencoded" } ],
+            "body": { "mode": "urlencoded", "urlencoded": [ { "key": "email", "value": "" }, { "key": "listId", "value": "" } ] },
+            "url": { "raw": "{{baseUrl}}/v1/add-prospect-to-list", "host": [ "{{baseUrl}}" ], "path": [ "v1", "add-prospect-to-list" ] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Campaigns",
+      "item": [
+        {
+          "name": "List the user's drip campaigns",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/v1/get-user-campaigns", "host": [ "{{baseUrl}}" ], "path": [ "v1", "get-user-campaigns" ] }
+          }
+        },
+        {
+          "name": "Get emails sent for a campaign",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/x-www-form-urlencoded" } ],
+            "body": { "mode": "urlencoded", "urlencoded": [ { "key": "campaignId", "value": "" } ] },
+            "url": { "raw": "{{baseUrl}}/v1/get-emails-sent", "host": [ "{{baseUrl}}" ], "path": [ "v1", "get-emails-sent" ] }
+          }
+        },
+        {
+          "name": "Get emails opened for a campaign",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/x-www-form-urlencoded" } ],
+            "body": { "mode": "urlencoded", "urlencoded": [ { "key": "campaignId", "value": "" } ] },
+            "url": { "raw": "{{baseUrl}}/v1/get-emails-opened", "host": [ "{{baseUrl}}" ], "path": [ "v1", "get-emails-opened" ] }
+          }
+        },
+        {
+          "name": "Get emails clicked for a campaign",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/x-www-form-urlencoded" } ],
+            "body": { "mode": "urlencoded", "urlencoded": [ { "key": "campaignId", "value": "" } ] },
+            "url": { "raw": "{{baseUrl}}/v1/get-emails-clicked", "host": [ "{{baseUrl}}" ], "path": [ "v1", "get-emails-clicked" ] }
+          }
+        },
+        {
+          "name": "Get email replies for a campaign",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/x-www-form-urlencoded" } ],
+            "body": { "mode": "urlencoded", "urlencoded": [ { "key": "campaignId", "value": "" } ] },
+            "url": { "raw": "{{baseUrl}}/v1/get-emails-replies", "host": [ "{{baseUrl}}" ], "path": [ "v1", "get-emails-replies" ] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Sender Accounts",
+      "item": [
+        {
+          "name": "List connected email sender accounts (free)",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/v2/sender-accounts/emails", "host": [ "{{baseUrl}}" ], "path": [ "v2", "sender-accounts", "emails" ] }
+          }
+        },
+        {
+          "name": "Connect a new email sender account",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": { "mode": "raw", "raw": "{\n  \"sender_name\": \"\",\n  \"email_from\": \"\",\n  \"password\": \"\",\n  \"smtp_host\": \"\",\n  \"smtp_port\": 587,\n  \"smtp_encryption\": \"tls\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/v2/sender-accounts/emails", "host": [ "{{baseUrl}}" ], "path": [ "v2", "sender-accounts", "emails" ] }
+          }
+        },
+        {
+          "name": "Check SMTP/IMAP status of a sender account",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/v2/sender-accounts/check-sender-status?sender_account_id={{senderAccountId}}", "host": [ "{{baseUrl}}" ], "path": [ "v2", "sender-accounts", "check-sender-status" ], "query": [ { "key": "sender_account_id", "value": "{{senderAccountId}}" } ] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Warm-up",
+      "item": [
+        {
+          "name": "List warm-up campaigns",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/v2/warm-up", "host": [ "{{baseUrl}}" ], "path": [ "v2", "warm-up" ] }
+          }
+        },
+        {
+          "name": "Create a warm-up campaign",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": { "mode": "raw", "raw": "{\n  \"sender_account_id\": 0,\n  \"strategy\": \"progressive\",\n  \"daily_goal\": 20\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/v2/warm-up", "host": [ "{{baseUrl}}" ], "path": [ "v2", "warm-up" ] }
+          }
+        },
+        {
+          "name": "Get warm-up campaign details",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/v2/warm-up/{{warmupId}}", "host": [ "{{baseUrl}}" ], "path": [ "v2", "warm-up", "{{warmupId}}" ] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "User",
+      "item": [
+        {
+          "name": "Check the account credit balance (free)",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/v1/get-balance", "host": [ "{{baseUrl}}" ], "path": [ "v1", "get-balance" ] },
+            "description": "Return the current credit balance and plan usage for the API account."
+          }
+        }
+      ]
+    }
+  ]
+}
