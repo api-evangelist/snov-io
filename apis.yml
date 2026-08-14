@@ -17,10 +17,10 @@ accessModel:
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/snov-io.png
 url: https://raw.githubusercontent.com/api-evangelist/snov-io/refs/heads/main/apis.yml
 created: '2026-06-12'
-modified: '2026-08-08'
+modified: '2026-08-13'
 artifacts:
 - type: OpenAPI
-  url: openapi/snov-io-openapi.yml
+  url: openapi/_original/snov-io-openapi.yml
 - type: JSONLDContext
   url: json-ld/snov-io-context.jsonld
 specificationVersion: '0.19'
@@ -30,6 +30,11 @@ description: Snov.io is a sales automation and lead generation platform serving 
   Authentication uses OAuth 2.0 client credentials to obtain short-lived Bearer tokens, and all API operations
   consume credits from the account balance. The API covers the full sales outreach lifecycle from prospect
   discovery and contact enrichment through multi-channel campaign execution and CRM pipeline management.
+  Snov.io also operates a first-party remote Model Context Protocol server at https://mcp.snov.io/mcp,
+  documented as exposing more than 100 actions to AI assistants and gated by a separate OAuth authorization
+  code flow with PKCE and dynamic client registration. The two surfaces are disjoint — campaigns, warm-up,
+  sender accounts and webhooks are REST-only, while Sales CRM writes and all LinkedIn outreach actions are
+  reachable only over MCP.
 tags:
 - Sales Automation
 - Email Finder
@@ -109,13 +114,15 @@ apis:
 - aid: snov-io:snov-io-authentication-api
   name: Snov.io Authentication API
   description: OAuth 2.0 token management
-  humanURL: https://snov.io/email-finder-api
+  humanURL: https://snov.io/api
   baseURL: https://api.snov.io
   tags:
   - Authentication
   properties:
   - type: OpenAPI
     url: openapi/snov-io-authentication-api-openapi.yml
+  - type: Overlay
+    url: overlays/snov-io-authentication-api-overlay.yaml
   - type: Documentation
     url: https://snov.io/api
   - type: GraphQL
@@ -123,13 +130,15 @@ apis:
 - aid: snov-io:snov-io-campaigns-api
   name: Snov.io Campaigns API
   description: Create and manage multi-channel outreach campaigns
-  humanURL: https://snov.io/email-finder-api
+  humanURL: https://snov.io/api
   baseURL: https://api.snov.io
   tags:
   - Campaigns
   properties:
   - type: OpenAPI
     url: openapi/snov-io-campaigns-api-openapi.yml
+  - type: Overlay
+    url: overlays/snov-io-campaigns-api-overlay.yaml
   - type: Documentation
     url: https://snov.io/api
   - type: GraphQL
@@ -137,13 +146,15 @@ apis:
 - aid: snov-io:snov-io-crm-pipeline-api
   name: Snov.io CRM Pipeline API
   description: CRM pipeline and stage management
-  humanURL: https://snov.io/email-finder-api
+  humanURL: https://snov.io/api
   baseURL: https://api.snov.io
   tags:
   - CRM Pipeline
   properties:
   - type: OpenAPI
     url: openapi/snov-io-crm-pipeline-api-openapi.yml
+  - type: Overlay
+    url: overlays/snov-io-crm-pipeline-api-overlay.yaml
   - type: Documentation
     url: https://snov.io/api
   - type: GraphQL
@@ -151,13 +162,15 @@ apis:
 - aid: snov-io:snov-io-domain-search-api
   name: Snov.io Domain Search API
   description: Search for company information and email addresses by domain
-  humanURL: https://snov.io/email-finder-api
+  humanURL: https://snov.io/api
   baseURL: https://api.snov.io
   tags:
   - Domain Search
   properties:
   - type: OpenAPI
     url: openapi/snov-io-domain-search-api-openapi.yml
+  - type: Overlay
+    url: overlays/snov-io-domain-search-api-overlay.yaml
   - type: Documentation
     url: https://snov.io/api
   - type: GraphQL
@@ -165,13 +178,15 @@ apis:
 - aid: snov-io:snov-io-email-accounts-api
   name: Snov.io Email Accounts API
   description: Manage sender email accounts
-  humanURL: https://snov.io/email-finder-api
+  humanURL: https://snov.io/api
   baseURL: https://api.snov.io
   tags:
   - Email Accounts
   properties:
   - type: OpenAPI
     url: openapi/snov-io-email-accounts-api-openapi.yml
+  - type: Overlay
+    url: overlays/snov-io-email-accounts-api-overlay.yaml
   - type: Documentation
     url: https://snov.io/api
   - type: GraphQL
@@ -186,6 +201,8 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/snov-io-email-finder-api-openapi.yml
+  - type: Overlay
+    url: overlays/snov-io-email-finder-api-overlay.yaml
   - type: Documentation
     url: https://snov.io/api
   - type: GraphQL
@@ -193,13 +210,15 @@ apis:
 - aid: snov-io:snov-io-email-verification-api
   name: Snov.io Email Verification API
   description: Verify email deliverability and validity
-  humanURL: https://snov.io/email-finder-api
+  humanURL: https://snov.io/email-verification-api
   baseURL: https://api.snov.io
   tags:
   - Email Verification
   properties:
   - type: OpenAPI
     url: openapi/snov-io-email-verification-api-openapi.yml
+  - type: Overlay
+    url: overlays/snov-io-email-verification-api-overlay.yaml
   - type: Documentation
     url: https://snov.io/api
   - type: GraphQL
@@ -207,13 +226,15 @@ apis:
 - aid: snov-io:snov-io-email-warm-up-api
   name: Snov.io Email Warm-up API
   description: Manage email warm-up campaigns for improved deliverability
-  humanURL: https://snov.io/email-finder-api
+  humanURL: https://snov.io/api
   baseURL: https://api.snov.io
   tags:
   - Email Warm-up
   properties:
   - type: OpenAPI
     url: openapi/snov-io-email-warm-up-api-openapi.yml
+  - type: Overlay
+    url: overlays/snov-io-email-warm-up-api-overlay.yaml
   - type: Documentation
     url: https://snov.io/api
   - type: GraphQL
@@ -221,13 +242,15 @@ apis:
 - aid: snov-io:snov-io-prospects-api
   name: Snov.io Prospects API
   description: Manage prospect records and lists
-  humanURL: https://snov.io/email-finder-api
+  humanURL: https://snov.io/api
   baseURL: https://api.snov.io
   tags:
   - Prospects
   properties:
   - type: OpenAPI
     url: openapi/snov-io-prospects-api-openapi.yml
+  - type: Overlay
+    url: overlays/snov-io-prospects-api-overlay.yaml
   - type: Documentation
     url: https://snov.io/api
   - type: GraphQL
@@ -235,13 +258,15 @@ apis:
 - aid: snov-io:snov-io-user-api
   name: Snov.io User API
   description: User account management
-  humanURL: https://snov.io/email-finder-api
+  humanURL: https://snov.io/api
   baseURL: https://api.snov.io
   tags:
   - User
   properties:
   - type: OpenAPI
     url: openapi/snov-io-user-api-openapi.yml
+  - type: Overlay
+    url: overlays/snov-io-user-api-overlay.yaml
   - type: Documentation
     url: https://snov.io/api
   - type: GraphQL
@@ -249,17 +274,44 @@ apis:
 - aid: snov-io:snov-io-webhooks-api
   name: Snov.io Webhooks API
   description: Real-time event webhook subscriptions
-  humanURL: https://snov.io/email-finder-api
+  humanURL: https://snov.io/api
   baseURL: https://api.snov.io
   tags:
   - Webhooks
   properties:
   - type: OpenAPI
     url: openapi/snov-io-webhooks-api-openapi.yml
+  - type: Overlay
+    url: overlays/snov-io-webhooks-api-overlay.yaml
   - type: Documentation
     url: https://snov.io/api
   - type: GraphQL
     url: graphql/snov-io-graphql.md
+- aid: snov-io:snov-io-mcp-server
+  name: Snov.io Outreach MCP Server
+  description: First-party remote Model Context Protocol server exposing 100+ Snov.io actions to AI assistants
+    — prospect search and enrichment, list and folder management, email verification, Sales CRM (pipelines,
+    deals, notes, loss reasons, tasks) and LinkedIn account setup and outreach. OAuth-gated with PKCE and
+    dynamic client registration; available on every plan including the free Trial.
+  humanURL: https://snov.io/mcp
+  baseURL: https://mcp.snov.io/mcp
+  tags:
+  - MCP
+  - Agent Surface
+  - Sales Automation
+  - LinkedIn Automation
+  - CRM
+  properties:
+  - type: MCPServer
+    url: mcp/snov-io-mcp.yml
+  - type: ToolCrosswalk
+    url: mcp/snov-io-tool-crosswalk.yml
+  - type: Documentation
+    url: https://snov.io/knowledgebase/how-to-use-snov-io-mcp-with-your-ai-assistant/
+  - type: OAuthScopes
+    url: scopes/snov-io-scopes.yml
+  - type: Authentication
+    url: authentication/snov-io-authentication.yml
 common:
 - type: AgenticAccess
   url: agentic-access/snov-io-agentic-access.yml
@@ -274,7 +326,7 @@ common:
 - type: Knowledgebase
   url: https://snov.io/knowledgebase/
 - type: GitHubOrganization
-  url: https://github.com/snovio
+  url: https://github.com/devsnovio
 - type: LinkedIn
   url: https://www.linkedin.com/company/snovio
 - type: Blog
@@ -293,8 +345,69 @@ common:
   url: finops/snov-io-finops.yml
 - type: OAuthScopes
   url: scopes/snov-io-scopes.yml
+- type: MCPServer
+  url: mcp/snov-io-mcp.yml
+- type: ToolCrosswalk
+  url: mcp/snov-io-tool-crosswalk.yml
+- type: WellKnown
+  url: well-known/snov-io-well-known.yml
+- type: Packages
+  url: packages/snov-io-packages.yml
+- type: LLMsTxt
+  url: llms/snov-io-llms.txt
+- type: Conventions
+  url: conventions/snov-io-conventions.yml
+- type: ErrorCatalog
+  url: errors/snov-io-problem-types.yml
+- type: Lifecycle
+  url: lifecycle/snov-io-lifecycle.yml
+- type: Conformance
+  url: conformance/snov-io-conformance.yml
+- type: Compliance
+  url: security/snov-io-trust-center.yml
+- type: TrustCenter
+  url: security/snov-io-trust-center.yml
+- type: DataModel
+  url: data-model/snov-io-data-model.yml
+- type: ChangeLog
+  url: changelog/snov-io-changelog.yml
+- type: Webhooks
+  url: asyncapi/snov-io-webhooks.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: GraphQL
+  url: graphql/snov-io-graphql.md
+- type: APIReference
+  url: https://snov.io/api
+- type: DeveloperPortal
+  url: https://snov.io/api
+- type: GettingStarted
+  url: https://snov.io/knowledgebase/how-to-use-snov-io-api/
+- type: Support
+  url: https://snov.io/contact-us
+- type: HelpCenter
+  url: https://snov.io/knowledgebase/
+- type: SignUp
+  url: https://app.snov.io/register
+- type: Login
+  url: https://app.snov.io/login
+- type: TermsOfService
+  url: https://snov.io/terms-and-conditions
+- type: PrivacyPolicy
+  url: https://snov.io/privacy-policy
+- type: SecurityCenter
+  url: https://snov.io/security-center
+- type: ReleaseNotes
+  url: https://snov.io/release-notes
+- type: Integrations
+  url: https://snov.io/integrations
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 x-merged-from:
 - snov
+x-enrichment:
+  date: '2026-08-13'
+  status: enriched
+  artifacts_added: 30
+  pass: local-v1
