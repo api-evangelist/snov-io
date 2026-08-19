@@ -23,7 +23,7 @@ artifacts:
   url: openapi/_original/snov-io-openapi.yml
 - type: JSONLDContext
   url: json-ld/snov-io-context.jsonld
-specificationVersion: '0.19'
+specificationVersion: '0.23'
 description: Snov.io is a sales automation and lead generation platform serving over 300,000 companies
   across 180+ countries. The platform provides a REST API enabling developers to programmatically access
   email finding, domain search, email verification, drip campaign management, and LinkedIn prospect automation.
