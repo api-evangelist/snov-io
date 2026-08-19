@@ -1,0 +1,203 @@
+name: Snov.io API Conventions
+specificationVersion: '0.1'
+generated: '2026-08-13'
+method: searched
+source: https://snov.io/api
+description: >-
+  Cross-cutting runtime semantics for the Snov.io REST API, read from the published reference at
+  https://snov.io/api and cross-checked against openapi/. Two conventions dominate everything
+  else: a two-step async task_hash pattern on every search/enrichment operation, and a
+  credit-metered request model where the same call costs money or is free depending on whether
+  it returns a result. Snov.io publishes NO idempotency mechanism, NO request-id tracing header
+  and NO rate-limit response headers.
+
+authentication:
+  style: oauth2-client-credentials-to-bearer
+  token_endpoint: https://api.snov.io/v1/oauth/access_token
+  grant_type: client_credentials
+  credentials_source: https://app.snov.io/account/api
+  header: 'Authorization: Bearer <access_token>'
+  token_ttl_seconds: 3600
+  refresh: Re-POST the token endpoint; there is no refresh_token grant on the REST API.
+  note: >-
+    The MCP server at https://mcp.snov.io/mcp uses a completely different credential path —
+    authorization_code + PKCE against https://app.snov.io — and the two are not interchangeable.
+    See authentication/snov-io-authentication.yml.
+  cross_reference: authentication/snov-io-authentication.yml
+
+idempotency:
+  supported: false
+  header: null
+  scope: null
+  retention: null
+  evidence: >-
+    The word "idempotent"/"idempotency" appears zero times in the full text of
+    https://snov.io/api (242 KB extracted 2026-08-13). No Idempotency-Key header, no request
+    fingerprinting, no replay window is documented for any operation, including credit-consuming
+    POSTs such as /v2/email-verification/start and /v1/add-prospect-to-list.
+  consequence: >-
+    A retried POST after a timeout can double-charge credits. Callers must dedupe client-side.
+    This is the reason no `type: Idempotency` pointer is wired in apis.yml.
+
+asynchronous_task_pattern:
+  supported: true
+  shape: two-step start/result
+  description: >-
+    Every search, enrichment and verification operation is split into a POST .../start that
+    returns a `task_hash`, and a GET .../result that is polled with that hash until `status`
+    flips from `in_progress` to `completed`. This is Snov.io's defining API convention and it
+    applies across domain search, database search, email finder, LinkedIn enrichment and email
+    verification.
+  correlation_field: task_hash
+  status_field: status
+  status_values:
+    - in_progress
+    - completed
+  callback_alternative:
+    parameter: webhook_url
+    description: >-
+      Most /start operations accept a `webhook_url` input parameter. Supplying it makes Snov.io
+      POST the completed result to that URL instead of requiring the caller to poll — a real
+      push alternative, not just a notification.
+    cross_reference: asyncapi/snov-io-webhooks.yml
+  examples:
+    - startDomainSearch -> getDomainSearchResult
+    - startEmailVerification -> getEmailVerificationResult
+    - startFindEmailsByName -> getFindEmailsByNameResult
+    - startLinkedInProfileEnrichment -> getLinkedInProfileEnrichmentResult
+
+pagination:
+  style: page-number
+  parameters:
+    - name: page
+      type: integer
+      default: 1
+      minimum: 1
+    - name: per_page
+      type: integer
+      default: 20
+      allowed_values: [20, 50, 100]
+  response_fields:
+    - meta
+    - data
+  note: >-
+    v2 collection endpoints (warm-up campaigns, campaigns, sender accounts) use page/per_page
+    with an enumerated per_page. Older v1 endpoints are inconsistent — several return the whole
+    collection with no paging parameters at all. There is no cursor, no total-pages field
+    documented, and no Link header.
+
+response_envelope:
+  success_shape: |
+    { "data": <object|array>, "meta": { ... } }
+  legacy_shape: |
+    { "success": true, "data": { ... } }
+  note: >-
+    Two envelopes coexist. v2 endpoints wrap payloads in `data` with a sibling `meta` block
+    holding request echo and counts. Several v1 endpoints instead return a boolean `success`
+    flag alongside `data`, and a few return `success` plus an `errors` array. A client must
+    handle both.
+  error_shape: |
+    { "errors": { "code": 404, "title": "Sorry, but url or entity not found", "source": "" } }
+  cross_reference: errors/snov-io-problem-types.yml
+
+field_expansion:
+  supported: false
+  note: No sparse-fieldset, `expand`, `fields` or `include` parameter is documented anywhere.
+
+metadata:
+  custom_fields: true
+  description: >-
+    Prospects support user-defined custom fields. `GET /v1/prospect-custom-fields` returns the
+    account's field definitions, which must be read before writing a prospect so the right keys
+    are supplied. There is no generic key/value `metadata` bag on other resources.
+
+request_tracing:
+  request_id_header: null
+  correlation_id: task_hash
+  note: >-
+    No X-Request-Id, X-Correlation-Id or trace header is documented on any response. The only
+    server-issued correlator is the per-task `task_hash`, which is scoped to one async job, not
+    to a request. There is no documented way to reference a failed call in a support ticket.
+
+versioning:
+  style: path-prefix
+  versions:
+    - v1
+    - v2
+  current: mixed
+  note: >-
+    v1 and v2 are live simultaneously and are NOT parallel generations of the same API — they
+    are different slices of the surface. Campaign analytics reads sit on /v1 while campaign
+    management sits on /v2; webhooks, pipelines, sender accounts and warm-up are v2-only;
+    balance, prospects and do-not-email lists are v1-only. There is no announced migration and
+    no v1 deprecation notice.
+  cross_reference: lifecycle/snov-io-lifecycle.yml
+
+rate_limit_signalling:
+  documented_limit: 60 requests per minute across all methods
+  response_headers: []
+  status_on_exhaustion: null
+  retry_after: false
+  note: >-
+    Snov.io states the limit in prose and returns nothing machine-readable. No X-RateLimit-*,
+    no RateLimit-* (RFC 9331), no Retry-After. An agent cannot back off on signal; it must
+    pace at 1 req/s by construction.
+  cross_reference: rate-limits/snov-io-rate-limits.yml
+
+metering:
+  model: credits + recipients
+  description: >-
+    Most read operations deduct 1 credit per RESULT, not per request, and several are explicitly
+    free when they return nothing — "If we find no information about the email owner in our
+    database, you will not be charged for the request." A handful of endpoints are marked Free
+    in the docs (get-domain-emails-count, sender account listing). Campaign sends draw on a
+    separate `recipients` quota where follow-ups within a billing period are free.
+  balance_operation: getUserBalance
+  cross_reference: finops/snov-io-finops.yml
+
+content_types:
+  request:
+    - application/x-www-form-urlencoded
+    - application/json
+  response:
+    - application/json
+  note: >-
+    Mixed. v1 endpoints in the docs are demonstrated with form-encoded POST bodies
+    (http_build_query in the PHP examples); v2 endpoints specify `Content-Type: application/json`
+    explicitly. Follow the per-endpoint example.
+
+spec_drift:
+  note: >-
+    Recorded for auditability. The OpenAPI documents in openapi/ are API Evangelist generations,
+    not provider-published artifacts, and a 2026-08-13 re-read of https://snov.io/api found 22
+    path templates that no longer matched the published reference. Those were repaired in place
+    against the docs. The following documented gaps remain and were NOT invented into the specs.
+  repaired: 22
+  outstanding:
+    - operationId: getRecipientStatus
+      documented_path: GET /v2/campaigns/{campaign_id}/recipient
+      issue: spec carries no campaign_id path parameter
+    - operationId: getCampaignProgress
+      documented_path: GET /v2/campaigns/{campaign_id}/progress
+      issue: spec carries no campaign_id path parameter
+    - operationId: getCampaignRecipientsActivity
+      documented_path: GET /v2/campaigns/{campaign_id}/recipients-activity
+      issue: spec carries no campaign_id path parameter
+    - operationId: getCampaignEmailReplies
+      documented_path: GET /v2/campaigns/{campaign_id}/all-replies
+      issue: spec carries no campaign_id path parameter
+    - operationId: createEmailStepContent
+      documented_path: POST /v2/campaigns/{campaign_id}/steps/{step_id}/content/create
+      issue: spec models a single {id} parameter where the docs require three
+    - operationId: getEmailStepContent
+      documented_path: GET /v2/campaigns/{campaign_id}/steps/{step_id}/content/{content_id}
+      issue: spec models a single {id} parameter where the docs require three
+    - operationId: updateEmailStepContent
+      documented_path: PATCH /v2/campaigns/{campaign_id}/steps/{step_id}/content/{content_id}
+      issue: spec models a single {id} parameter where the docs require three
+    - operationId: deleteEmailStepContent
+      documented_path: DELETE /v2/campaigns/{campaign_id}/steps/{step_id}/content/{content_id}
+      issue: spec models a single {id} parameter where the docs require three
+    - operationId: listPipelineStages
+      documented_path: GET /v2/pipelines/{pipeline_id}/stages
+      issue: spec carries no pipeline_id path parameter

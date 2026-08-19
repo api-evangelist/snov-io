@@ -1,0 +1,789 @@
+{
+  "item": [
+    {
+      "id": "1dd4e28f-7a3d-4e3c-a0e7-b8dd8444ff1a",
+      "name": "Email Accounts",
+      "description": {
+        "content": "Manage sender email accounts",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "b78daa04-0e15-4560-a4c6-474b24996b49",
+          "name": "List email accounts (free)",
+          "request": {
+            "name": "List email accounts (free)",
+            "description": {
+              "content": "Returns all connected sender email accounts with status information.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "sender-accounts",
+                "emails"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "ce956eec-3270-4b13-8eb8-435200254ba4",
+              "name": "List of email accounts",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "sender-accounts",
+                    "emails"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": \"string\",\n      \"email_from\": \"3waT2R7b2bMh8s@IiBTkrjGDu.nvx\",\n      \"sender_name\": \"string\",\n      \"smtp_status\": \"invalid\",\n      \"imap_status\": \"invalid\",\n      \"provider\": \"string\",\n      \"limitation\": 8547\n    },\n    {\n      \"id\": \"string\",\n      \"email_from\": \"NzByNGVNz@mJrxYeHmdKiwEgLoTdcqWcI.sdna\",\n      \"sender_name\": \"string\",\n      \"smtp_status\": \"pending\",\n      \"imap_status\": \"invalid\",\n      \"provider\": \"string\",\n      \"limitation\": 9068\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "14a99ed5-a603-48f3-875a-a118096e1233",
+              "name": "Unauthorized — missing or invalid Bearer token",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "sender-accounts",
+                    "emails"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "a41b59be-8b09-453c-a849-eb313380d094",
+          "name": "Add email account",
+          "request": {
+            "name": "Add email account",
+            "description": {
+              "content": "Connect a new sender email account with SMTP/IMAP configuration.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "sender-accounts",
+                "emails"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sender_name\": \"<string>\",\n  \"email_from\": \"<email>\",\n  \"password\": \"<string>\",\n  \"smtp\": {\n    \"host\": \"<string>\",\n    \"port\": \"<integer>\",\n    \"encryption\": \"<string>\"\n  },\n  \"imap\": {\n    \"host\": \"<string>\",\n    \"port\": \"<integer>\",\n    \"encryption\": \"<string>\"\n  },\n  \"reply_to\": \"<email>\",\n  \"limitation\": \"<integer>\",\n  \"delay\": \"<integer>\",\n  \"signature\": \"<string>\",\n  \"bcc_email\": \"<email>\",\n  \"tags\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"timezoneId\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "a85d9065-07eb-4f18-899d-13666fcedc22",
+              "name": "Email account created",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "sender-accounts",
+                    "emails"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"sender_name\": \"<string>\",\n  \"email_from\": \"<email>\",\n  \"password\": \"<string>\",\n  \"smtp\": {\n    \"host\": \"<string>\",\n    \"port\": \"<integer>\",\n    \"encryption\": \"<string>\"\n  },\n  \"imap\": {\n    \"host\": \"<string>\",\n    \"port\": \"<integer>\",\n    \"encryption\": \"<string>\"\n  },\n  \"reply_to\": \"<email>\",\n  \"limitation\": \"<integer>\",\n  \"delay\": \"<integer>\",\n  \"signature\": \"<string>\",\n  \"bcc_email\": \"<email>\",\n  \"tags\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"timezoneId\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"email_from\": \"bZxMX5lM@yixhXJTD.bplc\",\n  \"sender_name\": \"string\",\n  \"smtp_status\": \"invalid\",\n  \"imap_status\": \"valid\",\n  \"provider\": \"string\",\n  \"limitation\": 6023\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "7915f2d4-96b7-4ff3-a14d-c1bf91f55294",
+              "name": "Bad request — missing or invalid parameters",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "sender-accounts",
+                    "emails"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"sender_name\": \"<string>\",\n  \"email_from\": \"<email>\",\n  \"password\": \"<string>\",\n  \"smtp\": {\n    \"host\": \"<string>\",\n    \"port\": \"<integer>\",\n    \"encryption\": \"<string>\"\n  },\n  \"imap\": {\n    \"host\": \"<string>\",\n    \"port\": \"<integer>\",\n    \"encryption\": \"<string>\"\n  },\n  \"reply_to\": \"<email>\",\n  \"limitation\": \"<integer>\",\n  \"delay\": \"<integer>\",\n  \"signature\": \"<string>\",\n  \"bcc_email\": \"<email>\",\n  \"tags\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"timezoneId\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "02ffe5a0-c34c-48f0-95ec-add0ada97ea0",
+              "name": "Unauthorized — missing or invalid Bearer token",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "sender-accounts",
+                    "emails"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"sender_name\": \"<string>\",\n  \"email_from\": \"<email>\",\n  \"password\": \"<string>\",\n  \"smtp\": {\n    \"host\": \"<string>\",\n    \"port\": \"<integer>\",\n    \"encryption\": \"<string>\"\n  },\n  \"imap\": {\n    \"host\": \"<string>\",\n    \"port\": \"<integer>\",\n    \"encryption\": \"<string>\"\n  },\n  \"reply_to\": \"<email>\",\n  \"limitation\": \"<integer>\",\n  \"delay\": \"<integer>\",\n  \"signature\": \"<string>\",\n  \"bcc_email\": \"<email>\",\n  \"tags\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"timezoneId\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "fd6753f4-9870-4c24-be81-a9b61762083c",
+          "name": "Update email account",
+          "request": {
+            "name": "Update email account",
+            "description": {
+              "content": "Update an existing sender email account configuration.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "sender-accounts",
+                "emails",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) Email account ID"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sender_name\": \"<string>\",\n  \"email_from\": \"<email>\",\n  \"password\": \"<string>\",\n  \"smtp\": {\n    \"host\": \"<string>\",\n    \"port\": \"<integer>\",\n    \"encryption\": \"<string>\"\n  },\n  \"imap\": {\n    \"host\": \"<string>\",\n    \"port\": \"<integer>\",\n    \"encryption\": \"<string>\"\n  },\n  \"delay\": \"<integer>\",\n  \"signature\": \"<string>\",\n  \"bcc_email\": \"<email>\",\n  \"tags\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "22cbb37b-033e-47c9-8388-799e09c66006",
+              "name": "Email account updated",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "sender-accounts",
+                    "emails",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) Email account ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"sender_name\": \"<string>\",\n  \"email_from\": \"<email>\",\n  \"password\": \"<string>\",\n  \"smtp\": {\n    \"host\": \"<string>\",\n    \"port\": \"<integer>\",\n    \"encryption\": \"<string>\"\n  },\n  \"imap\": {\n    \"host\": \"<string>\",\n    \"port\": \"<integer>\",\n    \"encryption\": \"<string>\"\n  },\n  \"delay\": \"<integer>\",\n  \"signature\": \"<string>\",\n  \"bcc_email\": \"<email>\",\n  \"tags\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"email_from\": \"bZxMX5lM@yixhXJTD.bplc\",\n  \"sender_name\": \"string\",\n  \"smtp_status\": \"invalid\",\n  \"imap_status\": \"valid\",\n  \"provider\": \"string\",\n  \"limitation\": 6023\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a5bd5562-5858-4f80-b17e-ef30c4c483d6",
+              "name": "Unauthorized — missing or invalid Bearer token",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "sender-accounts",
+                    "emails",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) Email account ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"sender_name\": \"<string>\",\n  \"email_from\": \"<email>\",\n  \"password\": \"<string>\",\n  \"smtp\": {\n    \"host\": \"<string>\",\n    \"port\": \"<integer>\",\n    \"encryption\": \"<string>\"\n  },\n  \"imap\": {\n    \"host\": \"<string>\",\n    \"port\": \"<integer>\",\n    \"encryption\": \"<string>\"\n  },\n  \"delay\": \"<integer>\",\n  \"signature\": \"<string>\",\n  \"bcc_email\": \"<email>\",\n  \"tags\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c76714f4-8e01-4e50-828c-0fb9f199d5fd",
+              "name": "Resource not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "sender-accounts",
+                    "emails",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) Email account ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"sender_name\": \"<string>\",\n  \"email_from\": \"<email>\",\n  \"password\": \"<string>\",\n  \"smtp\": {\n    \"host\": \"<string>\",\n    \"port\": \"<integer>\",\n    \"encryption\": \"<string>\"\n  },\n  \"imap\": {\n    \"host\": \"<string>\",\n    \"port\": \"<integer>\",\n    \"encryption\": \"<string>\"\n  },\n  \"delay\": \"<integer>\",\n  \"signature\": \"<string>\",\n  \"bcc_email\": \"<email>\",\n  \"tags\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "48a81d82-1406-4fdf-beb5-ec6856314706",
+          "name": "Check sender account status",
+          "request": {
+            "name": "Check sender account status",
+            "description": {
+              "content": "Check SMTP and IMAP connection status for a sender account. Returns pending/valid/invalid status with error messages if applicable.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "sender-accounts",
+                "check-sender-status"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "sender_account_id",
+                  "value": "<string>",
+                  "description": "(Required) ID of the sender account to check"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "2dee942a-084d-4f0d-ba1e-0c97408b2e09",
+              "name": "Sender account status",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "sender-accounts",
+                    "check-sender-status"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "sender_account_id",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"smtp_status\": \"pending\",\n  \"imap_status\": \"valid\",\n  \"smtp_error\": \"string\",\n  \"imap_error\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "106a09ea-1489-425a-90d3-8fc478489264",
+              "name": "Unauthorized — missing or invalid Bearer token",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "sender-accounts",
+                    "check-sender-status"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "sender_account_id",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.snov.io",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "a6598f65-1ea9-4c86-8cc6-bd1450ad1105",
+    "name": "Snov.io Authentication Email Accounts API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Snov.io is a sales automation and lead generation platform. The REST API enables programmatic access to email finding, domain search, email verification, drip campaign management, email warm-up, prospect management, CRM pipeline, and webhook subscriptions. Authentication uses OAuth 2.0 client credentials to obtain short-lived Bearer tokens. All API operations consume credits from the account balance.\n\nContact Support:\n Name: Snov.io Support",
+      "type": "text/plain"
+    }
+  }
+}

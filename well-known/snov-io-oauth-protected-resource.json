@@ -1,0 +1,12 @@
+{
+  "resource": "https://mcp.snov.io/mcp",
+  "authorization_servers": [
+    "https://app.snov.io"
+  ],
+  "scopes_supported": [
+    "mcp"
+  ],
+  "bearer_methods_supported": [
+    "header"
+  ]
+}

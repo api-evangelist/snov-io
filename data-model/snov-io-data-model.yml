@@ -1,0 +1,283 @@
+name: Snov.io Data Model
+specificationVersion: '0.1'
+generated: '2026-08-13'
+method: derived
+source: >-
+  openapi/*.yml component schemas and id-reference fields, cross-checked against the response
+  examples in the published reference at https://snov.io/api
+description: >-
+  Entity-relationship graph for the Snov.io REST API. The graph has two roots that barely touch:
+  a DISCOVERY side (async task -> prospect -> list) where nothing is durable until a prospect is
+  saved, and a SENDING side (email account -> campaign -> recipient activity) where everything
+  hangs off a connected mailbox. All identifiers are bare integers except the async task
+  correlator, which is a 32-character hex `task_hash`. There are no prefixed ids and no global
+  object namespace.
+
+identifiers:
+  style: bare-integer
+  prefixes: none
+  note: >-
+    Snov.io does not use type-prefixed ids (no `prospect_...`, no `camp_...`). Every entity id
+    is an unqualified integer, so an id carries no information about what it identifies and ids
+    from different resources are indistinguishable in logs.
+  exceptions:
+    - field: task_hash
+      format: 32-character lowercase hex
+      scope: one async job
+      note: >-
+        The only opaque identifier in the API. Issued by every /start operation, consumed by the
+        matching /result operation, and not durable — it identifies a job, not an object.
+    - field: prospect_hash
+      format: long hex string
+      scope: one prospect within a domain-search result set
+      note: Used to resolve emails for a specific prospect found by domain search.
+    - field: created_at
+      format: Unix timestamp (integer)
+      note: >-
+        Webhook records use integer Unix timestamps while campaign and list records use ISO-8601
+        date-time strings. Timestamp encoding is not consistent across the API.
+
+entities:
+  - name: AccessToken
+    domain: authentication
+    schema: AccessToken
+    fields: [access_token, token_type, expires_in]
+    durable: false
+    note: Short-lived (3600s) credential, not a stored resource.
+
+  - name: Prospect
+    domain: discovery
+    schema: Prospect
+    id: id
+    fields: [id, email, first_name, last_name, position, company, location, custom_fields]
+    note: The central discovery entity. Becomes durable only once added to a ProspectList.
+
+  - name: ProspectProfile
+    domain: discovery
+    schema: ProspectProfile
+    id: id
+    fields: [id, first_name, last_name, email, position, company, location, industry, social, job_history]
+    note: >-
+      Enriched read-model of a person, returned by profile-by-email and LinkedIn URL enrichment.
+      Distinct from Prospect: it is a database lookup result, not an account-owned record.
+
+  - name: ProspectList
+    domain: discovery
+    schema: ProspectList
+    id: id
+    fields: [id, name, count, created_at]
+
+  - name: EmailVerificationResult
+    domain: discovery
+    schema: EmailVerificationResult
+    id: email
+    fields: [email, status, format_valid, mx_valid, disposable, gibberish]
+    note: Keyed by email address, not by an integer id. Not a stored resource.
+
+  - name: EmailAccount
+    domain: sending
+    schema: EmailAccount
+    id: id
+    fields: [id, email_from, sender_name, smtp_status, imap_status, provider, limitation]
+    note: >-
+      The root of the sending side. Also surfaced as "sender account" — openapi/ carries two
+      spec files (email-accounts, sender-accounts) describing the same
+      /v2/sender-accounts/emails resource under different tags.
+
+  - name: WarmUpCampaign
+    domain: sending
+    schema: WarmUpCampaign
+    id: id
+    fields: [id, email_account_id, status, strategy, per_day, reply_rate, campaign_deadline, deliverability_score]
+
+  - name: Campaign
+    domain: sending
+    schema: Campaign
+    id: id
+    fields: [id, name, status, created_at, updated_at]
+
+  - name: EmailStepContent
+    domain: sending
+    schema: EmailStepContent
+    id: id
+    fields: [id, campaign_id, subject, body, step_number, delay_days]
+
+  - name: CampaignAnalytics
+    domain: analytics
+    schema: CampaignAnalytics
+    fields: [total_recipients, sent, delivered, opened, clicked, replied, bounced, unsubscribed, open_rate, click_rate, reply_rate]
+    durable: false
+
+  - name: RecipientActivity
+    domain: analytics
+    schema: RecipientActivity
+    id: email
+    fields: [email, first_name, last_name, status, opened, clicked, replied, last_activity]
+
+  - name: SentEmail
+    domain: analytics
+    schema: SentEmail
+    id: id
+    fields: [id, recipient_email, subject, sent_at]
+
+  - name: EmailEvent
+    domain: analytics
+    schema: EmailEvent
+    fields: [email, occurred_at, step_number]
+    note: Shared shape for open and click events.
+
+  - name: EmailReply
+    domain: analytics
+    schema: EmailReply
+    fields: [email, first_name, last_name, reply_text, replied_at]
+
+  - name: Pipeline
+    domain: crm
+    schema: Pipeline
+    id: id
+    fields: [id, name, stages_count]
+    note: Read-only over REST. Every CRM write is MCP-only — see mcp/snov-io-tool-crosswalk.yml.
+
+  - name: PipelineStage
+    domain: crm
+    schema: PipelineStage
+    id: id
+    fields: [id, pipeline_id, name, position]
+
+  - name: Webhook
+    domain: events
+    schema: Webhook
+    id: id
+    fields: [id, url, event, status, created_at]
+    note: >-
+      The spec models a single `event` string; the live API splits it into `event_object` +
+      `event_action` and returns the endpoint as `end_point`. See asyncapi/snov-io-webhooks.yml
+      for the published shape.
+
+  - name: TaskStarted
+    domain: async
+    schema: TaskStarted
+    id: task_hash
+    fields: [task_hash, status]
+    durable: false
+    note: >-
+      Returned by all five /start families (domain search, email finder, LinkedIn enrichment,
+      email verification, database search). The correlator that binds every async pair.
+
+relationships:
+  - from: ProspectList
+    to: Prospect
+    type: has_many
+    via: list_id
+    evidence: ProspectCreate.list_id; viewProspectsInList returns prospects scoped to a list.
+  - from: Prospect
+    to: ProspectList
+    type: belongs_to
+    via: list_id
+  - from: Prospect
+    to: custom_fields
+    type: has_many
+    via: custom_fields
+    evidence: >-
+      Prospect.custom_fields is populated against the account-level definitions returned by
+      getProspectCustomFields.
+  - from: WarmUpCampaign
+    to: EmailAccount
+    type: belongs_to
+    via: email_account_id
+    evidence: WarmUpCampaign.email_account_id, WarmUpCampaignCreate.email_account_id
+  - from: EmailAccount
+    to: WarmUpCampaign
+    type: has_many
+    via: email_account_id
+  - from: Campaign
+    to: EmailAccount
+    type: belongs_to
+    via: sender_account_id
+    evidence: CampaignCreate.sender_account_id
+  - from: Campaign
+    to: EmailStepContent
+    type: has_many
+    via: campaign_id
+    evidence: EmailStepContent.campaign_id
+  - from: EmailStepContent
+    to: Campaign
+    type: belongs_to
+    via: campaign_id
+  - from: Campaign
+    to: CampaignAnalytics
+    type: has_one
+    via: campaign_id (query parameter)
+  - from: Campaign
+    to: RecipientActivity
+    type: has_many
+    via: campaign_id (query parameter)
+  - from: Campaign
+    to: SentEmail
+    type: has_many
+    via: campaign_id (query parameter)
+  - from: Campaign
+    to: EmailReply
+    type: has_many
+    via: campaign_id (query parameter)
+  - from: Campaign
+    to: EmailEvent
+    type: has_many
+    via: campaign_id (query parameter)
+    note: Opens and clicks share the EmailEvent shape.
+  - from: Pipeline
+    to: PipelineStage
+    type: has_many
+    via: pipeline_id
+    evidence: PipelineStage.pipeline_id; GET /v2/pipelines/{pipeline_id}/stages
+  - from: PipelineStage
+    to: Pipeline
+    type: belongs_to
+    via: pipeline_id
+  - from: Campaign
+    to: Prospect
+    type: has_many
+    via: recipient email
+    confidence: low
+    note: >-
+      Recipients are addressed by email address, not by prospect id. There is no foreign key
+      between a campaign recipient and a saved prospect record — the join is on the email string.
+  - from: TaskStarted
+    to: Prospect
+    type: has_many
+    via: task_hash
+    note: Async result sets resolve into prospect-shaped records that are not yet persisted.
+  - from: EmailAccount
+    to: SentEmail
+    type: has_many
+    via: sender
+    confidence: low
+    note: Implied by the sending model; no explicit foreign key is exposed in any response shape.
+
+orphans:
+  - entity: Webhook
+    note: >-
+      Subscriptions are account-scoped and reference no other entity. A webhook is bound to an
+      event_object/event_action pair, never to a specific campaign, list or prospect — there is
+      no way to subscribe to events for one campaign only.
+  - entity: EmailVerificationResult
+    note: Keyed by email address; never linked to a Prospect record by id.
+
+structural_findings:
+  - >-
+    The join between discovery and sending is a bare email string. Nothing in the API links a
+    saved Prospect to the campaign recipient it becomes, which means reply and bounce activity
+    cannot be attributed back to a prospect record without client-side matching on email.
+  - >-
+    CRM is read-only over REST — Pipeline and PipelineStage are the only CRM entities exposed,
+    and the deals, notes, tasks and loss-reason entities that the MCP server manipulates have no
+    REST representation at all. The published data model is a strict subset of the real one.
+  - >-
+    Nothing in the discovery flow is durable until it is written to a list. Task results expire
+    with the task_hash, so a caller that loses a hash loses the credits it spent.
+
+counts:
+  entities: 19
+  relationships: 18
+  durable_entities: 12
+  transient_entities: 5

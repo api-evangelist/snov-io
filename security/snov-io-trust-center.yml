@@ -1,0 +1,113 @@
+name: Snov.io Trust Center
+specificationVersion: '0.1'
+generated: '2026-08-13'
+method: searched
+source: https://snov.io/security-center
+description: >-
+  Snov.io operates a public Security Center page describing its data-protection program. It is a
+  narrative security page rather than a trust portal — there is no document request flow, no
+  subprocessor list, no uptime or incident history, and no named third-party audit report. The
+  only certifications named anywhere are GDPR adherence and an LOA (Letter of Authorization).
+
+trust_center:
+  url: https://snov.io/security-center
+  http_status: 200
+  type: security-narrative-page
+  document_request_flow: false
+  subprocessor_list: false
+  status_history: false
+  pentest_report: false
+
+certifications:
+  - name: GDPR
+    type: regulation
+    claimed: true
+    named_auditor: null
+    report_available: false
+    url: https://snov.io/gdpr
+    evidence: >-
+      "Snov.io fully adheres to GDPR laws and regulations, meaning your personal data is safely
+      stored and processed." A dedicated GDPR page is published and returns HTTP 200.
+  - name: LOA (Letter of Authorization)
+    type: authorization
+    claimed: true
+    named_auditor: null
+    report_available: false
+    evidence: >-
+      "LOA (Letter of Authorization) is a permission given to Snov.io to control and manage
+      operations with users' data." Badge text on the page reads "GDPR compliant • Encrypted •
+      LOA certified".
+  - name: CCPA / Do Not Sell My Personal Information
+    type: regulation
+    claimed: partial
+    evidence: >-
+      A "Do Not Sell My Personal Information" control is published in the site footer, which is
+      a CCPA/CPRA construct. Snov.io does not name CCPA explicitly.
+
+not_claimed:
+  frameworks:
+    - SOC 2 Type I
+    - SOC 2 Type II
+    - ISO/IEC 27001
+    - ISO/IEC 27701
+    - PCI DSS
+    - HIPAA
+    - FedRAMP
+    - CSA STAR
+  note: >-
+    None of these appear anywhere on snov.io. Snov.io states that "internal and external audits
+    take place regularly to test access control, risk possibility, information security, and IT
+    infrastructure" but names no framework, no auditor and no report. For a platform whose
+    entire product is B2B contact data, the absence of a named third-party attestation is the
+    notable finding here.
+
+controls_published:
+  - name: Database protections
+    detail: >-
+      Encrypted passwords, intrusion detection systems, and a VPC with strict firewall settings.
+  - name: Integrations security
+    detail: >-
+      Integrated SaaS services are authorized with OAuth2 and their credentials are not stored.
+  - name: Encryption in transit and at rest
+    detail: Data is encrypted both when transmitted over public networks and when stored.
+  - name: Data recovery
+    detail: Regular backups with a maximum 24-hour RPO and a maximum 24-hour RTO.
+  - name: Internal and external audits
+    detail: >-
+      Regular audits covering access control, risk, information security and IT infrastructure.
+      No framework or auditor named.
+
+legal:
+  privacy_policy: https://snov.io/privacy-policy
+  gdpr: https://snov.io/gdpr
+  terms: https://snov.io/terms-and-conditions
+  cookie_policy: https://snov.io/cookie-policy
+  do_not_sell: published in site footer
+
+vulnerability_disclosure:
+  published: false
+  security_txt: false
+  bug_bounty: false
+  note: >-
+    Probed 2026-08-13. No /.well-known/security.txt on snov.io or api.snov.io (both HTTP 404),
+    no disclosure or responsible-reporting page, and no HackerOne, Bugcrowd or Intigriti
+    program. There is no published route for a researcher to report a vulnerability other than
+    the general contact form. No VulnerabilityDisclosure or Security pointer is wired in
+    apis.yml as a result.
+
+x-evidence:
+  - fetched: '2026-08-13'
+    url: https://snov.io/security-center
+    http_status: 200
+  - fetched: '2026-08-13'
+    url: https://snov.io/gdpr
+    http_status: 200
+  - fetched: '2026-08-13'
+    url: https://snov.io/privacy-policy
+    http_status: 200
+  - fetched: '2026-08-13'
+    url: https://snov.io/.well-known/security.txt
+    http_status: 404
+  - fetched: '2026-08-13'
+    url: https://api.snov.io/.well-known/security.txt
+    http_status: 404

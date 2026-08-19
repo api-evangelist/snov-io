@@ -1,0 +1,313 @@
+{
+  "item": [
+    {
+      "id": "53d5db7d-ba0d-4364-837f-a2ab43051b02",
+      "name": "CRM Pipeline",
+      "description": {
+        "content": "CRM pipeline and stage management",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "c701a914-c88e-479d-b2b9-6cfee5b5376a",
+          "name": "List pipelines",
+          "request": {
+            "name": "List pipelines",
+            "description": {
+              "content": "Returns all CRM pipelines for the account.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "pipelines"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "a1a5eb1f-afec-4efd-bab0-b5e4c02f8c68",
+              "name": "List of pipelines",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "pipelines"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": 639,\n      \"name\": \"string\",\n      \"stages_count\": 254\n    },\n    {\n      \"id\": 4745,\n      \"name\": \"string\",\n      \"stages_count\": 7836\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "29f458ba-1112-4323-ba31-24dfe3a3ae54",
+              "name": "Unauthorized — missing or invalid Bearer token",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "pipelines"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "3f7d3a3f-d903-4d1e-902c-e95e2a7a1f8d",
+          "name": "List pipeline stages",
+          "request": {
+            "name": "List pipeline stages",
+            "description": {
+              "content": "Returns all stages within CRM pipelines.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "pipeline-stages"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "pipeline_id",
+                  "value": "<integer>",
+                  "description": "Filter stages by pipeline ID"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "f662b121-55a9-4146-a56f-b6b499c0f5a7",
+              "name": "List of pipeline stages",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "pipeline-stages"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "pipeline_id",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": 117,\n      \"pipeline_id\": 3427,\n      \"name\": \"string\",\n      \"position\": 2073\n    },\n    {\n      \"id\": 1223,\n      \"pipeline_id\": 4299,\n      \"name\": \"string\",\n      \"position\": 9252\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "119ba8cc-8641-4fee-8e7c-2deb7564657c",
+              "name": "Unauthorized — missing or invalid Bearer token",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "pipeline-stages"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "pipeline_id",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.snov.io",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "a331a9be-d226-4290-b391-bbbff52b98bb",
+    "name": "Snov.io Authentication CRM Pipeline API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Snov.io is a sales automation and lead generation platform. The REST API enables programmatic access to email finding, domain search, email verification, drip campaign management, email warm-up, prospect management, CRM pipeline, and webhook subscriptions. Authentication uses OAuth 2.0 client credentials to obtain short-lived Bearer tokens. All API operations consume credits from the account balance.\n\nContact Support:\n Name: Snov.io Support",
+      "type": "text/plain"
+    }
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Snov.io Authentication CRM Pipeline API",
+    "version": "2.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "CRM Pipeline",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List pipelines",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.snov.io/v1/pipelines",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Returns all CRM pipelines for the account."
+        },
+        {
+          "info": {
+            "name": "List pipeline stages",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.snov.io/v1/pipeline-stages",
+            "params": [
+              {
+                "name": "pipeline_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter stages by pipeline ID"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Returns all stages within CRM pipelines."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

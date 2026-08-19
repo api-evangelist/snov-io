@@ -1,16 +1,73 @@
-generated: '2026-07-11'
-method: derived
-source: openapi/snov-openapi.yml
+generated: '2026-08-13'
+method: probed
+source: >-
+  https://app.snov.io/.well-known/oauth-authorization-server and
+  https://mcp.snov.io/.well-known/oauth-protected-resource (both HTTP 200, 2026-08-13)
 docs: https://snov.io/api
-note: Snov.io uses an OAuth2 client_credentials flow that exchanges an API User ID
-  and Secret for a Bearer token with no scope parameter; no OAuth scopes are documented,
-  with access governed by the account plan (https://snov.io/api).
+description: >-
+  Snov.io issues exactly ONE OAuth scope across its entire platform: "mcp", advertised by the
+  authorization server on app.snov.io and required by the remote MCP server on mcp.snov.io. The
+  REST API issues no scopes at all — its client_credentials exchange accepts no scope parameter
+  and returns a token whose authority is derived entirely from the account's subscription plan
+  and credit balance.
+
+note: >-
+  Upgraded from derived to probed. The previous round recorded "no OAuth scopes are documented",
+  which was true of the REST API but missed the MCP authorization server entirely. Both
+  discovery documents are now captured verbatim under well-known/.
+
 schemes:
-- name: OAuth2
-  source: openapi/snov-openapi.yml
-  flows:
-  - flow: clientCredentials
-    tokenUrl: https://api.snov.io/v1/oauth/access_token
-  description: OAuth2 client_credentials flow. POST client_id and client_secret to /v1/oauth/access_token
-    to obtain a Bearer token, then send it in the Authorization header.
-scopes: []
+  - name: OAuth2ClientCredentials
+    surface: REST API
+    source: https://snov.io/api
+    flows:
+      - flow: clientCredentials
+        tokenUrl: https://api.snov.io/v1/oauth/access_token
+    scopes_supported: []
+    description: >-
+      POST client_id and client_secret to obtain a 3600-second Bearer token, then send it in the
+      Authorization header. No scope parameter is accepted and none is returned.
+    authorization_model: plan-derived
+    note: >-
+      Access is governed by the subscription tier (API access begins at the Starter plan) and by
+      the credit balance, not by any scope on the credential. There is no read-only credential,
+      no per-integration credential and no way to restrict a token to a subset of the surface.
+
+  - name: OAuth2AuthorizationCodeMCP
+    surface: MCP server
+    source: https://app.snov.io/.well-known/oauth-authorization-server
+    resource: https://mcp.snov.io/mcp
+    flows:
+      - flow: authorizationCode
+        authorizationUrl: https://app.snov.io/mcp/authorize
+        tokenUrl: https://app.snov.io/back/mcp/oauth/token
+        registrationUrl: https://app.snov.io/back/mcp/oauth/register
+        pkce: S256
+    scopes_supported:
+      - mcp
+    description: >-
+      Public-client authorization code flow with PKCE and dynamic client registration. One
+      scope, granted or not granted.
+
+scopes:
+  - name: mcp
+    surface: MCP server
+    resource: https://mcp.snov.io/mcp
+    description: >-
+      Grants an authorized MCP client the full published Snov.io action surface — prospect
+      search and enrichment, list and folder management, email verification, the Sales CRM
+      (pipelines, deals, notes, loss reasons, tasks) and LinkedIn account setup and outreach.
+    read_write: both
+    source: https://app.snov.io/.well-known/oauth-authorization-server
+    evidence: 'scopes_supported: ["mcp"] in the RFC 8414 metadata; scope="mcp" in the RFC 9728 WWW-Authenticate challenge from mcp.snov.io.'
+
+summary:
+  scope_count: 1
+  granular_scopes: false
+  read_only_scope_available: false
+  finding: >-
+    A single all-or-nothing scope covering more than 100 actions, including irreversible
+    write actions — sending LinkedIn connection requests and InMails, deleting prospect lists,
+    marking deals lost. An account holder connecting an AI assistant cannot grant it read access
+    only, and cannot withhold LinkedIn outreach while allowing prospect search. This is the most
+    consequential authorization gap on the Snov.io agent surface.

@@ -1,0 +1,537 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Snov.io Authentication Campaigns API",
+    "version": "2.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Campaigns",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List campaigns",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.snov.io/v1/user-campaigns",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Returns all multi-channel outreach campaigns for the user."
+        },
+        {
+          "info": {
+            "name": "Create campaign",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.snov.io/v1/create-campaign",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Create a new multi-channel outreach campaign."
+        },
+        {
+          "info": {
+            "name": "Get campaign",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.snov.io/v1/campaign/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Campaign ID"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Retrieve details of a specific campaign by ID."
+        },
+        {
+          "info": {
+            "name": "Update campaign",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.snov.io/v1/campaign/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Campaign ID"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Update an existing campaign's settings."
+        },
+        {
+          "info": {
+            "name": "Delete campaign",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.snov.io/v1/campaign/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Campaign ID"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Permanently delete a campaign."
+        },
+        {
+          "info": {
+            "name": "Change campaign state",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.snov.io/v1/campaign/:id/state",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Campaign ID"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Start, pause, or stop a campaign."
+        },
+        {
+          "info": {
+            "name": "List email schedules",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.snov.io/v1/email-schedules",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Returns all available email send schedules."
+        },
+        {
+          "info": {
+            "name": "Create email step content",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.snov.io/v1/email-step-content",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Create content for a campaign email step."
+        },
+        {
+          "info": {
+            "name": "Get email step content",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.snov.io/v1/email-step-content/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Resource ID"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get email step content"
+        },
+        {
+          "info": {
+            "name": "Update email step content",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.snov.io/v1/email-step-content/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Resource ID"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Update email step content"
+        },
+        {
+          "info": {
+            "name": "Delete email step content",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.snov.io/v1/email-step-content/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Resource ID"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Delete email step content"
+        },
+        {
+          "info": {
+            "name": "Check recipient status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.snov.io/v1/recipient-status",
+            "params": [
+              {
+                "name": "campaign_id",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "email",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Check the campaign status of a specific recipient."
+        },
+        {
+          "info": {
+            "name": "Change recipient status",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.snov.io/v1/recipient-status",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Update the campaign status of a recipient."
+        },
+        {
+          "info": {
+            "name": "List completed prospects",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.snov.io/v1/finished-prospects",
+            "params": [
+              {
+                "name": "campaign_id",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Returns prospects who have completed all campaign steps."
+        },
+        {
+          "info": {
+            "name": "Add to do-not-email list",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.snov.io/v1/do-not-email-list",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Add email addresses to a do-not-email suppression list."
+        },
+        {
+          "info": {
+            "name": "List do-not-email lists",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.snov.io/v1/do-not-email-lists",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Returns all do-not-email suppression lists for the account."
+        },
+        {
+          "info": {
+            "name": "Get campaign analytics",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.snov.io/v1/campaign-analytics",
+            "params": [
+              {
+                "name": "campaign_id",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Returns aggregate analytics data for a campaign."
+        },
+        {
+          "info": {
+            "name": "Get campaign progress",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.snov.io/v1/campaign-progress",
+            "params": [
+              {
+                "name": "campaign_id",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Returns progress statistics for a running campaign."
+        },
+        {
+          "info": {
+            "name": "Get recipients activity report",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.snov.io/v1/campaign-recipients-activity",
+            "params": [
+              {
+                "name": "campaign_id",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Returns detailed activity report for campaign recipients."
+        },
+        {
+          "info": {
+            "name": "Get sent emails",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.snov.io/v1/emails-sent",
+            "params": [
+              {
+                "name": "campaign_id",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Returns list of emails sent in a campaign."
+        },
+        {
+          "info": {
+            "name": "Get campaign opens",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.snov.io/v1/emails-opens",
+            "params": [
+              {
+                "name": "campaign_id",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Returns email open events for a campaign."
+        },
+        {
+          "info": {
+            "name": "Get campaign link clicks",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.snov.io/v1/emails-clicks",
+            "params": [
+              {
+                "name": "campaign_id",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Returns link click events for a campaign."
+        },
+        {
+          "info": {
+            "name": "Get all campaign replies",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.snov.io/v1/campaign-replies",
+            "params": [
+              {
+                "name": "campaign_id",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Returns all reply events across all email steps in a campaign."
+        },
+        {
+          "info": {
+            "name": "Get campaign email replies",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.snov.io/v1/campaign-email-replies",
+            "params": [
+              {
+                "name": "campaign_id",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Returns reply events scoped to a specific email step."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

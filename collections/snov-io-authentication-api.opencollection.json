@@ -1,0 +1,33 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Snov.io Authentication API",
+    "version": "2.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Authentication",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get access token",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.snov.io/v1/oauth/access_token",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Obtain a short-lived Bearer token using OAuth 2.0 client credentials flow. Tokens expire after 3600 seconds."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

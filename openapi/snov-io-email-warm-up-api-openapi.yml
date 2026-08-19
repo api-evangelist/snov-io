@@ -1,6 +1,6 @@
 openapi: 3.0.3
 info:
-  title: Snov.io Authentication Email Warm-up API
+  title: Snov.io Email Warm-up API
   description: Snov.io is a sales automation and lead generation platform. The REST API enables programmatic access to email finding, domain search, email verification, drip campaign management, email warm-up, prospect management, CRM pipeline, and webhook subscriptions. Authentication uses OAuth 2.0 client credentials to obtain short-lived Bearer tokens. All API operations consume credits from the account balance.
   version: '2.0'
   contact:

@@ -1,0 +1,161 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Snov.io Authentication Email Finder API",
+    "version": "2.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Email Finder",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Start find emails by name and domain",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.snov.io/v2/emails-by-domain-by-name/start",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Find email addresses by providing first name, last name, and domain. Costs 1 credit per valid or unknown email found."
+        },
+        {
+          "info": {
+            "name": "Get find emails by name results",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.snov.io/v2/emails-by-domain-by-name/result",
+            "params": [
+              {
+                "name": "task_hash",
+                "value": "",
+                "type": "query",
+                "description": "Task hash returned from the start endpoint"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get find emails by name results"
+        },
+        {
+          "info": {
+            "name": "Start find domain by company name",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.snov.io/v2/company-domain-by-name/start",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Find company domains by company name. Costs 1 credit per domain found."
+        },
+        {
+          "info": {
+            "name": "Get find domain by company name results",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.snov.io/v2/company-domain-by-name/result",
+            "params": [
+              {
+                "name": "task_hash",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get find domain by company name results"
+        },
+        {
+          "info": {
+            "name": "Start LinkedIn profile enrichment",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.snov.io/v2/li-profiles-by-urls/start",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Enrich LinkedIn profiles by URL. Costs 1 credit per profile retrieved."
+        },
+        {
+          "info": {
+            "name": "Get LinkedIn profile enrichment results",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.snov.io/v2/li-profiles-by-urls/result",
+            "params": [
+              {
+                "name": "task_hash",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get LinkedIn profile enrichment results"
+        },
+        {
+          "info": {
+            "name": "Enrich profile by email",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.snov.io/v1/get-profile-by-email",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Retrieve prospect profile information by email address. Costs 1 credit per request; free if no results are found."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

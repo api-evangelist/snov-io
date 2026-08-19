@@ -1,7 +1,11 @@
 openapi: 3.0.3
 info:
-  title: Snov.io Authentication Campaigns API
-  description: Snov.io is a sales automation and lead generation platform. The REST API enables programmatic access to email finding, domain search, email verification, drip campaign management, email warm-up, prospect management, CRM pipeline, and webhook subscriptions. Authentication uses OAuth 2.0 client credentials to obtain short-lived Bearer tokens. All API operations consume credits from the account balance.
+  title: Snov.io Campaigns API
+  description: Snov.io is a sales automation and lead generation platform. The REST API enables programmatic
+    access to email finding, domain search, email verification, drip campaign management, email warm-up,
+    prospect management, CRM pipeline, and webhook subscriptions. Authentication uses OAuth 2.0 client
+    credentials to obtain short-lived Bearer tokens. All API operations consume credits from the account
+    balance.
   version: '2.0'
   contact:
     name: Snov.io Support
@@ -17,7 +21,7 @@ tags:
 - name: Campaigns
   description: Create and manage multi-channel outreach campaigns
 paths:
-  /v1/user-campaigns:
+  /v2/campaigns/:
     get:
       tags:
       - Campaigns
@@ -40,7 +44,7 @@ paths:
                       $ref: '#/components/schemas/Campaign'
         '401':
           $ref: '#/components/responses/Unauthorized'
-  /v1/create-campaign:
+  /v2/campaigns/create:
     post:
       tags:
       - Campaigns
@@ -66,7 +70,7 @@ paths:
           $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/Unauthorized'
-  /v1/campaign/{id}:
+  /v2/campaigns/{id}:
     get:
       tags:
       - Campaigns
@@ -132,7 +136,7 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '404':
           $ref: '#/components/responses/NotFound'
-  /v1/campaign/{id}/state:
+  /v2/campaigns/{id}/action:
     post:
       tags:
       - Campaigns
@@ -169,7 +173,7 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '404':
           $ref: '#/components/responses/NotFound'
-  /v1/email-schedules:
+  /v2/campaigns/schedules:
     get:
       tags:
       - Campaigns
@@ -284,7 +288,7 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '404':
           $ref: '#/components/responses/NotFound'
-  /v1/recipient-status:
+  /v1/change-recipient-status:
     get:
       tags:
       - Campaigns
@@ -350,7 +354,7 @@ paths:
           description: Status changed
         '401':
           $ref: '#/components/responses/Unauthorized'
-  /v1/finished-prospects:
+  /v1/prospect-finished:
     get:
       tags:
       - Campaigns
@@ -409,7 +413,7 @@ paths:
           description: Emails added to suppression list
         '401':
           $ref: '#/components/responses/Unauthorized'
-  /v1/do-not-email-lists:
+  /v2/blacklists:
     get:
       tags:
       - Campaigns
@@ -439,7 +443,7 @@ paths:
                           type: integer
         '401':
           $ref: '#/components/responses/Unauthorized'
-  /v1/campaign-analytics:
+  /v2/statistics/campaign-analytics:
     get:
       tags:
       - Campaigns
@@ -554,7 +558,7 @@ paths:
                       $ref: '#/components/schemas/SentEmail'
         '401':
           $ref: '#/components/responses/Unauthorized'
-  /v1/emails-opens:
+  /v1/get-emails-opened:
     get:
       tags:
       - Campaigns
@@ -583,7 +587,7 @@ paths:
                       $ref: '#/components/schemas/EmailEvent'
         '401':
           $ref: '#/components/responses/Unauthorized'
-  /v1/emails-clicks:
+  /v1/get-emails-clicked:
     get:
       tags:
       - Campaigns
@@ -612,7 +616,7 @@ paths:
                       $ref: '#/components/schemas/EmailEvent'
         '401':
           $ref: '#/components/responses/Unauthorized'
-  /v1/campaign-replies:
+  /v1/get-emails-replies:
     get:
       tags:
       - Campaigns
@@ -880,4 +884,5 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
-      description: Obtain a Bearer token via POST /v1/oauth/access_token using client credentials. Tokens expire after 3600 seconds.
+      description: Obtain a Bearer token via POST /v1/oauth/access_token using client credentials. Tokens
+        expire after 3600 seconds.

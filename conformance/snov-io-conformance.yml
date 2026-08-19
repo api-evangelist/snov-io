@@ -1,0 +1,169 @@
+name: Snov.io Standards Conformance
+specificationVersion: '0.1'
+generated: '2026-08-13'
+method: searched
+source: >-
+  https://snov.io/api, https://snov.io/security-center, https://snov.io/gdpr,
+  https://mcp.snov.io/.well-known/oauth-protected-resource,
+  https://app.snov.io/.well-known/oauth-authorization-server, openapi/*.yml
+description: >-
+  Assessment of Snov.io against cross-cutting API and industry standards. The picture is
+  lopsided: the agent surface (MCP + its OAuth stack) is standards-conformant to a modern level
+  — RFC 8414, RFC 9728, RFC 7591, PKCE — while the REST surface conforms to almost nothing,
+  with a proprietary error format, no idempotency, no rate-limit headers and no machine-readable
+  contract published by the provider.
+
+standards:
+  - id: oauth2
+    name: OAuth 2.0 (RFC 6749)
+    conforms: true
+    evidence: >-
+      Two independent OAuth deployments. The REST API implements the client_credentials grant at
+      POST https://api.snov.io/v1/oauth/access_token with a 3600-second Bearer token. The MCP
+      server implements authorization_code + refresh_token, verified from
+      https://app.snov.io/.well-known/oauth-authorization-server (HTTP 200, 2026-08-13).
+  - id: oauth2-pkce
+    name: PKCE (RFC 7636)
+    conforms: true
+    evidence: >-
+      code_challenge_methods_supported ["S256"] in the authorization-server metadata; combined
+      with token_endpoint_auth_methods_supported ["none"] this is the correct public-client
+      posture for an MCP connector.
+  - id: rfc8414
+    name: OAuth 2.0 Authorization Server Metadata
+    conforms: true
+    evidence: >-
+      https://app.snov.io/.well-known/oauth-authorization-server returns HTTP 200 with issuer,
+      authorization_endpoint, token_endpoint, registration_endpoint, response_types_supported,
+      grant_types_supported, code_challenge_methods_supported,
+      token_endpoint_auth_methods_supported and scopes_supported. Saved verbatim to
+      well-known/snov-io-oauth-authorization-server.json.
+  - id: rfc9728
+    name: OAuth 2.0 Protected Resource Metadata
+    conforms: true
+    evidence: >-
+      https://mcp.snov.io/.well-known/oauth-protected-resource returns HTTP 200 with resource,
+      authorization_servers, scopes_supported and bearer_methods_supported, and the MCP endpoint
+      emits a matching WWW-Authenticate challenge with resource_metadata= on an unauthenticated
+      request. Saved verbatim to well-known/snov-io-oauth-protected-resource.json.
+  - id: rfc7591
+    name: OAuth 2.0 Dynamic Client Registration
+    conforms: true
+    evidence: >-
+      registration_endpoint https://app.snov.io/back/mcp/oauth/register advertised in the
+      authorization-server metadata — the mechanism that lets an MCP client self-register
+      without a pre-provisioned client_id.
+  - id: mcp
+    name: Model Context Protocol
+    conforms: true
+    evidence: >-
+      First-party remote server at https://mcp.snov.io/mcp, documented at https://snov.io/mcp
+      and https://snov.io/knowledgebase/how-to-use-snov-io-mcp-with-your-ai-assistant/, with
+      OAuth authorization per the MCP authorization spec. Verified live 2026-08-13 (HTTP 401 +
+      RFC 9728 challenge on an anonymous tools/list). Tool schemas are auth-gated and were not
+      introspected.
+  - id: oidc
+    name: OpenID Connect
+    conforms: false
+    evidence: >-
+      No OpenID Provider Configuration is served. https://app.snov.io/.well-known/openid-configuration
+      returns HTTP 200 but the body is the app's SPA shell, not a discovery document;
+      snov.io and mcp.snov.io both 404. No id_token, no openid scope — scopes_supported is
+      ["mcp"] only.
+  - id: openapi
+    name: OpenAPI Specification
+    conforms: false
+    evidence: >-
+      Snov.io publishes no OpenAPI document. Probed 2026-08-13 on the API host root and the docs
+      host: /openapi.json, /openapi.yaml, /swagger.json, /v1/openapi.json, /api-docs, /docs and
+      /redoc all return HTTP 404. The documents in openapi/ are API Evangelist generations from
+      the HTML reference at https://snov.io/api.
+  - id: asyncapi
+    name: AsyncAPI
+    conforms: false
+    evidence: >-
+      A twenty-action webhook catalog is published in prose and tables but no AsyncAPI document
+      exists on any host. See asyncapi/snov-io-webhooks.yml.
+  - id: rfc9457
+    name: Problem Details for HTTP APIs
+    conforms: false
+    evidence: >-
+      No application/problem+json anywhere. Live 404s return
+      {"errors":{"code":...,"title":...,"source":""}} as application/json, and a second,
+      incompatible {"success":false,"errors":[...]} envelope is used at the operation layer. See
+      errors/snov-io-problem-types.yml.
+  - id: idempotency
+    name: Idempotency keys (draft-ietf-httpapi-idempotency-key-header)
+    conforms: false
+    evidence: >-
+      Zero occurrences of "idempoten" in the full 242 KB text of https://snov.io/api. No
+      Idempotency-Key header on any operation, including credit-consuming POSTs.
+  - id: pagination
+    name: Consistent collection pagination
+    conforms: partial
+    evidence: >-
+      v2 collections use page + per_page with per_page constrained to 20/50/100 and a `meta`
+      block. Several v1 collections take no paging parameters at all. No cursor, no Link header,
+      no documented total-pages field.
+  - id: rate-limit-headers
+    name: RateLimit header fields (RFC 9331 / X-RateLimit-*)
+    conforms: false
+    evidence: >-
+      A 60 requests-per-minute limit is stated in prose. No RateLimit-*, X-RateLimit-* or
+      Retry-After header is documented or observed. See rate-limits/snov-io-rate-limits.yml.
+  - id: json-api
+    name: 'JSON:API'
+    conforms: false
+    evidence: Envelope is a bespoke data/meta wrapper, not JSON:API. No media type negotiation.
+  - id: odata
+    name: OData
+    conforms: false
+    evidence: Not applicable; no OData surface.
+  - id: scim
+    name: SCIM
+    conforms: false
+    evidence: >-
+      No user/team provisioning API. Team seat management is UI-only (and, per the MCP
+      capability list, MCP-only).
+  - id: webhook-signing
+    name: Signed webhook payloads
+    conforms: false
+    evidence: >-
+      No HMAC signature, shared secret, timestamp header or source IP allowlist is published for
+      webhook deliveries carrying prospect PII.
+  - id: gdpr
+    name: GDPR
+    conforms: true
+    evidence: >-
+      Snov.io publishes a dedicated GDPR page (https://snov.io/gdpr, HTTP 200) and states on its
+      Security Center that it "fully adheres to GDPR laws and regulations". A "Do Not Sell My
+      Personal Information" control is published in the site footer.
+    cross_reference: security/snov-io-trust-center.yml
+  - id: soc2
+    name: SOC 2
+    conforms: false
+    evidence: >-
+      No SOC 2 report, Type I or Type II, is named on the Security Center or anywhere else on
+      the site. Snov.io describes "internal and external audits" generically without naming a
+      framework, an auditor or a report.
+  - id: iso27001
+    name: ISO/IEC 27001
+    conforms: false
+    evidence: Not claimed anywhere on snov.io.
+  - id: hipaa
+    name: HIPAA
+    conforms: false
+    evidence: Not applicable — no PHI; not claimed.
+  - id: pci-dss
+    name: PCI DSS
+    conforms: false
+    evidence: Not claimed. Payment processing is not part of the API surface.
+
+summary:
+  conformant: 8
+  non_conformant: 12
+  partial: 1
+  finding: >-
+    Snov.io's OAuth/MCP stack is the most standards-conformant thing it ships — three RFCs and
+    PKCE, all verified live and anonymously. Its REST API conforms to no interoperability
+    standard beyond OAuth 2.0 itself and is not described by any provider-published contract.

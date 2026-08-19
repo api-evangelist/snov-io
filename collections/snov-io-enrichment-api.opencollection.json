@@ -1,0 +1,88 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Snov.io Authentication Enrichment API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "client_credentials",
+      "accessTokenUrl": "https://api.snov.io/v1/oauth/access_token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Enrichment",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get profile by email",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.snov.io/v1/get-profile-by-email",
+            "body": {
+              "type": "form-urlencoded",
+              "data": [
+                {
+                  "name": "email",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "docs": "Retrieves comprehensive profile data connected to an email address. Costs 1 credit per request (no charge if no data is found)."
+        },
+        {
+          "info": {
+            "name": "Start LinkedIn profile enrichment",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.snov.io/v2/li-profiles-by-urls/start",
+            "body": {
+              "type": "form-urlencoded",
+              "data": [
+                {
+                  "name": "urls",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "docs": "Extracts complete profile information from LinkedIn member URLs. Costs 1 credit per prospect profile."
+        },
+        {
+          "info": {
+            "name": "Get LinkedIn profile enrichment result",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.snov.io/v2/li-profiles-by-urls/result",
+            "params": [
+              {
+                "name": "task_hash",
+                "value": "",
+                "type": "query",
+                "description": "The task hash returned by the matching /start endpoint."
+              }
+            ]
+          },
+          "docs": "Get LinkedIn profile enrichment result"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

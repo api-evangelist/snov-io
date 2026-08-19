@@ -1,15 +1,132 @@
-generated: '2026-07-11'
-method: derived
-source: openapi/snov-io-openapi.yml
+generated: '2026-08-13'
+method: searched
+source: https://snov.io/api
+docs: https://snov.io/knowledgebase/how-to-use-snov-io-api/
+description: >-
+  Snov.io runs TWO independent OAuth 2.0 deployments that share no credentials, no host and no
+  grant type. The REST API at api.snov.io uses client_credentials to mint a 3600-second Bearer
+  token from an API user id and secret the account holder copies out of the web app. The remote
+  MCP server at mcp.snov.io uses authorization_code with PKCE against an authorization server on
+  app.snov.io, with open dynamic client registration and a single scope named "mcp". A token
+  minted for one will not work on the other.
 summary:
   types:
-  - http
+    - oauth2
+    - http
+  surfaces: 2
+  mfa_for_api: false
+  api_keys: false
+
 schemes:
-- name: bearerAuth
-  type: http
-  scheme: bearer
-  bearerFormat: JWT
-  description: Obtain a Bearer token via POST /v1/oauth/access_token using client credentials.
-    Tokens expire after 3600 seconds.
-  sources:
-  - openapi/snov-io-openapi.yml
+  - name: OAuth2ClientCredentials
+    surface: REST API
+    type: oauth2
+    flow: clientCredentials
+    token_url: https://api.snov.io/v1/oauth/access_token
+    grant_type: client_credentials
+    parameters:
+      - name: grant_type
+        value: client_credentials
+        required: true
+      - name: client_id
+        description: API User ID, from https://app.snov.io/account/api
+        required: true
+      - name: client_secret
+        description: API Secret, from https://app.snov.io/account/api
+        required: true
+    response_fields:
+      - access_token
+      - token_type
+      - expires_in
+    token_ttl_seconds: 3600
+    refresh_token: false
+    scopes: []
+    note: >-
+      No scope parameter is accepted and no scopes are issued. Authorization is entirely
+      plan-derived — what a token can do is decided by the account's subscription tier and
+      credit balance, not by the credential. Re-POST the token endpoint to renew; there is no
+      refresh grant.
+    sources:
+      - https://snov.io/api
+      - openapi/snov-io-authentication-api-openapi.yml
+
+  - name: BearerToken
+    surface: REST API
+    type: http
+    scheme: bearer
+    header: 'Authorization: Bearer <access_token>'
+    description: >-
+      The token returned by the client_credentials exchange, presented on every subsequent REST
+      call. Snov.io's own examples show a small number of legacy v1 endpoints accepting the
+      token as an `access_token` form field instead of a header — prefer the header everywhere.
+    sources:
+      - https://snov.io/api
+
+  - name: OAuth2AuthorizationCodeMCP
+    surface: MCP server
+    type: oauth2
+    flow: authorizationCode
+    resource: https://mcp.snov.io/mcp
+    authorization_server: https://app.snov.io
+    authorization_endpoint: https://app.snov.io/mcp/authorize
+    token_endpoint: https://app.snov.io/back/mcp/oauth/token
+    registration_endpoint: https://app.snov.io/back/mcp/oauth/register
+    pkce: S256
+    dynamic_client_registration: true
+    token_endpoint_auth_methods_supported:
+      - none
+    grant_types_supported:
+      - authorization_code
+      - refresh_token
+    bearer_methods_supported:
+      - header
+    scopes:
+      - name: mcp
+        description: >-
+          The only scope Snov.io issues. Grants an MCP client the full published action surface
+          — prospecting, email verification, Sales CRM and LinkedIn outreach — with no
+          finer-grained separation between read and write.
+    note: >-
+      Public-client OAuth: no client secret, PKCE required, and open RFC 7591 dynamic
+      registration so an MCP client can self-register. The user approves the connection inside
+      their Snov.io account, which is why Snov.io can say "you never share raw API keys" with
+      an AI assistant. Unlike the REST surface, this flow DOES issue refresh tokens.
+    sources:
+      - https://mcp.snov.io/.well-known/oauth-protected-resource
+      - https://app.snov.io/.well-known/oauth-authorization-server
+      - https://snov.io/knowledgebase/how-to-use-snov-io-mcp-with-your-ai-assistant/
+
+credential_management:
+  console: https://app.snov.io/account/api
+  rotation_policy: none published
+  key_prefixes: none
+  expiry: >-
+    The API User ID and Secret do not expire and there is no documented rotation or revocation
+    procedure. Only the derived access token is short-lived (3600s).
+  scoped_keys: false
+  ip_allowlisting: false
+  note: >-
+    There is no way to issue a restricted credential — no read-only key, no per-integration key,
+    no IP binding. A single compromised API secret grants the full account surface, including
+    the ability to send email from every connected sender mailbox.
+
+trial_access:
+  note: >-
+    Snov.io states in its API reference that free-plan users must "request test access by
+    booking a personal demo". The REST API is a paid-tier feature; the MCP server, by contrast,
+    is documented as available on all plans including the free Trial.
+
+x-evidence:
+  - fetched: '2026-08-13'
+    url: https://snov.io/api
+    http_status: 200
+  - fetched: '2026-08-13'
+    url: https://mcp.snov.io/.well-known/oauth-protected-resource
+    http_status: 200
+  - fetched: '2026-08-13'
+    url: https://app.snov.io/.well-known/oauth-authorization-server
+    http_status: 200
+  - fetched: '2026-08-13'
+    url: https://mcp.snov.io/mcp
+    http_status: 401
+    detail: 'www-authenticate: Bearer resource_metadata="...", scope="mcp"'

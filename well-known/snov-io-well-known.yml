@@ -1,0 +1,140 @@
+name: Snov.io Well-Known Discovery Probe
+specificationVersion: '0.1'
+generated: '2026-08-13'
+method: probed
+source: live HTTP probes of every host named in apis.yml baseURL / OpenAPI servers[] plus the docs, app and MCP hosts
+description: >-
+  Probe of RFC 8615 /.well-known/ paths across every Snov.io host. Two paths return real
+  documents, and both are part of the OAuth flow behind the remote MCP server at
+  https://mcp.snov.io/mcp: RFC 9728 protected-resource metadata on mcp.snov.io and RFC 8414
+  authorization-server metadata on app.snov.io. No security.txt, api-catalog, ai-plugin.json,
+  OpenID Connect discovery document or A2A agent card is served on any host. The marketing host
+  snov.io answers every unknown path with an HTTP 404 that carries a 107 KB HTML SPA shell, so a
+  non-zero body on that host is not evidence of a document.
+
+hosts:
+  - host: snov.io
+    role: marketing + documentation
+    note: >-
+      Returns HTTP 404 with a full HTML page body for every /.well-known/ path. Recorded as a
+      miss; the HTML shell is not a document.
+  - host: api.snov.io
+    role: REST API base URL
+    note: >-
+      Returns HTTP 404 with a JSON error envelope
+      {"errors":{"code":404,"title":"Sorry, but url or entity not found","source":""}} for every
+      /.well-known/ path and every OpenAPI discovery path probed.
+  - host: app.snov.io
+    role: web application + OAuth authorization server for MCP
+  - host: mcp.snov.io
+    role: remote MCP server
+
+probes:
+  - host: mcp.snov.io
+    path: /.well-known/oauth-protected-resource
+    url: https://mcp.snov.io/.well-known/oauth-protected-resource
+    status: 200
+    content_type: application/json
+    hit: true
+    file: well-known/snov-io-oauth-protected-resource.json
+    note: >-
+      RFC 9728 OAuth 2.0 Protected Resource Metadata. Names resource
+      https://mcp.snov.io/mcp, authorization server https://app.snov.io, scope "mcp", and
+      header-only bearer methods. Also served, byte-identical, at
+      /.well-known/oauth-protected-resource/mcp (HTTP 200).
+  - host: mcp.snov.io
+    path: /.well-known/oauth-protected-resource/mcp
+    url: https://mcp.snov.io/.well-known/oauth-protected-resource/mcp
+    status: 200
+    content_type: application/json
+    hit: true
+    file: well-known/snov-io-oauth-protected-resource.json
+    note: Path-suffixed variant per RFC 9728; identical body to the root path.
+  - host: app.snov.io
+    path: /.well-known/oauth-authorization-server
+    url: https://app.snov.io/.well-known/oauth-authorization-server
+    status: 200
+    content_type: application/json
+    hit: true
+    file: well-known/snov-io-oauth-authorization-server.json
+    note: >-
+      RFC 8414 OAuth 2.0 Authorization Server Metadata. Authorization code + refresh token
+      grants, PKCE S256 required, RFC 7591 dynamic client registration open at
+      /back/mcp/oauth/register, token_endpoint_auth_methods_supported ["none"] (public clients),
+      scopes_supported ["mcp"].
+  - host: mcp.snov.io
+    path: /.well-known/oauth-authorization-server
+    url: https://mcp.snov.io/.well-known/oauth-authorization-server
+    status: 404
+    hit: false
+    note: Plain-text "404 page not found"; authorization-server metadata lives on app.snov.io.
+  - host: mcp.snov.io
+    path: /.well-known/openid-configuration
+    url: https://mcp.snov.io/.well-known/openid-configuration
+    status: 404
+    hit: false
+  - host: app.snov.io
+    path: /.well-known/openid-configuration
+    url: https://app.snov.io/.well-known/openid-configuration
+    status: 200
+    hit: false
+    note: >-
+      SOFT HIT, recorded as a MISS. Returns HTTP 200 but the body is the Vue.js SPA shell for
+      app.snov.io, not an OpenID Provider Configuration document. Snov.io is not an OpenID
+      Connect provider; its authorization server publishes RFC 8414 metadata only.
+  - host: snov.io
+    path: /.well-known/security.txt
+    url: https://snov.io/.well-known/security.txt
+    status: 404
+    hit: false
+  - host: api.snov.io
+    path: /.well-known/security.txt
+    url: https://api.snov.io/.well-known/security.txt
+    status: 404
+    hit: false
+  - host: snov.io
+    path: /.well-known/openid-configuration
+    url: https://snov.io/.well-known/openid-configuration
+    status: 404
+    hit: false
+  - host: snov.io
+    path: /.well-known/oauth-authorization-server
+    url: https://snov.io/.well-known/oauth-authorization-server
+    status: 404
+    hit: false
+  - host: snov.io
+    path: /.well-known/api-catalog
+    url: https://snov.io/.well-known/api-catalog
+    status: 404
+    hit: false
+  - host: snov.io
+    path: /.well-known/ai-plugin.json
+    url: https://snov.io/.well-known/ai-plugin.json
+    status: 404
+    hit: false
+  - host: snov.io
+    path: /.well-known/agent-card.json
+    url: https://snov.io/.well-known/agent-card.json
+    status: 404
+    hit: false
+  - host: snov.io
+    path: /.well-known/agent.json
+    url: https://snov.io/.well-known/agent.json
+    status: 404
+    hit: false
+  - host: api.snov.io
+    path: /.well-known/agent-card.json
+    url: https://api.snov.io/.well-known/agent-card.json
+    status: 404
+    hit: false
+
+summary:
+  paths_probed: 16
+  documents_found: 3
+  security_txt: false
+  openid_configuration: false
+  oauth_authorization_server: true
+  oauth_protected_resource: true
+  api_catalog: false
+  ai_plugin: false
+  agent_card: false

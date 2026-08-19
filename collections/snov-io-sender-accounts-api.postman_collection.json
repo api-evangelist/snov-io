@@ -1,0 +1,433 @@
+{
+  "item": [
+    {
+      "id": "201060fd-5e7f-4a16-ac96-164e5c11adc4",
+      "name": "Sender Accounts",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "98a2d75c-8cc1-48ac-884f-56b37a8b6362",
+          "name": "List connected email sender accounts (free)",
+          "request": {
+            "name": "List connected email sender accounts (free)",
+            "description": {},
+            "url": {
+              "path": [
+                "v2",
+                "sender-accounts",
+                "emails"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "f3762c63-4792-4684-8c01-0522a57b63e5",
+              "name": "Connected sender accounts in the workspace.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "sender-accounts",
+                    "emails"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"key_0\": \"string\",\n    \"key_1\": 7500\n  },\n  {\n    \"key_0\": true,\n    \"key_1\": 6553\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "de14251b-7a1b-4357-b297-3d3e8bec28e0",
+          "name": "Connect a new email sender account",
+          "request": {
+            "name": "Connect a new email sender account",
+            "description": {},
+            "url": {
+              "path": [
+                "v2",
+                "sender-accounts",
+                "emails"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sender_name\": \"<string>\",\n  \"email_from\": \"<email>\",\n  \"password\": \"<string>\",\n  \"smtp_host\": \"<string>\",\n  \"smtp_port\": \"<integer>\",\n  \"smtp_encryption\": \"<string>\",\n  \"imap_host\": \"<string>\",\n  \"imap_port\": \"<integer>\",\n  \"reply_to\": \"<string>\",\n  \"daily_limitation\": \"<integer>\",\n  \"signature\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "034ec1d1-ffd8-4af6-87d1-0c014538679e",
+              "name": "The created sender account.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "sender-accounts",
+                    "emails"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"sender_name\": \"<string>\",\n  \"email_from\": \"<email>\",\n  \"password\": \"<string>\",\n  \"smtp_host\": \"<string>\",\n  \"smtp_port\": \"<integer>\",\n  \"smtp_encryption\": \"<string>\",\n  \"imap_host\": \"<string>\",\n  \"imap_port\": \"<integer>\",\n  \"reply_to\": \"<string>\",\n  \"daily_limitation\": \"<integer>\",\n  \"signature\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"key_0\": 7048.879831387905,\n  \"key_1\": \"string\",\n  \"key_2\": 5762\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "f938169d-2ab2-4d12-a345-ac3a3aee899c",
+          "name": "Update a sender account",
+          "request": {
+            "name": "Update a sender account",
+            "description": {},
+            "url": {
+              "path": [
+                "v2",
+                "sender-accounts",
+                "emails",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"key_0\": 9205.242822251179,\n  \"key_1\": \"string\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "59953b86-0d29-4d0d-93ce-573015de95f6",
+              "name": "The updated sender account.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "sender-accounts",
+                    "emails",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"key_0\": 7048.879831387905,\n  \"key_1\": \"string\",\n  \"key_2\": 5762\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"key_0\": 7048.879831387905,\n  \"key_1\": \"string\",\n  \"key_2\": 5762\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "1b21b0f1-76c3-468b-b3a8-5dbf81c4a985",
+          "name": "Check SMTP/IMAP status of a sender account",
+          "request": {
+            "name": "Check SMTP/IMAP status of a sender account",
+            "description": {},
+            "url": {
+              "path": [
+                "v2",
+                "sender-accounts",
+                "check-sender-status"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "sender_account_id",
+                  "value": "<integer>",
+                  "description": "(Required) "
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "cb71a0c0-aae8-454a-b423-1b0d541fda95",
+              "name": "Connection validity and any errors.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "sender-accounts",
+                    "check-sender-status"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "sender_account_id",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"key_0\": 7048.879831387905,\n  \"key_1\": \"string\",\n  \"key_2\": 5762\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.snov.io",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "oauth2",
+    "oauth2": [
+      {
+        "key": "accessTokenUrl",
+        "value": "https://api.snov.io/v1/oauth/access_token"
+      },
+      {
+        "key": "grant_type",
+        "value": "client_credentials"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "9739feee-4190-485a-848e-ecc98cf716c8",
+    "name": "Snov.io Authentication Sender Accounts API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Snov.io sales engagement REST API. Authentication uses the OAuth2 client_credentials grant to exchange an API User ID (client_id) and API Secret (client_secret) for a one-hour Bearer access token. Email finder, domain search, and email verification use an asynchronous pattern: a POST to a `/start` endpoint returns a `task_hash`, then a GET to the matching `/result` endpoint retrieves the outcome. Most request bodies are application/x-www-form-urlencoded; a few v2 endpoints accept JSON. The API is rate limited to 60 requests per minute.\n\nContact Support:\n Name: Snov.io Support",
+      "type": "text/plain"
+    }
+  }
+}

@@ -1,0 +1,247 @@
+name: Snov.io MCP / REST / GraphQL Tool Crosswalk
+specificationVersion: '0.1'
+generated: '2026-08-13'
+method: derived
+source: >-
+  mcp/snov-io-mcp.yml (capability groups published at https://snov.io/mcp and
+  https://snov.io/knowledgebase/how-to-use-snov-io-mcp-with-your-ai-assistant/) bound by
+  name and semantics to operationIds in openapi/*.yml
+description: >-
+  Binds Snov.io's published MCP capability groups to the REST operations that back them. The
+  live MCP tool list is OAuth-gated (tools/list returns HTTP 401), so this crosswalk maps
+  CAPABILITY GROUPS to operationIds by name and semantics rather than by introspected tool
+  names — every confidence value below reflects that. The headline finding is asymmetry: the
+  MCP server covers a materially larger product surface than the public REST API, and roughly
+  half of what an agent can do over MCP has no documented REST equivalent at all.
+
+surfaces:
+  openapi:
+    files:
+      - openapi/snov-io-authentication-api-openapi.yml
+      - openapi/snov-io-campaigns-api-openapi.yml
+      - openapi/snov-io-crm-pipeline-api-openapi.yml
+      - openapi/snov-io-domain-search-api-openapi.yml
+      - openapi/snov-io-email-accounts-api-openapi.yml
+      - openapi/snov-io-email-finder-api-openapi.yml
+      - openapi/snov-io-email-verification-api-openapi.yml
+      - openapi/snov-io-email-warm-up-api-openapi.yml
+      - openapi/snov-io-enrichment-api-openapi.yml
+      - openapi/snov-io-prospects-api-openapi.yml
+      - openapi/snov-io-user-api-openapi.yml
+      - openapi/snov-io-webhooks-api-openapi.yml
+    base_url: https://api.snov.io
+    gated: false
+    note: >-
+      Snov.io publishes no OpenAPI document of its own; these specs are API Evangelist
+      generations from the published reference at https://snov.io/api.
+  graphql:
+    endpoint: null
+    file: graphql/snov-io-schema.graphql
+    gated: n/a
+    note: >-
+      Snov.io ships NO GraphQL API. graphql/snov-io-schema.graphql is an API Evangelist
+      conceptual graph layer over the REST surface, not a provider endpoint, and is therefore
+      excluded from this crosswalk.
+  mcp:
+    url: https://mcp.snov.io/mcp
+    mode: remote
+    gated: true
+    gate: OAuth 2.0 bearer, scope "mcp" — tools/list returns HTTP 401 unauthenticated
+
+crosswalk:
+  - tool: Search the Snov.io database by AI-powered filters and save to lists
+    category: prospect-search
+    rest: []
+    binding: none
+    confidence: high
+    note: >-
+      Database Search is documented in the REST reference at
+      /v2/database-search/prospects/start and /v2/database-search/companies/start but is NOT
+      present in any spec in openapi/ — a real gap in our capture, recorded rather than papered
+      over. See lifecycle/snov-io-lifecycle.yml gaps[].
+  - tool: Find contacts by company domain (start a search, get results)
+    category: prospect-search
+    rest:
+      - startDomainSearch
+      - getDomainSearchResult
+      - startDomainProspectSearch
+      - getDomainProspectSearchResult
+      - startDomainEmailsSearch
+      - getDomainEmailsSearchResult
+      - startGenericContactsSearch
+      - getGenericContactsSearchResult
+      - getDomainEmailsCount
+    binding: direct
+    confidence: high
+    note: The REST two-step start/result task_hash pattern maps cleanly onto the MCP async-action warning.
+  - tool: Find and verify individual emails by name and company
+    category: email-finder
+    rest:
+      - startFindEmailsByName
+      - getFindEmailsByNameResult
+      - startFindDomainByCompanyName
+      - getFindDomainByCompanyNameResult
+    binding: direct
+    confidence: high
+  - tool: Verify emails individually or in bulk
+    category: email-verification
+    rest:
+      - startEmailVerification
+      - getEmailVerificationResult
+    binding: direct
+    confidence: high
+    note: >-
+      REST caps a verification request at 10 addresses; the MCP "bulk" wording likely fans out
+      across calls or uses the UI bulk pipeline. Unverifiable without an authenticated session.
+  - tool: Pull a prospect profile by email, ID, or list
+    category: prospect-management
+    rest:
+      - findProspectByEmail
+      - findProspectById
+      - viewProspectsInList
+      - getProfileByEmail
+    binding: direct
+    confidence: high
+  - tool: Search LinkedIn profiles by URL and save them as prospects
+    category: enrichment
+    rest:
+      - startLinkedInProfileEnrichment
+      - getLinkedInProfileEnrichmentResult
+      - startLiProfilesByUrls
+      - getLiProfilesByUrlsResult
+    binding: partial
+    confidence: medium
+    note: >-
+      REST enriches profiles from URLs (max 10 per request) but has no operation that saves the
+      result as a prospect in one call; the MCP tool composes enrichment + addProspect.
+  - tool: List all prospects in a list
+    category: prospect-management
+    rest:
+      - viewProspectsInList
+      - listProspectLists
+    binding: direct
+    confidence: high
+  - tool: Add, update, and remove prospects in lists
+    category: prospect-management
+    rest:
+      - addProspect
+    binding: partial
+    confidence: medium
+    note: REST publishes add only. No documented update or remove operation for a prospect in a list.
+  - tool: Create, rename, delete, and restore prospect lists
+    category: prospect-management
+    rest:
+      - createProspectList
+      - listProspectLists
+    binding: partial
+    confidence: medium
+    note: REST publishes create and list only. Rename, delete and restore are MCP-only.
+  - tool: List, create, edit, reorder, and delete pipelines
+    category: crm
+    rest:
+      - listPipelines
+      - listPipelineStages
+    binding: partial
+    confidence: medium
+    note: REST is read-only over CRM pipelines. Every write in this group is MCP-only.
+  - tool: Search the Snov.io database by prospect custom fields
+    category: prospect-management
+    rest:
+      - getProspectCustomFields
+    binding: partial
+    confidence: low
+    note: Inferred binding; Snov.io does not name a custom-field MCP action explicitly.
+
+mcp_only:
+  - tool: Organize lists into folders (list, create, move, delete folder)
+    reason: No public REST operation for list folders.
+  - tool: Export lists with custom field selection
+    reason: No public REST export operation.
+  - tool: 'CRM deals — list, create, update, search, delete, move between stages'
+    reason: >-
+      The public REST API exposes pipelines and stages read-only. There is no deals resource in
+      the published reference at all.
+  - tool: 'CRM deals — mark won/lost with reason tracking, add participants, view timeline'
+    reason: No REST deals resource.
+  - tool: 'CRM notes — add, edit, delete notes on deals'
+    reason: No REST notes resource.
+  - tool: 'CRM loss reasons — list, create, update, delete'
+    reason: No REST loss-reasons resource.
+  - tool: 'CRM tasks — list/filter, create/update calendar tasks, mark done, link to deals'
+    reason: No REST tasks resource.
+  - tool: 'LinkedIn account setup — connect accounts, daily limits, warm-up mode, proxies, team slots'
+    reason: >-
+      LinkedIn automation is a paid add-on ($69 per account slot) with no REST surface. The
+      public API touches LinkedIn only for read-only profile enrichment from URLs.
+  - tool: 'LinkedIn actions — invites, messages, InMails, profile visits, post likes, skill endorsements'
+    reason: No REST equivalent; write-side LinkedIn automation is MCP/UI only.
+  - tool: 'LinkedIn — check connection level and invite status, sync chat history'
+    reason: No REST equivalent.
+  - tool: 'LinkedIn — parse network and export contacts as CSV'
+    reason: No REST equivalent; documented as a long-running async action.
+
+rest_only:
+  - operationId: getAccessToken
+    reason: >-
+      REST client_credentials token exchange. The MCP server uses a different credential path
+      entirely (authorization_code + PKCE against app.snov.io), so this has no tool analogue.
+  - operationId: listCampaigns
+    reason: No campaign-management action appears in Snov.io's published MCP capability list.
+  - operationId: createCampaign
+  - operationId: getCampaign
+  - operationId: updateCampaign
+  - operationId: deleteCampaign
+  - operationId: changeCampaignState
+  - operationId: listEmailSchedules
+  - operationId: createEmailStepContent
+  - operationId: getEmailStepContent
+  - operationId: updateEmailStepContent
+  - operationId: deleteEmailStepContent
+  - operationId: getRecipientStatus
+  - operationId: changeRecipientStatus
+  - operationId: listFinishedProspects
+  - operationId: addToDoNotEmailList
+  - operationId: listDoNotEmailLists
+  - operationId: getCampaignAnalytics
+  - operationId: getCampaignProgress
+  - operationId: getCampaignRecipientsActivity
+  - operationId: getSentEmails
+  - operationId: getCampaignOpens
+  - operationId: getCampaignClicks
+  - operationId: getCampaignReplies
+  - operationId: getCampaignEmailReplies
+  - operationId: listWarmUpCampaigns
+    reason: Email warm-up has no published MCP action.
+  - operationId: createWarmUpCampaign
+  - operationId: getWarmUpCampaign
+  - operationId: updateWarmUpCampaign
+  - operationId: listEmailAccounts
+    reason: Sender-account management has no published MCP action.
+  - operationId: addEmailAccount
+  - operationId: updateEmailAccount
+  - operationId: checkSenderStatus
+  - operationId: listWebhooks
+    reason: Webhook subscription management has no published MCP action.
+  - operationId: addWebhook
+  - operationId: updateWebhook
+  - operationId: deleteWebhook
+  - operationId: getUserBalance
+
+coverage:
+  rest_operations_total: 65
+  rest_operations_deduplicated: 54
+  mcp_capability_groups: 8
+  mcp_actions_claimed_by_provider: '100+'
+  crosswalk_rows: 11
+  mcp_only_rows: 11
+  rest_only_operations: 37
+  bound_with_high_confidence: 5
+  bound_with_medium_confidence: 5
+  bound_with_low_confidence: 1
+  note: >-
+    Counts are group-level, not tool-level, because the tool list is gated. Two directional
+    findings survive that limitation and are worth stating plainly: (1) every CRM write, every
+    LinkedIn write and all list-folder/export functionality is reachable ONLY through MCP, and
+    (2) the entire multichannel campaign engine, email warm-up, sender accounts and webhooks
+    are reachable ONLY through REST. Neither surface is a superset of the other, so an agent
+    integrator needs both credentials.

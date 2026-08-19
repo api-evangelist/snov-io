@@ -1,0 +1,120 @@
+name: Snov.io Agent Skills
+specificationVersion: '0.1'
+generated: '2026-08-13'
+method: generated
+source: >-
+  openapi/*.yml (operationIds grounded in the specs), conventions/snov-io-conventions.yml,
+  errors/snov-io-problem-types.yml, asyncapi/snov-io-webhooks.yml and the published reference at
+  https://snov.io/api
+description: >-
+  Packaged Agent Skills for the Snov.io REST API. Every operationId referenced in these skills
+  exists in openapi/; none was invented. Each skill carries the cross-cutting rules an agent
+  gets wrong by default on this API — the two-step async task_hash pattern, the 3600-second
+  token, the 60 req/min cap with no rate-limit headers, per-result credit metering, the absence
+  of idempotency, and the two incompatible error envelopes.
+  Snov.io publishes no skills, no AGENTS.md and no llms.txt; these are API Evangelist
+  generations. Snov.io's own agent surface is its remote MCP server — see mcp/snov-io-mcp.yml.
+
+skills:
+  - name: snov-io-find-and-verify-emails
+    file: skills/snov-io-find-and-verify-emails.md
+    api: Snov.io Email Finder API
+    summary: >-
+      Resolve a company domain from its name if needed, find a named person's business email,
+      then verify deliverability before anyone sends to it.
+    operations:
+      - getAccessToken
+      - getUserBalance
+      - startFindDomainByCompanyName
+      - getFindDomainByCompanyNameResult
+      - startFindEmailsByName
+      - getFindEmailsByNameResult
+      - startEmailVerification
+      - getEmailVerificationResult
+
+  - name: snov-io-build-prospect-list-from-domain
+    file: skills/snov-io-build-prospect-list-from-domain.md
+    api: Snov.io Domain Search API
+    summary: >-
+      Size a domain crawl for free, pick the right one of four search families, and persist the
+      results into a named prospect list before the task_hash expires.
+    operations:
+      - getAccessToken
+      - getDomainEmailsCount
+      - startDomainSearch
+      - getDomainSearchResult
+      - startDomainProspectSearch
+      - getDomainProspectSearchResult
+      - startDomainEmailsSearch
+      - getDomainEmailsSearchResult
+      - startGenericContactsSearch
+      - getGenericContactsSearchResult
+      - getProspectCustomFields
+      - createProspectList
+      - addProspect
+      - viewProspectsInList
+      - listProspectLists
+
+  - name: snov-io-launch-and-monitor-campaign
+    file: skills/snov-io-launch-and-monitor-campaign.md
+    api: Snov.io Campaigns API
+    summary: >-
+      Validate a sender mailbox, load suppressions, create a campaign and its steps, start it,
+      and read analytics — preferring webhook subscriptions over polling.
+    operations:
+      - getAccessToken
+      - listEmailAccounts
+      - addEmailAccount
+      - checkSenderStatus
+      - listEmailSchedules
+      - createCampaign
+      - createEmailStepContent
+      - listCampaigns
+      - getCampaign
+      - updateCampaign
+      - changeCampaignState
+      - deleteCampaign
+      - getCampaignAnalytics
+      - getCampaignProgress
+      - getCampaignRecipientsActivity
+      - getSentEmails
+      - getCampaignOpens
+      - getCampaignClicks
+      - getCampaignReplies
+      - addToDoNotEmailList
+      - listDoNotEmailLists
+
+  - name: snov-io-subscribe-to-webhooks
+    file: skills/snov-io-subscribe-to-webhooks.md
+    api: Snov.io Webhooks API
+    summary: >-
+      Subscribe to the 20 published event actions, meet the 3-second/2xx delivery contract, and
+      audit for the silent auto-deactivation that follows 7 failed retries.
+    operations:
+      - getAccessToken
+      - listWebhooks
+      - addWebhook
+      - updateWebhook
+      - deleteWebhook
+
+shared_rules:
+  authentication: >-
+    OAuth 2.0 client_credentials at POST /v1/oauth/access_token. Bearer token, 3600-second TTL,
+    no refresh grant. Re-exchange on a timer, not on a 401.
+  async: >-
+    Every search, enrichment and verification is a POST .../start returning task_hash, polled at
+    GET .../result until status is completed. No failure terminal state is published — set your
+    own deadline.
+  rate_limit: >-
+    60 requests per minute, account-wide. No RateLimit-*, no X-RateLimit-*, no Retry-After. Pace
+    at 1 req/s by construction.
+  idempotency: >-
+    None. Never blindly retry a credit-consuming POST; check state or balance first.
+  metering: >-
+    Credits are charged per RESULT, not per request, and several operations are free when they
+    return nothing. Guard batches with getUserBalance.
+  errors: >-
+    Two incompatible envelopes. The router returns {"errors":{"code","title","source"}} (object);
+    operations return {"success":false,"errors":[...]} (array). Handle both.
+  versioning: >-
+    v1 and v2 are disjoint slices of one API, not generations. Prefixes are never interchangeable.

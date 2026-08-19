@@ -1,0 +1,205 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Snov.io Authentication Domain Search API",
+    "version": "2.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Domain Search",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Start domain search",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.snov.io/v2/domain-search/start",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Initiate an async domain search. Returns a task_hash to retrieve results. Costs 1 credit per unique domain request."
+        },
+        {
+          "info": {
+            "name": "Get domain search results",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.snov.io/v2/domain-search/result/:task_hash",
+            "params": [
+              {
+                "name": "task_hash",
+                "value": "",
+                "type": "path",
+                "description": "Task hash returned from the corresponding start endpoint"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Retrieve results of a previously started domain search task."
+        },
+        {
+          "info": {
+            "name": "Start domain prospect search",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.snov.io/v2/domain-search/prospects/start",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Initiate an async search for prospect profiles associated with a domain."
+        },
+        {
+          "info": {
+            "name": "Get domain prospect search results",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.snov.io/v2/domain-search/prospects/result/:task_hash",
+            "params": [
+              {
+                "name": "task_hash",
+                "value": "",
+                "type": "path",
+                "description": "Task hash returned from the corresponding start endpoint"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get domain prospect search results"
+        },
+        {
+          "info": {
+            "name": "Start domain emails search",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.snov.io/v2/domain-search/domain-emails/start",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Initiate an async search for all email addresses associated with a domain."
+        },
+        {
+          "info": {
+            "name": "Get domain emails search results",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.snov.io/v2/domain-search/domain-emails/result/:task_hash",
+            "params": [
+              {
+                "name": "task_hash",
+                "value": "",
+                "type": "path",
+                "description": "Task hash returned from the corresponding start endpoint"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get domain emails search results"
+        },
+        {
+          "info": {
+            "name": "Start generic contacts search",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.snov.io/v2/domain-search/generic-contacts/start",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Initiate an async search for generic company contact addresses (e.g. info@, support@)."
+        },
+        {
+          "info": {
+            "name": "Get generic contacts search results",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.snov.io/v2/domain-search/generic-contacts/result/:task_hash",
+            "params": [
+              {
+                "name": "task_hash",
+                "value": "",
+                "type": "path",
+                "description": "Task hash returned from the corresponding start endpoint"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get generic contacts search results"
+        },
+        {
+          "info": {
+            "name": "Check available emails count (free)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.snov.io/v1/get-domain-emails-count",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Returns the count of available email addresses for a domain. Free endpoint."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

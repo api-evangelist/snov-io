@@ -1,0 +1,72 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Snov.io Authentication Email Verifier API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "client_credentials",
+      "accessTokenUrl": "https://api.snov.io/v1/oauth/access_token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Email Verifier",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Start email verification",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.snov.io/v2/email-verification/start",
+            "body": {
+              "type": "form-urlencoded",
+              "data": [
+                {
+                  "name": "emails",
+                  "value": ""
+                },
+                {
+                  "name": "webhook_url",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "docs": "Starts verification for up to ten email addresses at once. Each email is added as a separate parameter. Supports an optional webhook_url for async delivery of results."
+        },
+        {
+          "info": {
+            "name": "Get email verification result",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.snov.io/v2/email-verification/result",
+            "params": [
+              {
+                "name": "task_hash",
+                "value": "",
+                "type": "query",
+                "description": "The task hash returned by the matching /start endpoint."
+              }
+            ]
+          },
+          "docs": "Get email verification result"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

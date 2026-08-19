@@ -1,0 +1,128 @@
+name: Snov.io Error Catalog
+specificationVersion: '0.1'
+generated: '2026-08-13'
+method: probed
+source: >-
+  live unauthenticated probes of https://api.snov.io (2026-08-13), the published reference at
+  https://snov.io/api, and 4xx responses declared across openapi/*.yml
+description: >-
+  Snov.io does NOT implement RFC 9457 problem+json. It returns application/json with a
+  proprietary envelope and, critically, it uses two different error shapes depending on which
+  layer rejected the call. There is no published error-code reference page — no table of codes,
+  no remediation guidance, no error index anywhere in the developer documentation. Everything
+  below was recovered by probing the live API and reading error shapes out of endpoint response
+  examples.
+
+format: proprietary-json
+media_type: application/json
+rfc9457: false
+rfc7807: false
+
+envelopes:
+  - name: routing/gateway envelope
+    shape: |
+      { "errors": { "code": <int>, "title": "<string>", "source": "<string>" } }
+    observed: true
+    evidence: >-
+      Confirmed live 2026-08-13. GET https://api.snov.io/openapi.json (and every other unknown
+      path probed on the API host) returns HTTP 404 with
+      {"errors":{"code":404,"title":"Sorry, but url or entity not found","source":""}} and
+      Content-Type: application/json. Note `errors` is an OBJECT here, not an array.
+  - name: operation-result envelope
+    shape: |
+      { "success": false, "errors": [ "<string>", ... ] }
+    observed: documented
+    evidence: >-
+      Documented on POST /v2/campaigns/{id}/action ("errors — A list of errors that occurred
+      when changing the campaign state") and on the sender-account status check, where
+      data.smtp.errors is an array of strings such as "Connection refused". Here `errors` is an
+      ARRAY. A client that assumes one shape will crash on the other.
+  - name: spec-declared envelope
+    shape: |
+      { "error": "<code>", "message": "<human readable>" }
+    observed: false
+    evidence: >-
+      Declared as components.schemas.Error across openapi/*.yml. NOT corroborated by any live
+      probe or by any response example in the published reference; recorded here as a
+      known-weak assertion inherited from the generated spec rather than as a fact about the
+      API.
+
+problem_types:
+  - status: 401
+    name: Unauthorized
+    envelope: routing/gateway envelope
+    declared_on_operations: 65
+    meaning: >-
+      Missing, malformed or expired Bearer token. Snov.io access tokens live 3600 seconds; the
+      most common cause in production is a token that aged out mid-run.
+    remediation: >-
+      Re-POST https://api.snov.io/v1/oauth/access_token with grant_type=client_credentials plus
+      the client_id and client_secret from https://app.snov.io/account/api, then retry with the
+      fresh Bearer token. Refresh proactively on a timer rather than reactively on 401 — there
+      is no refresh_token grant.
+    source: openapi/*.yml + https://snov.io/api
+  - status: 404
+    name: Not Found
+    envelope: routing/gateway envelope
+    title_observed: 'Sorry, but url or entity not found'
+    declared_on_operations: 15
+    meaning: >-
+      Either the path does not exist on api.snov.io or the addressed entity (campaign, webhook,
+      warm-up campaign, prospect list) is absent from the caller's account. The response does
+      not distinguish the two — `source` was empty on every probe.
+    remediation: >-
+      Verify the path against https://snov.io/api (v1 and v2 prefixes are not interchangeable —
+      see conventions/snov-io-conventions.yml versioning) and confirm the entity id belongs to
+      the authenticated account.
+    probed: true
+  - status: 400
+    name: Bad Request
+    envelope: operation-result envelope
+    declared_on_operations: 6
+    meaning: >-
+      Input validation failure — a missing required parameter, an out-of-range value (per_page
+      outside 20/50/100, reply_rate outside 10-45), or a state transition the resource does not
+      permit.
+    remediation: >-
+      Read the `errors` array for the per-field messages. For campaign deletion specifically the
+      docs state deletion is allowed only from the new (draft), complete or archived states —
+      an active, paused or scheduled campaign must be stopped first.
+    source: https://snov.io/api
+
+undocumented_conditions:
+  - condition: rate limit exhaustion
+    status: unknown
+    note: >-
+      Snov.io publishes a hard limit of 60 requests per minute but does NOT document the status
+      code returned on breach, does not return any RateLimit-*/X-RateLimit-* headers, and does
+      not return Retry-After. 429 appears once in the whole reference and not as a documented
+      response. An agent has no runtime signal to back off on.
+  - condition: credit exhaustion
+    status: unknown
+    note: >-
+      Every credit-consuming operation can fail for insufficient balance, but no error code,
+      status or message is published for that case. The only available guard is polling
+      getUserBalance (GET /v1/get-balance) before a batch.
+  - condition: webhook delivery failure
+    status: n/a
+    note: >-
+      Snov.io publishes its retry ladder for OUTBOUND webhooks (7 attempts over 38 hours, then
+      the subscription is deactivated) but nothing about inbound API failure modes. See
+      asyncapi/snov-io-webhooks.yml.
+  - condition: async task failure
+    status: unknown
+    note: >-
+      The two-step task_hash pattern documents only `in_progress` and `completed` for `status`.
+      No failed/errored terminal state is published, so a caller cannot distinguish a job that
+      is still running from one that will never finish.
+
+summary:
+  distinct_statuses: 3
+  rfc9457_compliant: false
+  published_error_reference: false
+  machine_readable_error_codes: false
+  finding: >-
+    The single most consequential gap is the absence of any published error reference. There is
+    no page listing codes, meanings or remediation, three distinct error envelopes are in
+    simultaneous use, and the two highest-frequency production failure modes for a metered API
+    — rate-limit breach and credit exhaustion — have no documented response at all.

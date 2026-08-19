@@ -1,0 +1,81 @@
+name: Snov.io Change Log
+specificationVersion: '0.1'
+generated: '2026-08-13'
+method: searched
+source: https://snov.io/release-notes
+description: >-
+  Snov.io publishes a product release-notes page and a Telegram updates channel. Neither is an
+  API changelog: there is no versioned, dated record of API additions, changes or removals
+  anywhere on the site, and the release-notes page itself is client-rendered — a server-side
+  fetch returns the site chrome plus "No results found" and zero entries.
+
+scheme: product-release-notes
+api_specific: false
+machine_readable: false
+feed: none
+versioned: false
+
+sources:
+  - url: https://snov.io/release-notes
+    http_status: 200
+    readable: false
+    note: >-
+      Client-rendered. A non-JavaScript fetch returns 2.9 KB of navigation chrome and no dated
+      entries. Recorded as unreadable, not as absent.
+  - url: https://t.me/snovioupdates
+    type: telegram
+    note: Secondary update channel linked from the developer reference at https://snov.io/api.
+  - url: https://snov.io/blog/
+    type: blog
+    note: >-
+      Snov.io ships a monthly "product updates" post to its blog, which is the only DATED update
+      record reachable without JavaScript. The entries below were read from posts already
+      captured in this repo's blogs/ directory during a prior pull.
+
+entries:
+  - date: '2026-06-10'
+    title: 'May updates: smarter deliverability checks and a big launch in June'
+    type: product
+    breaking: false
+    source: blogs/2026-06-10-may-updates-smarter-deliverability-checks-and-a-big-launch-in-june.md
+  - date: '2026-06-15'
+    title: >-
+      Web Summit Rio: Snov.io research shows multichannel outreach delivers 85% more replies in
+      Brazil
+    type: announcement
+    breaking: false
+    source: blogs/2026-06-15-web-summit-rio-snovio-research-shows-multichannel-outreach-delivers-85-more-replies-in-brazil.md
+
+undated_api_changes:
+  description: >-
+    Material changes to the API and agent surface that are visible in the product but carry no
+    changelog entry. Dates below are the earliest evidence available, not announcement dates.
+  entries:
+    - change: Remote MCP server launched at https://mcp.snov.io/mcp
+      earliest_evidence: '2026-07-09'
+      evidence_source: >-
+        Author byline date on
+        https://snov.io/knowledgebase/how-to-use-snov-io-mcp-with-your-ai-assistant/ (written
+        9.07.2026, last updated 5.08.2026)
+      breaking: false
+      note: >-
+        The single largest addition to Snov.io's programmable surface in 2026 — 100+ actions,
+        a new OAuth authorization server, a new host — with no changelog entry of any kind.
+    - change: Official n8n community nodes published to npm as n8n-nodes-snovio@0.0.2
+      earliest_evidence: '2025-11-21'
+      evidence_source: registry.npmjs.org publish timestamp
+      breaking: false
+    - change: 'Email Accounts / sender-accounts v2 surface (marked "New" in site navigation)'
+      earliest_evidence: '2026-08-13'
+      evidence_source: '"New" badge on https://snov.io/ product navigation, observed 2026-08-13'
+      breaking: false
+
+summary:
+  entries_recorded: 2
+  api_changelog_published: false
+  breaking_changes_recorded: 0
+  finding: >-
+    An API consumer has no way to learn that something changed. There is no API changelog, the
+    product release notes do not render server-side, and the biggest API-adjacent shipment of
+    the year — a remote MCP server with 100+ actions — is documented only in a knowledgebase
+    article, never announced as a change.

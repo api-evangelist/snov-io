@@ -1,0 +1,189 @@
+name: Snov.io Webhook Event Catalog
+specificationVersion: '0.1'
+generated: '2026-08-13'
+method: searched
+source: https://snov.io/api
+description: >-
+  Snov.io publishes NO AsyncAPI document and no event-schema registry, but it does publish a
+  complete, tabulated webhook catalog in its developer reference: eight event objects, twenty
+  actions, a stated delivery contract and a full retry ladder. Captured here verbatim in
+  substance. Subscriptions are managed over REST at /v2/webhooks; there is no UI-only path and
+  no signing scheme.
+
+asyncapi_published: false
+asyncapi_searched:
+  paths:
+    - https://snov.io/asyncapi.yaml
+    - https://api.snov.io/asyncapi.json
+    - GitHub devsnovio org
+  note: No AsyncAPI artifact exists on any Snov.io host or repository.
+
+delivery:
+  transport: HTTP POST
+  content_type: application/json
+  target: subscriber-supplied endpoint URL
+  success_criteria: HTTP status in the 200-299 range received within 3 seconds
+  timeout_seconds: 3
+  signing: none
+  note: >-
+    No HMAC signature, no shared secret, no timestamp header and no source IP allowlist is
+    published. A receiver cannot cryptographically verify that a delivery came from Snov.io.
+    This is a material security gap for an events surface that carries prospect PII.
+
+retry_policy:
+  attempts: 7
+  window_hours: 38
+  on_exhaustion: subscription is automatically deactivated
+  schedule:
+    - attempt: 1
+      after: immediately after the event
+      cumulative: 0
+    - attempt: 2
+      after: 20 minutes after the last attempt
+      cumulative: 20 minutes
+    - attempt: 3
+      after: 40 minutes after the last attempt
+      cumulative: 1 hour
+    - attempt: 4
+      after: 60 minutes after the last attempt
+      cumulative: 2 hours
+    - attempt: 5
+      after: 4 hours after the last attempt
+      cumulative: 6 hours
+    - attempt: 6
+      after: 8 hours after the last attempt
+      cumulative: 14 hours
+    - attempt: 7
+      after: 24 hours after the last attempt
+      cumulative: 38 hours
+
+limits:
+  max_subscriptions: 50
+  plan_requirement: premium plans
+  note: Premium plan users can create up to 50 webhooks per account.
+
+subscription_management:
+  base_url: https://api.snov.io
+  operations:
+    - operationId: listWebhooks
+      method: GET
+      path: /v2/webhooks
+    - operationId: addWebhook
+      method: POST
+      path: /v2/webhooks
+    - operationId: updateWebhook
+      method: PUT
+      path: /v2/webhooks/{id}
+      note: Toggles status between active and deactivated.
+    - operationId: deleteWebhook
+      method: DELETE
+      path: /v2/webhooks/{id}
+  subscription_model:
+    event_object: string
+    event_action: string
+    endpoint_url: string
+    status:
+      - active
+      - deactivated
+    created_at: Unix timestamp (integer)
+
+events:
+  - object: campaign_email
+    actions:
+      - action: sent
+        trigger: When any email is sent to the recipient in any drip campaign
+      - action: first_sent
+        trigger: When the first email is sent to the recipient in any drip campaign
+      - action: opened
+        trigger: When a recipient opens any email from any drip campaign
+      - action: bounced
+        trigger: When a campaign email bounces
+      - action: clicked
+        trigger: When a recipient clicked a link in a campaign email
+  - object: campaign_reply
+    actions:
+      - action: received
+        trigger: When the recipient responds to any email in any of the campaigns
+      - action: first_received
+        trigger: When the recipient responds to the email for the first time in any of the campaigns
+      - action: autoreply_received
+        trigger: When you receive an auto-reply to a campaign email
+  - object: campaign_li_reply
+    actions:
+      - action: received
+        trigger: >-
+          When the recipient sends a subsequent reply over LinkedIn — to a connection request, to
+          a direct message or to an InMail — in any of the campaigns
+      - action: first_received
+        trigger: >-
+          When the recipient sends their first reply over LinkedIn — to a connection request, to
+          a direct message or to an InMail — in any of the campaigns
+  - object: campaign_li
+    actions:
+      - action: connection_request_accepted
+        trigger: When the recipient accepts a LinkedIn connection request sent from a campaign
+  - object: company
+    actions:
+      - action: found_domains_by_names
+        trigger: When you request a company's domain based on its name
+      - action: found_company_by_domain
+        trigger: When you search a company by its domain
+  - object: prospect
+    actions:
+      - action: found_by_li_url
+        trigger: When you request a prospect's profile info based on their LinkedIn URL
+      - action: found_emails_by_name_by_domain
+        trigger: When you search for a prospect's email
+      - action: campaign_finished
+        trigger: 'When a campaign is completed for a recipient (status: Finished)'
+      - action: unsubscribed
+        trigger: When a campaign recipient unsubscribed from your emails
+      - action: found_company_by_domain
+        trigger: When you search prospects by company domain
+  - object: email_verification
+    actions:
+      - action: verified
+        trigger: When you request email verification
+  - object: email
+    actions:
+      - action: found_emails_by_domain
+        trigger: When you search all emails by domain
+      - action: found_generic_contacts_by_domain
+        trigger: When you search generic emails by domain
+      - action: found_prospect_emails
+        trigger: When you search prospect emails
+  - object: database_search
+    actions:
+      - action: task_result
+        trigger: When you request a prospect or company search
+
+inline_callbacks:
+  supported: true
+  parameter: webhook_url
+  description: >-
+    Distinct from subscriptions. Most async /start operations accept a per-request `webhook_url`
+    input parameter; supplying it makes Snov.io POST that one task's completed result to the URL
+    instead of requiring the caller to poll the matching /result endpoint with the task_hash.
+  operations:
+    - startDomainSearch
+    - startDomainProspectSearch
+    - startDomainEmailsSearch
+    - startGenericContactsSearch
+    - startFindEmailsByName
+    - startFindDomainByCompanyName
+    - startLinkedInProfileEnrichment
+    - startEmailVerification
+  cross_reference: conventions/snov-io-conventions.yml
+
+summary:
+  event_objects: 8
+  event_actions: 20
+  signed: false
+  asyncapi: false
+  max_subscriptions: 50
+  finding: >-
+    A genuinely well-documented webhook surface — the retry ladder and success criteria are
+    published to a level of detail most providers skip — undermined by the absence of any
+    payload signing and of any machine-readable event schema. There is no AsyncAPI document and
+    no per-event payload schema, so a subscriber cannot generate types for the twenty events it
+    can subscribe to.

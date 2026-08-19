@@ -1,0 +1,111 @@
+name: Snov.io Client Packages
+specificationVersion: '0.1'
+generated: '2026-08-13'
+method: searched
+source: >-
+  registry.npmjs.org, pypi.org, packagist.org, rubygems.org, api.github.com and the Snov.io
+  developer reference at https://snov.io/api
+description: >-
+  Snov.io publishes exactly ONE first-party package to any public registry: an n8n community
+  node set on npm. There is no first-party SDK in any language. The developer reference at
+  https://snov.io/api teaches integration with raw PHP cURL and Python `requests` snippets only
+  — no client library is offered, referenced or linked anywhere in the docs. Every other
+  Snov.io client in the wild is third-party and unmaintained; the newest community client last
+  shipped in February 2024 and the oldest in 2018. The one official package carries a single
+  0.0.2 release from November 2025 and has not been touched since.
+
+registries_searched:
+  - npm
+  - PyPI
+  - Packagist
+  - RubyGems
+  - pkg.go.dev
+  - GitHub (org + code search)
+
+official_github_account:
+  login: devsnovio
+  url: https://github.com/devsnovio
+  name: Snov.io Official
+  company: Snov.io
+  blog: https://snov.io
+  created: '2025-11-21'
+  public_repos: 1
+  note: >-
+    Confirmed first-party: GitHub profile name "Snov.io Official", company "Snov.io", website
+    snov.io; the matching npm package is maintained by dev@snov.io. NOTE — the apis.yml
+    GitHubOrganization pointer previously named https://github.com/snovio, which is an
+    unrelated individual GitHub user whose only public repo is a crypto browser extension.
+
+packages:
+  - name: n8n-nodes-snovio
+    official: true
+    registry: npm
+    language: JavaScript/TypeScript
+    url: https://www.npmjs.com/package/n8n-nodes-snovio
+    repository: https://github.com/devsnovio/n8n-nodes-snovio
+    version: 0.0.2
+    published: '2025-11-21'
+    license: MIT
+    maintainer: dev@snov.io
+    description: >-
+      Official n8n community nodes for the Snov.io API — email finding, verification, domain
+      search, prospect management, company enrichment and bulk operations inside n8n workflows.
+    note: >-
+      The only first-party package Snov.io ships. Its single 0.0.2 release predates the MCP
+      server (July 2026) and the v2 REST surface it does not cover, so it is a workflow
+      connector rather than a maintained SDK. Snov.io's own integrations page lists n8n as a
+      supported integration (https://snov.io/integrations/n8n).
+
+  - name: helgesverre/snov-io
+    official: false
+    registry: packagist
+    language: PHP
+    url: https://packagist.org/packages/helgesverre/snov-io
+    repository: https://github.com/HelgeSverre/snov-io
+    version: null
+    published: '2024-02-17'
+    description: Third-party PHP/Laravel SDK for the Snov.io API.
+    note: >-
+      Community-maintained, not endorsed by Snov.io. `published` is the last commit date from
+      the GitHub repository; the Packagist search API does not return a version for this
+      package and no tagged release version was resolvable unauthenticated, so `version` is
+      recorded null rather than guessed.
+
+  - name: snovio
+    official: false
+    registry: npm
+    language: JavaScript
+    url: https://www.npmjs.com/package/snovio
+    repository: https://github.com/timothyverhaeghe/snovio
+    version: 1.0.4
+    published: '2018-06-24'
+    description: Third-party Node.js implementation for Snov.io.
+    note: >-
+      Abandoned. Last published June 2018 — seven years before the current v2 API surface. Named
+      here only so the absence of a maintained JavaScript client is legible.
+
+  - name: python-snovio
+    official: false
+    registry: github
+    language: Python
+    url: https://github.com/miguelcdpmarques/python-snovio
+    repository: https://github.com/miguelcdpmarques/python-snovio
+    version: null
+    published: '2022-02-13'
+    description: Third-party Python wrapper around the Snov.io API.
+    note: >-
+      Never published to PyPI — `pypi.org/pypi/snovio/json`, `/snov/json`, `/snov-io/json` and
+      `/snovio-api/json` all return HTTP 404. `version: null` because there is no registry
+      metadata endpoint to read; `published` is the last push date from the GitHub API.
+
+summary:
+  official_packages: 1
+  official_sdks: 0
+  community_packages: 3
+  languages_with_official_client: []
+  newest_official_release: '2025-11-21'
+  finding: >-
+    Zero first-party SDKs. An integrator writing against api.snov.io in any language is writing
+    raw HTTP against the docs. This is the single largest developer-experience gap in the
+    Snov.io API surface and it stands in sharp contrast to the agent surface, where Snov.io
+    ships a maintained remote MCP server covering 100+ actions.

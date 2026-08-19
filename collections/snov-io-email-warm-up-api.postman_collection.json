@@ -1,0 +1,880 @@
+{
+  "item": [
+    {
+      "id": "7e80211e-0959-4260-9398-041ef55fc27b",
+      "name": "Email Warm-up",
+      "description": {
+        "content": "Manage email warm-up campaigns for improved deliverability",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "08ad0bc5-4bb9-44a9-9028-338ecb81a5a1",
+          "name": "List warm-up campaigns",
+          "request": {
+            "name": "List warm-up campaigns",
+            "description": {
+              "content": "Returns a paginated list of all email warm-up campaigns.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "warm-up"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "disabled": false,
+                  "key": "per_page",
+                  "value": "20"
+                },
+                {
+                  "disabled": false,
+                  "key": "status",
+                  "value": "<string>"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "54a6ecbb-cde7-4f32-8860-7ba1338962f2",
+              "name": "Paginated list of warm-up campaigns",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "warm-up"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "per_page",
+                      "value": "20"
+                    },
+                    {
+                      "key": "status",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": 9263,\n      \"email_account_id\": \"string\",\n      \"status\": \"string\",\n      \"strategy\": \"progressive\",\n      \"per_day\": 2943,\n      \"reply_rate\": 3080,\n      \"campaign_deadline\": \"1979-02-13\",\n      \"deliverability_score\": 5644.7427698692145\n    },\n    {\n      \"id\": 3601,\n      \"email_account_id\": \"string\",\n      \"status\": \"string\",\n      \"strategy\": \"steady\",\n      \"per_day\": 225,\n      \"reply_rate\": 9990,\n      \"campaign_deadline\": \"1986-01-31\",\n      \"deliverability_score\": 938.4044893082\n    }\n  ],\n  \"total\": 7683,\n  \"page\": 5142,\n  \"per_page\": 4066\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "cf3a455c-10d0-464a-bd67-069e3429ce74",
+              "name": "Unauthorized — missing or invalid Bearer token",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "warm-up"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "per_page",
+                      "value": "20"
+                    },
+                    {
+                      "key": "status",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "dea20eb9-9276-447d-98ec-9a07be3d6050",
+          "name": "Create warm-up campaign",
+          "request": {
+            "name": "Create warm-up campaign",
+            "description": {
+              "content": "Create a new email warm-up campaign to improve deliverability scores.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "warm-up"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email_account_id\": \"<string>\",\n  \"per_day\": \"<integer>\",\n  \"strategy\": \"progressive\",\n  \"from\": \"<integer>\",\n  \"increase\": \"<integer>\",\n  \"email_content\": \"<string>\",\n  \"subject\": \"<string>\",\n  \"body\": \"<string>\",\n  \"reply_rate\": \"<integer>\",\n  \"campaign_deadline\": \"<date>\",\n  \"providers\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"send_to_paid_domain\": \"<boolean>\",\n  \"enable_ctd\": \"<boolean>\",\n  \"enable_proxy\": \"<boolean>\",\n  \"schedule_id\": \"<integer>\",\n  \"template_name\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "d28c88d2-7d6b-48e3-aa7c-5656ef00f1be",
+              "name": "Warm-up campaign created",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "warm-up"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email_account_id\": \"<string>\",\n  \"per_day\": \"<integer>\",\n  \"strategy\": \"progressive\",\n  \"from\": \"<integer>\",\n  \"increase\": \"<integer>\",\n  \"email_content\": \"<string>\",\n  \"subject\": \"<string>\",\n  \"body\": \"<string>\",\n  \"reply_rate\": \"<integer>\",\n  \"campaign_deadline\": \"<date>\",\n  \"providers\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"send_to_paid_domain\": \"<boolean>\",\n  \"enable_ctd\": \"<boolean>\",\n  \"enable_proxy\": \"<boolean>\",\n  \"schedule_id\": \"<integer>\",\n  \"template_name\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 8045,\n  \"email_account_id\": \"string\",\n  \"status\": \"string\",\n  \"strategy\": \"steady\",\n  \"per_day\": 6370,\n  \"reply_rate\": 6448,\n  \"campaign_deadline\": \"2007-10-03\",\n  \"deliverability_score\": 9455.914203894454\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "82b76808-9043-4db3-b89b-9f7c1a626781",
+              "name": "Bad request — missing or invalid parameters",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "warm-up"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email_account_id\": \"<string>\",\n  \"per_day\": \"<integer>\",\n  \"strategy\": \"progressive\",\n  \"from\": \"<integer>\",\n  \"increase\": \"<integer>\",\n  \"email_content\": \"<string>\",\n  \"subject\": \"<string>\",\n  \"body\": \"<string>\",\n  \"reply_rate\": \"<integer>\",\n  \"campaign_deadline\": \"<date>\",\n  \"providers\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"send_to_paid_domain\": \"<boolean>\",\n  \"enable_ctd\": \"<boolean>\",\n  \"enable_proxy\": \"<boolean>\",\n  \"schedule_id\": \"<integer>\",\n  \"template_name\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "bc3c5c12-53c9-4319-b642-ea7e3b121763",
+              "name": "Unauthorized — missing or invalid Bearer token",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "warm-up"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email_account_id\": \"<string>\",\n  \"per_day\": \"<integer>\",\n  \"strategy\": \"progressive\",\n  \"from\": \"<integer>\",\n  \"increase\": \"<integer>\",\n  \"email_content\": \"<string>\",\n  \"subject\": \"<string>\",\n  \"body\": \"<string>\",\n  \"reply_rate\": \"<integer>\",\n  \"campaign_deadline\": \"<date>\",\n  \"providers\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"send_to_paid_domain\": \"<boolean>\",\n  \"enable_ctd\": \"<boolean>\",\n  \"enable_proxy\": \"<boolean>\",\n  \"schedule_id\": \"<integer>\",\n  \"template_name\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "20d157a5-da5a-4937-af5d-a10e83337909",
+          "name": "Get warm-up campaign",
+          "request": {
+            "name": "Get warm-up campaign",
+            "description": {
+              "content": "Retrieve full details of a specific warm-up campaign.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "warm-up",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "id",
+                  "description": "(Required) Campaign ID"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "ac57444d-bac1-4494-8b65-8a6dd0ee7a4b",
+              "name": "Warm-up campaign details",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "warm-up",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "id",
+                      "description": "(Required) Campaign ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 8045,\n  \"email_account_id\": \"string\",\n  \"status\": \"string\",\n  \"strategy\": \"steady\",\n  \"per_day\": 6370,\n  \"reply_rate\": 6448,\n  \"campaign_deadline\": \"2007-10-03\",\n  \"deliverability_score\": 9455.914203894454\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4cf9ffda-7982-4dc7-9c82-e99b048d7514",
+              "name": "Unauthorized — missing or invalid Bearer token",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "warm-up",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "id",
+                      "description": "(Required) Campaign ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9be1aa13-c9d6-4ba8-8700-61e80b5159ef",
+              "name": "Resource not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "warm-up",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "id",
+                      "description": "(Required) Campaign ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "80fcba63-082a-4f5b-bb4d-7a686e2fe9be",
+          "name": "Update warm-up campaign",
+          "request": {
+            "name": "Update warm-up campaign",
+            "description": {
+              "content": "Update settings of an existing warm-up campaign.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "warm-up",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "id",
+                  "description": "(Required) Campaign ID"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"<string>\",\n  \"strategy\": \"<string>\",\n  \"per_day\": \"<integer>\",\n  \"from\": \"<integer>\",\n  \"increase\": \"<integer>\",\n  \"email_content\": \"<string>\",\n  \"reply_rate\": \"<integer>\",\n  \"campaign_deadline\": \"<date>\",\n  \"make_endless\": \"<boolean>\",\n  \"providers\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"enable_ctd\": \"<boolean>\",\n  \"enable_proxy\": \"<boolean>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "3c9b3757-dddb-4482-801f-1c6843bb19f1",
+              "name": "Warm-up campaign updated",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "warm-up",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "id",
+                      "description": "(Required) Campaign ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"status\": \"<string>\",\n  \"strategy\": \"<string>\",\n  \"per_day\": \"<integer>\",\n  \"from\": \"<integer>\",\n  \"increase\": \"<integer>\",\n  \"email_content\": \"<string>\",\n  \"reply_rate\": \"<integer>\",\n  \"campaign_deadline\": \"<date>\",\n  \"make_endless\": \"<boolean>\",\n  \"providers\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"enable_ctd\": \"<boolean>\",\n  \"enable_proxy\": \"<boolean>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 8045,\n  \"email_account_id\": \"string\",\n  \"status\": \"string\",\n  \"strategy\": \"steady\",\n  \"per_day\": 6370,\n  \"reply_rate\": 6448,\n  \"campaign_deadline\": \"2007-10-03\",\n  \"deliverability_score\": 9455.914203894454\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "27243886-3c6c-429d-8656-fb9c47a134db",
+              "name": "Unauthorized — missing or invalid Bearer token",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "warm-up",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "id",
+                      "description": "(Required) Campaign ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"status\": \"<string>\",\n  \"strategy\": \"<string>\",\n  \"per_day\": \"<integer>\",\n  \"from\": \"<integer>\",\n  \"increase\": \"<integer>\",\n  \"email_content\": \"<string>\",\n  \"reply_rate\": \"<integer>\",\n  \"campaign_deadline\": \"<date>\",\n  \"make_endless\": \"<boolean>\",\n  \"providers\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"enable_ctd\": \"<boolean>\",\n  \"enable_proxy\": \"<boolean>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b38ae352-e490-481d-ae2b-08bff5355f91",
+              "name": "Resource not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "warm-up",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "id",
+                      "description": "(Required) Campaign ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"status\": \"<string>\",\n  \"strategy\": \"<string>\",\n  \"per_day\": \"<integer>\",\n  \"from\": \"<integer>\",\n  \"increase\": \"<integer>\",\n  \"email_content\": \"<string>\",\n  \"reply_rate\": \"<integer>\",\n  \"campaign_deadline\": \"<date>\",\n  \"make_endless\": \"<boolean>\",\n  \"providers\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"enable_ctd\": \"<boolean>\",\n  \"enable_proxy\": \"<boolean>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.snov.io",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "f0989857-a3af-408c-9cb5-e08820812962",
+    "name": "Snov.io Authentication Email Warm-up API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Snov.io is a sales automation and lead generation platform. The REST API enables programmatic access to email finding, domain search, email verification, drip campaign management, email warm-up, prospect management, CRM pipeline, and webhook subscriptions. Authentication uses OAuth 2.0 client credentials to obtain short-lived Bearer tokens. All API operations consume credits from the account balance.\n\nContact Support:\n Name: Snov.io Support",
+      "type": "text/plain"
+    }
+  }
+}

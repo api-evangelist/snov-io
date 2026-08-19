@@ -1,0 +1,75 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Snov.io Authentication Domain Search API
+  version: 1.0.0
+  x-generated: '2026-08-13'
+  x-method: generated
+  x-source: apis.yml + https://snov.io/api + repo artifacts
+  x-description: Non-destructive overlay of API Evangelist enhancements over snov-io-domain-search-api-openapi.yml.
+    Records provenance, the published rate limit, the absence of idempotency, the credit-metering model,
+    the real error envelopes and the sibling MCP agent surface. The underlying OpenAPI is never mutated
+    by this overlay.
+extends: snov-io-domain-search-api-openapi.yml
+actions:
+- target: $.info
+  description: Record the provider-published reference as the source of record and correct the title generated
+    during harvesting.
+  update:
+    x-source-of-record: https://snov.io/api
+    x-provider: Snov.io
+    x-provider-publishes-openapi: false
+    contact:
+      name: Snov.io Support
+      url: https://snov.io/knowledgebase/
+      x-api-docs: https://snov.io/api
+    termsOfService: https://snov.io/terms-and-conditions
+- target: $
+  description: Attach external documentation and the cross-cutting runtime semantics an agent needs before
+    it calls anything.
+  update:
+    externalDocs:
+      description: Snov.io API reference
+      url: https://snov.io/api
+    x-rate-limit:
+      requests: 60
+      window: 1 minute
+      scope: account
+      headers: []
+      note: Stated in prose at https://snov.io/api. No RateLimit-* or Retry-After headers are returned.
+    x-idempotency:
+      supported: false
+      note: No idempotency mechanism is published. A retried credit-consuming POST can double-charge.
+    x-metering:
+      model: credits
+      note: Most operations deduct credits per RESULT; several are free when they return nothing. See
+        finops/snov-io-finops.yml.
+    x-error-envelopes:
+    - '{"errors":{"code":int,"title":string,"source":string}}'
+    - '{"success":false,"errors":[string]}'
+    x-agent-surface:
+      mcp: https://mcp.snov.io/mcp
+      mode: remote
+      auth: oauth
+- target: $
+  description: Document the two-step async task pattern that governs every start/result pair in this document.
+  update:
+    x-async-pattern:
+      style: two-step start/result
+      correlator: task_hash
+      status_field: status
+      status_values:
+      - in_progress
+      - completed
+      callback_parameter: webhook_url
+      start_operations:
+      - startDomainEmailsSearch
+      - startDomainProspectSearch
+      - startDomainSearch
+      - startGenericContactsSearch
+      result_operations:
+      - getDomainEmailsSearchResult
+      - getDomainProspectSearchResult
+      - getDomainSearchResult
+      - getGenericContactsSearchResult
+      note: No failure terminal state is documented; a caller cannot distinguish a running job from a
+        dead one.

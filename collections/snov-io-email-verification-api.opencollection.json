@@ -1,0 +1,59 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Snov.io Authentication Email Verification API",
+    "version": "2.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Email Verification",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Start email verification",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.snov.io/v2/email-verification/start",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Initiate async verification of up to 10 email addresses. Returns a task_hash to poll for results."
+        },
+        {
+          "info": {
+            "name": "Get email verification results",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.snov.io/v2/email-verification/result",
+            "params": [
+              {
+                "name": "task_hash",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get email verification results"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

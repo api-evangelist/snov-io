@@ -1,0 +1,102 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Snov.io Authentication Email Accounts API",
+    "version": "2.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Email Accounts",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List email accounts (free)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.snov.io/v2/sender-accounts/emails",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Returns all connected sender email accounts with status information."
+        },
+        {
+          "info": {
+            "name": "Add email account",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.snov.io/v2/sender-accounts/emails",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Connect a new sender email account with SMTP/IMAP configuration."
+        },
+        {
+          "info": {
+            "name": "Update email account",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.snov.io/v2/sender-accounts/emails/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Email account ID"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Update an existing sender email account configuration."
+        },
+        {
+          "info": {
+            "name": "Check sender account status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.snov.io/v2/sender-accounts/check-sender-status",
+            "params": [
+              {
+                "name": "sender_account_id",
+                "value": "",
+                "type": "query",
+                "description": "ID of the sender account to check"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Check SMTP and IMAP connection status for a sender account. Returns pending/valid/invalid status with error messages if applicable."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

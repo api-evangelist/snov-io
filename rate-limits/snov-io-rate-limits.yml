@@ -1,5 +1,9 @@
 name: Snov.io API Rate Limits
 specificationVersion: '0.1'
+generated: '2026-08-13'
+method: searched
+source: https://snov.io/api
+limit_count: 3
 description: >-
   Snov.io enforces a global rate limit of 60 requests per minute across all
   API methods. Authentication tokens (OAuth 2.0 Bearer) expire after 3600
@@ -68,3 +72,41 @@ creditCosts:
     - operation: Get email accounts list
       credits: 0
       note: FREE endpoint
+
+responseSignalling:
+  headers: []
+  statusOnExhaustion: null
+  retryAfter: false
+  checked: '2026-08-13'
+  source: https://snov.io/api
+  note: >-
+    Snov.io returns NO runtime rate-limit signal. There is no RateLimit-* (RFC 9331), no
+    X-RateLimit-Limit/Remaining/Reset, and no Retry-After header documented on any operation or
+    observed on any probe. The status code returned when the 60/minute cap is breached is not
+    documented either — "429" appears exactly once in the 242 KB developer reference and not as
+    a declared response. A client therefore cannot discover its remaining budget or back off on
+    signal; it must pace at one request per second by construction and treat any unexplained
+    failure during a burst as a possible throttle.
+
+creditSignalling:
+  balanceOperation: getUserBalance
+  endpoint: GET https://api.snov.io/v1/get-balance
+  cost: free
+  fields:
+    - balance
+    - teamwork
+    - unique_recipients_used
+    - limit_resets_in
+    - expires_in
+  note: >-
+    The only quota visibility Snov.io offers is a poll. There is no header carrying remaining
+    credits on the responses that consume them, so an agent must call getUserBalance before a
+    batch and cannot detect mid-batch exhaustion except by the operation failing.
+
+x-evidence:
+  - fetched: '2026-08-13'
+    url: https://snov.io/api
+    http_status: 200
+    detail: >-
+      "The API rate is limited to 60 requests per minute." Stated once, in prose, in the
+      introduction. No per-endpoint limits and no burst allowance are published.

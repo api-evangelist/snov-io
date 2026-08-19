@@ -1,0 +1,123 @@
+name: Snov.io API Lifecycle
+specificationVersion: '0.1'
+generated: '2026-08-13'
+method: searched
+source: https://snov.io/api
+description: >-
+  Snov.io runs two API versions side by side with no announced migration, publishes no
+  deprecation policy, ships no Sunset or Deprecation headers, offers no SLA and operates no
+  public status page. The only lifecycle signal a consumer can act on is a product release-notes
+  page — which is client-rendered and returns no entries to a non-JavaScript fetch.
+
+versioning:
+  scheme: path-prefix
+  versions:
+    - version: v1
+      status: live
+      note: >-
+        Not legacy. v1 carries endpoints with no v2 equivalent — balance (/v1/get-balance),
+        prospect CRUD, do-not-email list writes, campaign open/click/reply analytics and profile
+        enrichment by email. There is no announcement that v1 will ever be retired.
+    - version: v2
+      status: live
+      note: >-
+        Carries domain search, database search, email finder, email verification, LinkedIn
+        enrichment, sender accounts, warm-up, campaign management, pipelines and webhooks.
+  concurrent: true
+  negotiation: path only — no Accept header versioning, no version query parameter
+  breaking_change_policy: none published
+  finding: >-
+    v1 and v2 are not generations, they are disjoint slices. Neither is a superset. A working
+    integration must call both, which means "which version am I on" is not a question a Snov.io
+    consumer can answer.
+
+deprecation:
+  policy_published: false
+  policy_url: null
+  sunset_header: false
+  deprecation_header: false
+  rfc8594: false
+  deprecated_operations: []
+  note: >-
+    No operation in openapi/ carries `deprecated: true`, no Sunset or Deprecation response
+    header is documented, and neither the API reference nor the knowledgebase contains a
+    deprecation or migration policy. The strings "deprecat" and "sunset" appear zero times in
+    the full text of https://snov.io/api.
+
+status_page:
+  published: false
+  url: null
+  probes:
+    - url: https://status.snov.io
+      status: 0
+      note: Host does not resolve.
+    - url: https://snov.io/status
+      status: 200
+      note: >-
+        NOT a status page. Returns a 16-byte JSON health check, {"message":"ok"}, with no
+        component breakdown, no incident history and no subscription mechanism. Recorded as an
+        absence — no StatusPage pointer is wired in apis.yml on the strength of a health probe.
+  incident_history: false
+  sla: none published
+
+changelog:
+  published: true
+  url: https://snov.io/release-notes
+  scope: product
+  api_specific: false
+  machine_readable: false
+  cross_reference: changelog/snov-io-changelog.yml
+  note: >-
+    A product release-notes page exists but is client-rendered; a server-side fetch returns the
+    site chrome and "No results found" with zero entries. It also covers the product broadly
+    rather than the API specifically — there is no API changelog. A Telegram channel
+    (https://t.me/snovioupdates) is linked from the reference as a secondary update feed.
+
+support:
+  channels:
+    - type: Knowledgebase
+      url: https://snov.io/knowledgebase/
+    - type: Contact
+      url: https://snov.io/contact-us
+    - type: Telegram updates
+      url: https://t.me/snovioupdates
+  api_support_tier: >-
+    Starter plans and above are documented as carrying 24-hour support; Pro tiers add priority
+    support. Free Trial accounts must "request test access by booking a personal demo" to use
+    the API at all.
+
+gaps:
+  description: >-
+    Surface documented by Snov.io at https://snov.io/api but absent from openapi/ in this repo.
+    Recorded rather than invented.
+  missing_from_specs:
+    - section: Database Search
+      documented_paths:
+        - POST /v2/database-search/prospects/start
+        - GET /v2/database-search/prospects/result/{task_hash}
+        - POST /v2/database-search/companies/start
+        - GET /v2/database-search/companies/result/{task_hash}
+        - POST /v2/database-search/prospects/search-emails/start/{task_hash}
+        - GET /v2/database-search/prospects/search-emails/result/{task_hash}
+      note: >-
+        An entire documented product area — the AI-filtered B2B database search that anchors
+        every paid tier and is the headline MCP capability — has no representation in openapi/.
+    - section: Domain Search email resolution
+      documented_paths:
+        - POST /v2/domain-search/prospects/search-emails/start/{prospect_hash}
+        - GET /v2/domain-search/prospects/search-emails/result/{task_hash}
+    - section: Email Warm-up
+      documented_paths:
+        - DELETE /v2/warm-up/{warm_up_id}
+        - GET /v2/warm-up/statistics/{warm_up_id}
+  path_drift_repaired: 22
+  path_drift_outstanding: 9
+  cross_reference: conventions/snov-io-conventions.yml
+
+summary:
+  versions_live: 2
+  deprecation_policy: false
+  sunset_headers: false
+  status_page: false
+  sla: false
+  changelog: product-only, client-rendered

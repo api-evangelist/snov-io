@@ -1,5 +1,9 @@
 name: Snov.io Plans and Pricing
 specificationVersion: '0.1'
+generated: '2026-08-13'
+method: searched
+source: https://snov.io/pricing
+plan_count: 7
 description: >-
   Snov.io offers credit-based pricing tiers for sales automation and email
   outreach. Credits are consumed by prospect search, email finding, and email
@@ -145,3 +149,62 @@ addons:
       unit: token
       amount: 0.02
       currency: USD
+
+  - name: Preconfigured sending domains
+    description: >-
+      Fully set-up sending domains with domain forwarding, sold to protect the primary domain's
+      reputation.
+    price:
+      unit: year
+      amount: 12
+      currency: USD
+      qualifier: from, per domain
+
+  - name: Done-for-you Google mailboxes
+    description: DNS-configured, ready-to-use Google email accounts for scaling sending volume.
+    price:
+      unit: month
+      amount: 5
+      currency: USD
+      qualifier: per email account
+
+verification:
+  checked: '2026-08-13'
+  url: https://snov.io/pricing
+  http_status: 200
+  observed_annual_prices:
+    note: >-
+      The pricing page displays annual-billing prices (25% off) by default. Confirmed 2026-08-13:
+      Trial Free, Starter $29.25, Pro S $74.25, Pro M $141.75, Pro L $276.75, Ultra $553.50. The
+      monthly list prices recorded above ($39 / $99 / $189 / $369 / $738) are those figures at
+      full rate and reconcile exactly.
+  tier_labels_observed:
+    - Trial
+    - Starter
+    - Pro S
+    - Pro M
+    - Pro L
+    - Ultra
+  quota_ladder_observed:
+    database_search_credits: [50, 1000, 5000, 20000, 50000, 100000]
+    domain_search_credits: [50, 1000, 5000, 20000, 50000, 100000]
+    recipients: [100, 5000, 25000, 50000, 100000, 200000]
+    warmup_accounts: [1, 3, unlimited, unlimited, unlimited, unlimited]
+    warmup_volume_per_account_per_day: [15, 50, 100, 200, 500, 1000]
+
+api_access:
+  rest_api:
+    included_from: Starter
+    trial: false
+    note: >-
+      Snov.io's API reference states that free-plan users must "request test access by booking a
+      personal demo with us" — the REST API is not self-serve on Trial.
+    source: https://snov.io/api
+  mcp_server:
+    included_from: Trial
+    all_plans: true
+    note: >-
+      "Snov.io MCP is available across all plans, including the free Trial." MCP actions draw on
+      the same credit, recipient and LinkedIn slot quotas as the rest of the platform, so the
+      agent surface is metered but not gated.
+    source: https://snov.io/mcp

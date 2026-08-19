@@ -1,0 +1,182 @@
+name: Snov.io Outreach MCP Server
+specificationVersion: '0.1'
+generated: '2026-08-13'
+method: searched
+source: https://snov.io/mcp
+docs: https://snov.io/knowledgebase/how-to-use-snov-io-mcp-with-your-ai-assistant/
+description: >-
+  Snov.io ships a first-party REMOTE Model Context Protocol server at https://mcp.snov.io/mcp.
+  It is a hosted HTTP endpoint an MCP client POSTs to directly — there is no npx package, no
+  stdio binary and nothing to install. Access is OAuth-gated: the endpoint answers an
+  unauthenticated tools/list with HTTP 401 and an RFC 9728 WWW-Authenticate challenge pointing
+  at https://mcp.snov.io/.well-known/oauth-protected-resource, which names
+  https://app.snov.io as the authorization server and "mcp" as the single scope. Snov.io states
+  the server exposes more than 100 actions covering prospect search and enrichment, email
+  verification, list and folder management, the Sales CRM (pipelines, deals, notes, loss
+  reasons, tasks) and LinkedIn account setup and outreach. It is available on every plan
+  including the free Trial, and consumes the same credits, recipients and LinkedIn slots as the
+  rest of the platform.
+
+deployment:
+  mode: remote
+  endpoint: https://mcp.snov.io/mcp
+  auth: oauth
+  verified: probed
+  note: >-
+    Verified 2026-08-13 by POSTing {"jsonrpc":"2.0","id":1,"method":"tools/list"} with
+    Accept: application/json, text/event-stream. Response: HTTP 401, body "no bearer token",
+    header www-authenticate: Bearer resource_metadata="https://mcp.snov.io/.well-known/oauth-protected-resource",
+    scope="mcp". No install/package fields: Snov.io publishes no local stdio server.
+
+transport:
+  protocol: streamable-http
+  endpoint: https://mcp.snov.io/mcp
+  evidence: >-
+    Snov.io's own setup guide instructs users to add "https://mcp.snov.io/mcp" as a Remote MCP
+    Server URL in Claude Desktop -> Settings -> Connectors -> Add custom connector.
+
+authorization:
+  scheme: oauth2
+  flow: authorization_code
+  pkce: S256
+  dynamic_client_registration: true
+  protected_resource_metadata: https://mcp.snov.io/.well-known/oauth-protected-resource
+  authorization_server: https://app.snov.io
+  authorization_server_metadata: https://app.snov.io/.well-known/oauth-authorization-server
+  authorization_endpoint: https://app.snov.io/mcp/authorize
+  token_endpoint: https://app.snov.io/back/mcp/oauth/token
+  registration_endpoint: https://app.snov.io/back/mcp/oauth/register
+  scopes:
+    - mcp
+  token_endpoint_auth_methods_supported:
+    - none
+  grant_types_supported:
+    - authorization_code
+    - refresh_token
+  bearer_methods_supported:
+    - header
+  note: >-
+    Public-client OAuth with PKCE and open dynamic client registration (RFC 7591) — the pattern
+    that lets an MCP client self-register without a pre-provisioned client_id. The user approves
+    the connection inside their Snov.io account; no API key is handed to the AI assistant. This
+    is a SEPARATE credential path from the REST API, which uses OAuth 2.0 client_credentials
+    against https://api.snov.io/v1/oauth/access_token.
+
+availability:
+  plans: all
+  free_trial: true
+  metering: >-
+    MCP actions draw on the same plan quotas as the UI and REST API — credits, recipients and
+    LinkedIn account slots.
+  source: https://snov.io/mcp
+
+clients_documented:
+  - Claude Desktop
+  - ChatGPT
+  - Cursor
+  - Windsurf
+  - Codex
+
+tools:
+  status: documented-catalog
+  count_claimed: '100+'
+  schemas_available: false
+  note: >-
+    The live tool schemas could not be introspected: tools/list requires an OAuth bearer token
+    tied to a Snov.io account. The groups below are transcribed verbatim in substance from
+    Snov.io's published action list; they are CAPABILITY GROUPS, not tool names, and carry no
+    inputSchema. Obtaining the real tool names and inputSchemas requires authenticated
+    introspection. Snov.io publishes no llms.txt and no MCP tool reference, so there is no
+    anonymous path to the schemas.
+  groups:
+    - group: Prospect search and enrichment
+      capabilities:
+        - Search the Snov.io database by AI-powered filters (job title, industry, location, company size, revenue and more) and save to lists
+        - Find contacts by company domain (start a search, get results, find contacts by domain)
+        - Find and verify individual emails by name and company
+        - Pull a prospect profile by email, ID, or list
+        - Search LinkedIn profiles by filters or URL and save them as prospects
+        - Verify emails individually or in bulk
+        - List all prospects in a list
+        - Add, update, and remove prospects in lists
+        - Create, rename, delete, and restore prospect lists
+        - Organize lists into folders (list, create, move, delete)
+        - Export lists with custom field selection
+    - group: CRM — pipelines
+      capabilities:
+        - List, create, edit, reorder, and delete pipelines
+        - Manage pipeline statuses
+    - group: CRM — deals
+      capabilities:
+        - List, create, update, search, and delete deals
+        - Move deals between stages
+        - Mark deals as won or lost with reason tracking
+        - Add participants to deals
+        - View full deal timeline and activity history
+        - View deal currencies and colors
+    - group: CRM — notes
+      capabilities:
+        - Add, edit, and delete notes on deals
+    - group: CRM — loss reasons
+      capabilities:
+        - List, create, update, and delete loss reasons
+    - group: CRM — tasks
+      capabilities:
+        - List and filter tasks by status, owner, or related deal
+        - Create and update calendar tasks (calls, meetings, follow-ups)
+        - Mark tasks as done
+        - Link tasks to deals and contacts
+    - group: LinkedIn account setup
+      capabilities:
+        - Connect and manage multiple LinkedIn accounts
+        - Configure daily action limits for safe automation
+        - Set up warm-up mode for new accounts
+        - Manage proxies and server locations
+        - Assign and manage team slots
+        - Check trial access and usage summary
+    - group: LinkedIn actions
+      capabilities:
+        - Send connection invites, messages, and InMails
+        - Visit profiles, like posts, endorse skills
+        - Check connection level and invite status
+        - View and sync chat history with prospects
+        - Parse LinkedIn network and export contacts as CSV
+        - Convert LinkedIn profiles into Snov.io prospects
+        - Save prospects from network or pending connections
+
+asynchronous_actions:
+  note: >-
+    Snov.io warns that some MCP actions run in the background — LinkedIn network parsing and
+    bulk verification are the examples given — and that the caller must poll for status. This
+    mirrors the REST API's two-step task_hash pattern (see conventions/snov-io-conventions.yml).
+
+surface_comparison:
+  note: >-
+    Snov.io states plainly that the MCP server and the REST API are different products for
+    different buyers: "Snov.io outreach MCP server lets you run supported Snov.io actions
+    through natural-language prompts in your AI assistant. The Snov.io API is designed for
+    developers who want to build custom integrations." The MCP surface is materially LARGER
+    than the documented REST surface — deals, notes, loss reasons, tasks, list folders and all
+    LinkedIn account/outreach actions have MCP coverage with no public REST equivalent.
+  source: https://snov.io/mcp
+
+x-evidence:
+  - fetched: '2026-08-13'
+    url: https://mcp.snov.io/mcp
+    method: POST
+    http_status: 401
+    detail: 'www-authenticate: Bearer resource_metadata="https://mcp.snov.io/.well-known/oauth-protected-resource", scope="mcp"'
+  - fetched: '2026-08-13'
+    url: https://mcp.snov.io/.well-known/oauth-protected-resource
+    http_status: 200
+    content_type: application/json
+  - fetched: '2026-08-13'
+    url: https://app.snov.io/.well-known/oauth-authorization-server
+    http_status: 200
+    content_type: application/json
+  - fetched: '2026-08-13'
+    url: https://snov.io/mcp
+    http_status: 200
+  - fetched: '2026-08-13'
+    url: https://snov.io/knowledgebase/how-to-use-snov-io-mcp-with-your-ai-assistant/
+    http_status: 200

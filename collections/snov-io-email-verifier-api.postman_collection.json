@@ -1,0 +1,271 @@
+{
+  "item": [
+    {
+      "id": "afdc497c-277b-430c-89b8-f32ec82691f9",
+      "name": "Email Verifier",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "ee8b3759-7ddb-40e1-a57a-7f27ad81b028",
+          "name": "Start email verification",
+          "request": {
+            "name": "Start email verification",
+            "description": {
+              "content": "Starts verification for up to ten email addresses at once. Each email is added as a separate parameter. Supports an optional webhook_url for async delivery of results.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "email-verification",
+                "start"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "disabled": false,
+                  "key": "emails",
+                  "value": "<email>",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "key": "emails",
+                  "value": "<email>",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "key": "webhook_url",
+                  "value": "<uri>"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "4e55fa25-fdf5-4c91-a938-7f771708fdf8",
+              "name": "Verification task started.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "email-verification",
+                    "start"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "urlencoded",
+                  "urlencoded": [
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) ",
+                        "type": "text/plain"
+                      },
+                      "key": "emails",
+                      "value": "<email>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) ",
+                        "type": "text/plain"
+                      },
+                      "key": "emails",
+                      "value": "<email>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "webhook_url",
+                      "value": "<uri>"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"task_hash\": \"string\",\n  \"status\": \"in_progress\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "6dbd7f66-f7cc-4876-8bd3-6c55c6a41c9f",
+          "name": "Get email verification result",
+          "request": {
+            "name": "Get email verification result",
+            "description": {},
+            "url": {
+              "path": [
+                "v2",
+                "email-verification",
+                "result"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "task_hash",
+                  "value": "<string>",
+                  "description": "(Required) The task hash returned by the matching /start endpoint."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "39e0cfb5-56b6-46d3-86b4-74202f13fbd7",
+              "name": "Verification results with SMTP and quality signals.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "email-verification",
+                    "result"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "task_hash",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"data\": [\n    {\n      \"email\": \"l-Nkx77ezFEGY-x@sZhGlOGYQHjPK.woq\",\n      \"smtp_status\": \"not_valid\",\n      \"is_valid_format\": true,\n      \"is_disposable\": false,\n      \"is_webmail\": false,\n      \"is_gibberish\": false\n    },\n    {\n      \"email\": \"whwU0eNSocAl@sjGkYXjMbEF.phlr\",\n      \"smtp_status\": \"unknown\",\n      \"is_valid_format\": false,\n      \"is_disposable\": true,\n      \"is_webmail\": false,\n      \"is_gibberish\": true\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.snov.io",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "oauth2",
+    "oauth2": [
+      {
+        "key": "accessTokenUrl",
+        "value": "https://api.snov.io/v1/oauth/access_token"
+      },
+      {
+        "key": "grant_type",
+        "value": "client_credentials"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "34324d47-0d76-4952-8621-496735e5a51a",
+    "name": "Snov.io Authentication Email Verifier API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Snov.io sales engagement REST API. Authentication uses the OAuth2 client_credentials grant to exchange an API User ID (client_id) and API Secret (client_secret) for a one-hour Bearer access token. Email finder, domain search, and email verification use an asynchronous pattern: a POST to a `/start` endpoint returns a `task_hash`, then a GET to the matching `/result` endpoint retrieves the outcome. Most request bodies are application/x-www-form-urlencoded; a few v2 endpoints accept JSON. The API is rate limited to 60 requests per minute.\n\nContact Support:\n Name: Snov.io Support",
+      "type": "text/plain"
+    }
+  }
+}
