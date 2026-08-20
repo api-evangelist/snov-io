@@ -106,6 +106,9 @@ apis:
   humanURL: https://snov.io/api
   baseURL: https://api.snov.io
   tags:
+  - Webhook
+  - Event
+  tags_raw:
   - Webhooks
   - Events
   properties:
@@ -277,6 +280,8 @@ apis:
   humanURL: https://snov.io/api
   baseURL: https://api.snov.io
   tags:
+  - Webhook
+  tags_raw:
   - Webhooks
   properties:
   - type: OpenAPI
