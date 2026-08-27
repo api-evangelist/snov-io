@@ -48,8 +48,9 @@ tags:
 - Cold Email
 apis:
 - name: Snov.io Email Verification API
-  description: Verify the deliverability and validity of up to 10 email addresses per request using a
-    two-step async API. Returns validity status, MX record checks, and disposable email detection results.
+  description: >-
+    Verify the deliverability and validity of up to 10 email addresses per request using a two-step async
+    API. Returns validity status, MX record checks, and disposable email detection results.
   image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
   humanURL: https://snov.io/email-verification-api
   baseURL: https://api.snov.io
@@ -60,8 +61,9 @@ apis:
   - type: Documentation
     url: https://snov.io/api
 - name: Snov.io Campaigns API
-  description: Create, update, delete, and manage multi-channel outreach campaigns programmatically. Supports
-    email step content management, recipient management, campaign state changes, and full analytics reporting
+  description: >-
+    Create, update, delete, and manage multi-channel outreach campaigns programmatically. Supports email
+    step content management, recipient management, campaign state changes, and full analytics reporting
     including opens, clicks, and replies.
   image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
   humanURL: https://snov.io/api
@@ -75,8 +77,9 @@ apis:
   - type: Documentation
     url: https://snov.io/api
 - name: Snov.io Prospect Management API
-  description: Add, search, and manage prospect records and lists within Snov.io. Supports custom fields,
-    list creation, CRM pipeline management, and do-not-email suppression list operations.
+  description: >-
+    Add, search, and manage prospect records and lists within Snov.io. Supports custom fields, list creation,
+    CRM pipeline management, and do-not-email suppression list operations.
   image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
   humanURL: https://snov.io/api
   baseURL: https://api.snov.io
@@ -88,8 +91,9 @@ apis:
   - type: Documentation
     url: https://snov.io/api
 - name: Snov.io Email Warm-up API
-  description: Create and manage email warm-up campaigns to improve deliverability scores. Supports full
-    CRUD operations on warm-up campaigns and provides statistical reporting on warm-up progress.
+  description: >-
+    Create and manage email warm-up campaigns to improve deliverability scores. Supports full CRUD operations
+    on warm-up campaigns and provides statistical reporting on warm-up progress.
   image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
   humanURL: https://snov.io/api
   baseURL: https://api.snov.io
@@ -100,8 +104,9 @@ apis:
   - type: Documentation
     url: https://snov.io/api
 - name: Snov.io Webhooks API
-  description: Subscribe to real-time event notifications from the Snov.io platform. Supports listing,
-    creating, updating, and deleting webhook subscriptions for automated event-driven integrations.
+  description: >-
+    Subscribe to real-time event notifications from the Snov.io platform. Supports listing, creating,
+    updating, and deleting webhook subscriptions for automated event-driven integrations.
   image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
   humanURL: https://snov.io/api
   baseURL: https://api.snov.io
@@ -294,10 +299,11 @@ apis:
     url: graphql/snov-io-graphql.md
 - aid: snov-io:snov-io-mcp-server
   name: Snov.io Outreach MCP Server
-  description: First-party remote Model Context Protocol server exposing 100+ Snov.io actions to AI assistants
-    — prospect search and enrichment, list and folder management, email verification, Sales CRM (pipelines,
-    deals, notes, loss reasons, tasks) and LinkedIn account setup and outreach. OAuth-gated with PKCE and
-    dynamic client registration; available on every plan including the free Trial.
+  description: >-
+    First-party remote Model Context Protocol server exposing 100+ Snov.io actions to AI assistants —
+    prospect search and enrichment, list and folder management, email verification, Sales CRM (pipelines,
+    deals, notes, loss reasons, tasks) and LinkedIn account setup and outreach. OAuth-gated with PKCE
+    and dynamic client registration; available on every plan including the free Trial.
   humanURL: https://snov.io/mcp
   baseURL: https://mcp.snov.io/mcp
   tags:
@@ -317,6 +323,46 @@ apis:
     url: scopes/snov-io-scopes.yml
   - type: Authentication
     url: authentication/snov-io-authentication.yml
+- aid: snov-io:snov-io-email-verifier-api
+  name: Snov.io Email Verifier API
+  description: The Email Verifier API from Snov.io — 2 operation(s) for email verifier.
+  humanURL: https://snov.io/email-verification-api
+  baseURL: https://api.snov.io
+  tags:
+  - Email Verifier
+  properties:
+  - type: OpenAPI
+    url: openapi/snov-io-email-verifier-api-openapi.yml
+- aid: snov-io:snov-io-enrichment-api
+  name: Snov.io Enrichment API
+  description: The Enrichment API from Snov.io — 3 operation(s) for enrichment.
+  humanURL: https://snov.io/email-verification-api
+  baseURL: https://api.snov.io
+  tags:
+  - Enrichment
+  properties:
+  - type: OpenAPI
+    url: openapi/snov-io-enrichment-api-openapi.yml
+- aid: snov-io:snov-io-sender-accounts-api
+  name: Snov.io Sender Accounts API
+  description: The Sender Accounts API from Snov.io — 3 operation(s) for sender accounts.
+  humanURL: https://snov.io/email-verification-api
+  baseURL: https://api.snov.io
+  tags:
+  - Sender Accounts
+  properties:
+  - type: OpenAPI
+    url: openapi/snov-io-sender-accounts-api-openapi.yml
+- aid: snov-io:snov-io-warm-up-api
+  name: Snov.io Warm Up API
+  description: The Warm-up API from Snov.io — 2 operation(s) for warm-up.
+  humanURL: https://snov.io/email-verification-api
+  baseURL: https://api.snov.io
+  tags:
+  - Warm-up
+  properties:
+  - type: OpenAPI
+    url: openapi/snov-io-warm-up-api-openapi.yml
 common:
 - type: AgenticAccess
   url: agentic-access/snov-io-agentic-access.yml
