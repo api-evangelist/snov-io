@@ -1,11 +1,7 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
   title: Snov.io Campaigns API
-  description: Snov.io is a sales automation and lead generation platform. The REST API enables programmatic
-    access to email finding, domain search, email verification, drip campaign management, email warm-up,
-    prospect management, CRM pipeline, and webhook subscriptions. Authentication uses OAuth 2.0 client
-    credentials to obtain short-lived Bearer tokens. All API operations consume credits from the account
-    balance.
+  description: Snov.io is a sales automation and lead generation platform. The REST API enables programmatic access to email finding, domain search, email verification, drip campaign management, email warm-up, prospect management, CRM pipeline, and webhook subscriptions. Authentication uses OAuth 2.0 client credentials to obtain short-lived Bearer tokens. All API operations consume credits from the account balance.
   version: '2.0'
   contact:
     name: Snov.io Support
@@ -21,7 +17,7 @@ tags:
 - name: Campaigns
   description: Create and manage multi-channel outreach campaigns
 paths:
-  /v2/campaigns/:
+  /v1/user-campaigns:
     get:
       tags:
       - Campaigns
@@ -44,7 +40,7 @@ paths:
                       $ref: '#/components/schemas/Campaign'
         '401':
           $ref: '#/components/responses/Unauthorized'
-  /v2/campaigns/create:
+  /v1/create-campaign:
     post:
       tags:
       - Campaigns
@@ -70,7 +66,7 @@ paths:
           $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/Unauthorized'
-  /v2/campaigns/{id}:
+  /v1/campaign/{id}:
     get:
       tags:
       - Campaigns
@@ -136,7 +132,7 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '404':
           $ref: '#/components/responses/NotFound'
-  /v2/campaigns/{id}/action:
+  /v1/campaign/{id}/state:
     post:
       tags:
       - Campaigns
@@ -173,7 +169,7 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '404':
           $ref: '#/components/responses/NotFound'
-  /v2/campaigns/schedules:
+  /v1/email-schedules:
     get:
       tags:
       - Campaigns
@@ -288,7 +284,7 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '404':
           $ref: '#/components/responses/NotFound'
-  /v1/change-recipient-status:
+  /v1/recipient-status:
     get:
       tags:
       - Campaigns
@@ -354,7 +350,7 @@ paths:
           description: Status changed
         '401':
           $ref: '#/components/responses/Unauthorized'
-  /v1/prospect-finished:
+  /v1/finished-prospects:
     get:
       tags:
       - Campaigns
@@ -413,7 +409,7 @@ paths:
           description: Emails added to suppression list
         '401':
           $ref: '#/components/responses/Unauthorized'
-  /v2/blacklists:
+  /v1/do-not-email-lists:
     get:
       tags:
       - Campaigns
@@ -443,7 +439,7 @@ paths:
                           type: integer
         '401':
           $ref: '#/components/responses/Unauthorized'
-  /v2/statistics/campaign-analytics:
+  /v1/campaign-analytics:
     get:
       tags:
       - Campaigns
@@ -558,7 +554,7 @@ paths:
                       $ref: '#/components/schemas/SentEmail'
         '401':
           $ref: '#/components/responses/Unauthorized'
-  /v1/get-emails-opened:
+  /v1/emails-opens:
     get:
       tags:
       - Campaigns
@@ -587,7 +583,7 @@ paths:
                       $ref: '#/components/schemas/EmailEvent'
         '401':
           $ref: '#/components/responses/Unauthorized'
-  /v1/get-emails-clicked:
+  /v1/emails-clicks:
     get:
       tags:
       - Campaigns
@@ -616,7 +612,7 @@ paths:
                       $ref: '#/components/schemas/EmailEvent'
         '401':
           $ref: '#/components/responses/Unauthorized'
-  /v1/get-emails-replies:
+  /v1/campaign-replies:
     get:
       tags:
       - Campaigns
@@ -676,6 +672,38 @@ paths:
           $ref: '#/components/responses/Unauthorized'
 components:
   schemas:
+    Prospect:
+      type: object
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+          format: email
+        first_name:
+          type: string
+        last_name:
+          type: string
+        position:
+          type: string
+        company:
+          type: string
+        location:
+          type: string
+        custom_fields:
+          type: object
+          additionalProperties: true
+    EmailEvent:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        occurred_at:
+          type: string
+          format: date-time
+        step_number:
+          type: integer
     CampaignAnalytics:
       type: object
       properties:
@@ -704,87 +732,6 @@ components:
         reply_rate:
           type: number
           format: float
-    Campaign:
-      type: object
-      properties:
-        id:
-          type: integer
-        name:
-          type: string
-        status:
-          type: string
-          enum:
-          - draft
-          - active
-          - paused
-          - stopped
-          - finished
-        created_at:
-          type: string
-          format: date-time
-        updated_at:
-          type: string
-          format: date-time
-    EmailEvent:
-      type: object
-      properties:
-        email:
-          type: string
-          format: email
-        occurred_at:
-          type: string
-          format: date-time
-        step_number:
-          type: integer
-    EmailReply:
-      type: object
-      properties:
-        email:
-          type: string
-          format: email
-        first_name:
-          type: string
-        last_name:
-          type: string
-        reply_text:
-          type: string
-        replied_at:
-          type: string
-          format: date-time
-    Prospect:
-      type: object
-      properties:
-        id:
-          type: string
-        email:
-          type: string
-          format: email
-        first_name:
-          type: string
-        last_name:
-          type: string
-        position:
-          type: string
-        company:
-          type: string
-        location:
-          type: string
-        custom_fields:
-          type: object
-          additionalProperties: true
-    SentEmail:
-      type: object
-      properties:
-        id:
-          type: integer
-        recipient_email:
-          type: string
-          format: email
-        subject:
-          type: string
-        sent_at:
-          type: string
-          format: date-time
     EmailStepContent:
       type: object
       properties:
@@ -800,6 +747,19 @@ components:
           type: integer
         delay_days:
           type: integer
+    SentEmail:
+      type: object
+      properties:
+        id:
+          type: integer
+        recipient_email:
+          type: string
+          format: email
+        subject:
+          type: string
+        sent_at:
+          type: string
+          format: date-time
     RecipientActivity:
       type: object
       properties:
@@ -819,6 +779,42 @@ components:
         replied:
           type: boolean
         last_activity:
+          type: string
+          format: date-time
+    EmailReply:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        first_name:
+          type: string
+        last_name:
+          type: string
+        reply_text:
+          type: string
+        replied_at:
+          type: string
+          format: date-time
+    Campaign:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        status:
+          type: string
+          enum:
+          - draft
+          - active
+          - paused
+          - stopped
+          - finished
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
           type: string
           format: date-time
     CampaignCreate:
@@ -846,14 +842,14 @@ components:
           type: string
           description: Human-readable error message
   responses:
-    Unauthorized:
-      description: Unauthorized — missing or invalid Bearer token
+    BadRequest:
+      description: Bad request — missing or invalid parameters
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    BadRequest:
-      description: Bad request — missing or invalid parameters
+    Unauthorized:
+      description: Unauthorized — missing or invalid Bearer token
       content:
         application/json:
           schema:
@@ -865,13 +861,6 @@ components:
           schema:
             $ref: '#/components/schemas/Error'
   parameters:
-    ResourceId:
-      name: id
-      in: path
-      required: true
-      schema:
-        type: integer
-      description: Resource ID
     CampaignId:
       name: id
       in: path
@@ -879,10 +868,16 @@ components:
       schema:
         type: integer
       description: Campaign ID
+    ResourceId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: Resource ID
   securitySchemes:
     bearerAuth:
       type: http
       scheme: bearer
       bearerFormat: JWT
-      description: Obtain a Bearer token via POST /v1/oauth/access_token using client credentials. Tokens
-        expire after 3600 seconds.
+      description: Obtain a Bearer token via POST /v1/oauth/access_token using client credentials. Tokens expire after 3600 seconds.

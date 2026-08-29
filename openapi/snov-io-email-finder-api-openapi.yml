@@ -1,4 +1,4 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
   title: Snov.io Email Finder API
   description: Snov.io is a sales automation and lead generation platform. The REST API enables programmatic access to email finding, domain search, email verification, drip campaign management, email warm-up, prospect management, CRM pipeline, and webhook subscriptions. Authentication uses OAuth 2.0 client credentials to obtain short-lived Bearer tokens. All API operations consume credits from the account balance.
@@ -257,13 +257,6 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 components:
-  responses:
-    Unauthorized:
-      description: Unauthorized — missing or invalid Bearer token
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   schemas:
     TaskStarted:
       type: object
@@ -274,31 +267,6 @@ components:
         status:
           type: string
           description: Current task status
-    EmailFinderResult:
-      type: object
-      properties:
-        status:
-          type: string
-        data:
-          type: array
-          items:
-            type: object
-            properties:
-              first_name:
-                type: string
-              last_name:
-                type: string
-              domain:
-                type: string
-              email:
-                type: string
-                format: email
-              confidence:
-                type: integer
-                description: Confidence score 0-100
-              status:
-                type: string
-                description: Email status (valid/unknown/not_valid)
     ProspectProfile:
       type: object
       properties:
@@ -341,15 +309,31 @@ components:
                 type: string
               end_date:
                 type: string
-    Error:
+    EmailFinderResult:
       type: object
       properties:
-        error:
+        status:
           type: string
-          description: Error code
-        message:
-          type: string
-          description: Human-readable error message
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              first_name:
+                type: string
+              last_name:
+                type: string
+              domain:
+                type: string
+              email:
+                type: string
+                format: email
+              confidence:
+                type: integer
+                description: Confidence score 0-100
+              status:
+                type: string
+                description: Email status (valid/unknown/not_valid)
     ProspectListResult:
       type: object
       properties:
@@ -359,6 +343,22 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ProspectProfile'
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error code
+        message:
+          type: string
+          description: Human-readable error message
+  responses:
+    Unauthorized:
+      description: Unauthorized — missing or invalid Bearer token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   securitySchemes:
     bearerAuth:
       type: http

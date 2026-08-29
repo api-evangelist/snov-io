@@ -1,4 +1,4 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
   title: Snov.io Email Warm-up API
   description: Snov.io is a sales automation and lead generation platform. The REST API enables programmatic access to email finding, domain search, email verification, drip campaign management, email warm-up, prospect management, CRM pipeline, and webhook subscriptions. Authentication uses OAuth 2.0 client credentials to obtain short-lived Bearer tokens. All API operations consume credits from the account balance.
@@ -142,14 +142,14 @@ paths:
           $ref: '#/components/responses/NotFound'
 components:
   responses:
-    Unauthorized:
-      description: Unauthorized — missing or invalid Bearer token
+    BadRequest:
+      description: Bad request — missing or invalid parameters
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    BadRequest:
-      description: Bad request — missing or invalid parameters
+    Unauthorized:
+      description: Unauthorized — missing or invalid Bearer token
       content:
         application/json:
           schema:
@@ -161,43 +161,6 @@ components:
           schema:
             $ref: '#/components/schemas/Error'
   schemas:
-    WarmUpCampaignUpdate:
-      type: object
-      properties:
-        status:
-          type: string
-          enum:
-          - active
-          - paused
-          - stopped
-        strategy:
-          type: string
-          enum:
-          - progressive
-          - steady
-        per_day:
-          type: integer
-        from:
-          type: integer
-        increase:
-          type: integer
-        email_content:
-          type: string
-        reply_rate:
-          type: integer
-        campaign_deadline:
-          type: string
-          format: date
-        make_endless:
-          type: boolean
-        providers:
-          type: array
-          items:
-            type: string
-        enable_ctd:
-          type: boolean
-        enable_proxy:
-          type: boolean
     WarmUpCampaignCreate:
       type: object
       required:
@@ -250,15 +213,6 @@ components:
           type: integer
         template_name:
           type: string
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-          description: Error code
-        message:
-          type: string
-          description: Human-readable error message
     WarmUpCampaign:
       type: object
       properties:
@@ -283,6 +237,52 @@ components:
         deliverability_score:
           type: number
           format: float
+    WarmUpCampaignUpdate:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+          - active
+          - paused
+          - stopped
+        strategy:
+          type: string
+          enum:
+          - progressive
+          - steady
+        per_day:
+          type: integer
+        from:
+          type: integer
+        increase:
+          type: integer
+        email_content:
+          type: string
+        reply_rate:
+          type: integer
+        campaign_deadline:
+          type: string
+          format: date
+        make_endless:
+          type: boolean
+        providers:
+          type: array
+          items:
+            type: string
+        enable_ctd:
+          type: boolean
+        enable_proxy:
+          type: boolean
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error code
+        message:
+          type: string
+          description: Human-readable error message
   parameters:
     CampaignId:
       name: id

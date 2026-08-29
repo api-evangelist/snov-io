@@ -1,11 +1,7 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
   title: Snov.io Prospects API
-  description: Snov.io is a sales automation and lead generation platform. The REST API enables programmatic
-    access to email finding, domain search, email verification, drip campaign management, email warm-up,
-    prospect management, CRM pipeline, and webhook subscriptions. Authentication uses OAuth 2.0 client
-    credentials to obtain short-lived Bearer tokens. All API operations consume credits from the account
-    balance.
+  description: Snov.io is a sales automation and lead generation platform. The REST API enables programmatic access to email finding, domain search, email verification, drip campaign management, email warm-up, prospect management, CRM pipeline, and webhook subscriptions. Authentication uses OAuth 2.0 client credentials to obtain short-lived Bearer tokens. All API operations consume credits from the account balance.
   version: '2.0'
   contact:
     name: Snov.io Support
@@ -21,7 +17,7 @@ tags:
 - name: Prospects
   description: Manage prospect records and lists
 paths:
-  /v1/add-prospect-to-list:
+  /v1/add-prospect:
     post:
       tags:
       - Prospects
@@ -47,7 +43,7 @@ paths:
           $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/Unauthorized'
-  /v1/get-prospect-by-id:
+  /v1/find-prospect-by-id:
     post:
       tags:
       - Prospects
@@ -78,7 +74,7 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '404':
           $ref: '#/components/responses/NotFound'
-  /v1/get-prospects-by-email:
+  /v1/find-prospect-by-email:
     post:
       tags:
       - Prospects
@@ -139,7 +135,7 @@ paths:
                           type: string
         '401':
           $ref: '#/components/responses/Unauthorized'
-  /v1/get-user-lists:
+  /v1/user-lists:
     get:
       tags:
       - Prospects
@@ -162,7 +158,7 @@ paths:
                       $ref: '#/components/schemas/ProspectList'
         '401':
           $ref: '#/components/responses/Unauthorized'
-  /v1/prospect-list:
+  /v1/view-prospects-in-list:
     post:
       tags:
       - Prospects
@@ -204,7 +200,7 @@ paths:
                     type: integer
         '401':
           $ref: '#/components/responses/Unauthorized'
-  /v1/lists:
+  /v1/create-prospect-list:
     post:
       tags:
       - Prospects
@@ -235,25 +231,6 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 components:
-  responses:
-    Unauthorized:
-      description: Unauthorized — missing or invalid Bearer token
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    BadRequest:
-      description: Bad request — missing or invalid parameters
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    NotFound:
-      description: Resource not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   schemas:
     Prospect:
       type: object
@@ -329,10 +306,28 @@ components:
         message:
           type: string
           description: Human-readable error message
+  responses:
+    BadRequest:
+      description: Bad request — missing or invalid parameters
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Unauthorized — missing or invalid Bearer token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   securitySchemes:
     bearerAuth:
       type: http
       scheme: bearer
       bearerFormat: JWT
-      description: Obtain a Bearer token via POST /v1/oauth/access_token using client credentials. Tokens
-        expire after 3600 seconds.
+      description: Obtain a Bearer token via POST /v1/oauth/access_token using client credentials. Tokens expire after 3600 seconds.

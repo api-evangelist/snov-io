@@ -1,22 +1,12 @@
 {
   "provider": "snov-io",
   "sources": [
-    "snov-io-authentication-api-openapi.yml",
-    "snov-io-campaigns-api-openapi.yml",
-    "snov-io-crm-pipeline-api-openapi.yml",
-    "snov-io-domain-search-api-openapi.yml",
-    "snov-io-email-accounts-api-openapi.yml",
-    "snov-io-email-finder-api-openapi.yml",
-    "snov-io-email-verification-api-openapi.yml",
-    "snov-io-email-warm-up-api-openapi.yml",
-    "snov-io-prospects-api-openapi.yml",
-    "snov-io-user-api-openapi.yml",
-    "snov-io-webhooks-api-openapi.yml"
+    "_original/snov-io-openapi.yml"
   ],
   "outputs": [
     "snov-io-authentication-api-openapi.yml",
-    "snov-io-campaigns-api-openapi.yml",
     "snov-io-crm-pipeline-api-openapi.yml",
+    "snov-io-campaigns-api-openapi.yml",
     "snov-io-domain-search-api-openapi.yml",
     "snov-io-email-accounts-api-openapi.yml",
     "snov-io-email-finder-api-openapi.yml",
@@ -29,6 +19,25 @@
   "archived": [],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "snov-io-openapi.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0"
+  ],
+  "skipped": [
+    "snov-io-authentication-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "snov-io-campaigns-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "snov-io-crm-pipeline-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "snov-io-domain-search-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "snov-io-email-accounts-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "snov-io-email-finder-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "snov-io-email-verification-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "snov-io-email-verifier-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "snov-io-email-warm-up-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "snov-io-enrichment-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "snov-io-prospects-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "snov-io-sender-accounts-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "snov-io-user-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "snov-io-warm-up-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "snov-io-webhooks-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }

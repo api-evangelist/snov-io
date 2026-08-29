@@ -1,4 +1,4 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
   title: Snov.io Enrichment API
   description: 'Snov.io sales engagement REST API. Authentication uses the OAuth2 client_credentials grant to exchange an API User ID (client_id) and API Secret (client_secret) for a one-hour Bearer access token. Email finder, domain search, and email verification use an asynchronous pattern: a POST to a `/start` endpoint returns a `task_hash`, then a GET to the matching `/result` endpoint retrieves the outcome. Most request bodies are application/x-www-form-urlencoded; a few v2 endpoints accept JSON. The API is rate limited to 60 requests per minute.'
@@ -87,6 +87,14 @@ paths:
                 type: object
                 additionalProperties: true
 components:
+  parameters:
+    TaskHashQuery:
+      name: task_hash
+      in: query
+      required: true
+      description: The task hash returned by the matching /start endpoint.
+      schema:
+        type: string
   schemas:
     TaskStarted:
       type: object
@@ -98,14 +106,6 @@ components:
         status:
           type: string
           example: in_progress
-  parameters:
-    TaskHashQuery:
-      name: task_hash
-      in: query
-      required: true
-      description: The task hash returned by the matching /start endpoint.
-      schema:
-        type: string
   securitySchemes:
     OAuth2:
       type: oauth2

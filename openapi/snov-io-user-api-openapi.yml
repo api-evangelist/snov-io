@@ -1,11 +1,7 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
   title: Snov.io User API
-  description: Snov.io is a sales automation and lead generation platform. The REST API enables programmatic
-    access to email finding, domain search, email verification, drip campaign management, email warm-up,
-    prospect management, CRM pipeline, and webhook subscriptions. Authentication uses OAuth 2.0 client
-    credentials to obtain short-lived Bearer tokens. All API operations consume credits from the account
-    balance.
+  description: Snov.io is a sales automation and lead generation platform. The REST API enables programmatic access to email finding, domain search, email verification, drip campaign management, email warm-up, prospect management, CRM pipeline, and webhook subscriptions. Authentication uses OAuth 2.0 client credentials to obtain short-lived Bearer tokens. All API operations consume credits from the account balance.
   version: '2.0'
   contact:
     name: Snov.io Support
@@ -21,7 +17,7 @@ tags:
 - name: User
   description: User account management
 paths:
-  /v1/get-balance:
+  /v1/user-balance:
     get:
       tags:
       - User
@@ -72,5 +68,4 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
-      description: Obtain a Bearer token via POST /v1/oauth/access_token using client credentials. Tokens
-        expire after 3600 seconds.
+      description: Obtain a Bearer token via POST /v1/oauth/access_token using client credentials. Tokens expire after 3600 seconds.

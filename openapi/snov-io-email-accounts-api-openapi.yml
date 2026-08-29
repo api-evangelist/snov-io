@@ -1,4 +1,4 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
   title: Snov.io Email Accounts API
   description: Snov.io is a sales automation and lead generation platform. The REST API enables programmatic access to email finding, domain search, email verification, drip campaign management, email warm-up, prospect management, CRM pipeline, and webhook subscriptions. Authentication uses OAuth 2.0 client credentials to obtain short-lived Bearer tokens. All API operations consume credits from the account balance.
@@ -135,23 +135,25 @@ paths:
                     - valid
                     - invalid
                   smtp_error:
-                    type: string
-                    nullable: true
+                    type:
+                    - string
+                    - 'null'
                   imap_error:
-                    type: string
-                    nullable: true
+                    type:
+                    - string
+                    - 'null'
         '401':
           $ref: '#/components/responses/Unauthorized'
 components:
   responses:
-    Unauthorized:
-      description: Unauthorized — missing or invalid Bearer token
+    BadRequest:
+      description: Bad request — missing or invalid parameters
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    BadRequest:
-      description: Bad request — missing or invalid parameters
+    Unauthorized:
+      description: Unauthorized — missing or invalid Bearer token
       content:
         application/json:
           schema:
@@ -202,6 +204,33 @@ components:
           type: array
           items:
             type: string
+    EmailAccount:
+      type: object
+      properties:
+        id:
+          type: string
+        email_from:
+          type: string
+          format: email
+        sender_name:
+          type: string
+        smtp_status:
+          type: string
+          enum:
+          - pending
+          - valid
+          - invalid
+        imap_status:
+          type: string
+          enum:
+          - pending
+          - valid
+          - invalid
+        provider:
+          type: string
+        limitation:
+          type: integer
+          description: Daily sending limit
     EmailAccountCreate:
       type: object
       required:
@@ -266,33 +295,6 @@ components:
             type: string
         timezoneId:
           type: string
-    EmailAccount:
-      type: object
-      properties:
-        id:
-          type: string
-        email_from:
-          type: string
-          format: email
-        sender_name:
-          type: string
-        smtp_status:
-          type: string
-          enum:
-          - pending
-          - valid
-          - invalid
-        imap_status:
-          type: string
-          enum:
-          - pending
-          - valid
-          - invalid
-        provider:
-          type: string
-        limitation:
-          type: integer
-          description: Daily sending limit
     Error:
       type: object
       properties:

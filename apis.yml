@@ -335,46 +335,6 @@ apis:
     url: scopes/snov-io-scopes.yml
   - type: Authentication
     url: authentication/snov-io-authentication.yml
-- aid: snov-io:snov-io-email-verifier-api
-  name: Snov.io Email Verifier API
-  description: The Email Verifier API from Snov.io — 2 operation(s) for email verifier.
-  humanURL: https://snov.io/email-verification-api
-  baseURL: https://api.snov.io
-  tags:
-  - Email Verifier
-  properties:
-  - type: OpenAPI
-    url: openapi/snov-io-email-verifier-api-openapi.yml
-- aid: snov-io:snov-io-enrichment-api
-  name: Snov.io Enrichment API
-  description: The Enrichment API from Snov.io — 3 operation(s) for enrichment.
-  humanURL: https://snov.io/email-verification-api
-  baseURL: https://api.snov.io
-  tags:
-  - Enrichment
-  properties:
-  - type: OpenAPI
-    url: openapi/snov-io-enrichment-api-openapi.yml
-- aid: snov-io:snov-io-sender-accounts-api
-  name: Snov.io Sender Accounts API
-  description: The Sender Accounts API from Snov.io — 3 operation(s) for sender accounts.
-  humanURL: https://snov.io/email-verification-api
-  baseURL: https://api.snov.io
-  tags:
-  - Sender Accounts
-  properties:
-  - type: OpenAPI
-    url: openapi/snov-io-sender-accounts-api-openapi.yml
-- aid: snov-io:snov-io-warm-up-api
-  name: Snov.io Warm Up API
-  description: The Warm-up API from Snov.io — 2 operation(s) for warm-up.
-  humanURL: https://snov.io/email-verification-api
-  baseURL: https://api.snov.io
-  tags:
-  - Warm-up
-  properties:
-  - type: OpenAPI
-    url: openapi/snov-io-warm-up-api-openapi.yml
 common:
 - type: AgenticAccess
   url: agentic-access/snov-io-agentic-access.yml
