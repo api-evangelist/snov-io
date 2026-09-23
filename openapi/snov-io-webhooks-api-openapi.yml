@@ -131,24 +131,6 @@ components:
           schema:
             $ref: '#/components/schemas/Error'
   schemas:
-    Webhook:
-      type: object
-      properties:
-        id:
-          type: integer
-        url:
-          type: string
-          format: uri
-        event:
-          type: string
-        status:
-          type: string
-          enum:
-          - active
-          - inactive
-        created_at:
-          type: string
-          format: date-time
     WebhookCreate:
       type: object
       required:
@@ -168,6 +150,24 @@ components:
           - active
           - inactive
           default: active
+    Webhook:
+      type: object
+      properties:
+        id:
+          type: integer
+        url:
+          type: string
+          format: uri
+        event:
+          type: string
+        status:
+          type: string
+          enum:
+          - active
+          - inactive
+        created_at:
+          type: string
+          format: date-time
     Error:
       type: object
       properties:

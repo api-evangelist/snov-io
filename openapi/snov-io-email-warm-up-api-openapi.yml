@@ -160,59 +160,15 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+  parameters:
+    CampaignId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: Campaign ID
   schemas:
-    WarmUpCampaignCreate:
-      type: object
-      required:
-      - email_account_id
-      - per_day
-      properties:
-        email_account_id:
-          type: string
-        per_day:
-          type: integer
-          description: Number of warm-up emails per day
-        strategy:
-          type: string
-          enum:
-          - progressive
-          - steady
-          default: progressive
-        from:
-          type: integer
-          description: Starting daily count for progressive strategy
-        increase:
-          type: integer
-          description: Daily increase amount for progressive strategy
-        email_content:
-          type: string
-          enum:
-          - default
-          - custom
-        subject:
-          type: string
-        body:
-          type: string
-        reply_rate:
-          type: integer
-          description: Percentage of warm-up emails to reply to (0-100)
-        campaign_deadline:
-          type: string
-          format: date
-        providers:
-          type: array
-          items:
-            type: string
-        send_to_paid_domain:
-          type: boolean
-        enable_ctd:
-          type: boolean
-        enable_proxy:
-          type: boolean
-        schedule_id:
-          type: integer
-        template_name:
-          type: string
     WarmUpCampaign:
       type: object
       properties:
@@ -283,14 +239,58 @@ components:
         message:
           type: string
           description: Human-readable error message
-  parameters:
-    CampaignId:
-      name: id
-      in: path
-      required: true
-      schema:
-        type: integer
-      description: Campaign ID
+    WarmUpCampaignCreate:
+      type: object
+      required:
+      - email_account_id
+      - per_day
+      properties:
+        email_account_id:
+          type: string
+        per_day:
+          type: integer
+          description: Number of warm-up emails per day
+        strategy:
+          type: string
+          enum:
+          - progressive
+          - steady
+          default: progressive
+        from:
+          type: integer
+          description: Starting daily count for progressive strategy
+        increase:
+          type: integer
+          description: Daily increase amount for progressive strategy
+        email_content:
+          type: string
+          enum:
+          - default
+          - custom
+        subject:
+          type: string
+        body:
+          type: string
+        reply_rate:
+          type: integer
+          description: Percentage of warm-up emails to reply to (0-100)
+        campaign_deadline:
+          type: string
+          format: date
+        providers:
+          type: array
+          items:
+            type: string
+        send_to_paid_domain:
+          type: boolean
+        enable_ctd:
+          type: boolean
+        enable_proxy:
+          type: boolean
+        schedule_id:
+          type: integer
+        template_name:
+          type: string
   securitySchemes:
     bearerAuth:
       type: http

@@ -258,6 +258,40 @@ paths:
           $ref: '#/components/responses/Unauthorized'
 components:
   schemas:
+    ProspectListResult:
+      type: object
+      properties:
+        status:
+          type: string
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProspectProfile'
+    EmailFinderResult:
+      type: object
+      properties:
+        status:
+          type: string
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              first_name:
+                type: string
+              last_name:
+                type: string
+              domain:
+                type: string
+              email:
+                type: string
+                format: email
+              confidence:
+                type: integer
+                description: Confidence score 0-100
+              status:
+                type: string
+                description: Email status (valid/unknown/not_valid)
     TaskStarted:
       type: object
       properties:
@@ -267,6 +301,15 @@ components:
         status:
           type: string
           description: Current task status
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error code
+        message:
+          type: string
+          description: Human-readable error message
     ProspectProfile:
       type: object
       properties:
@@ -309,49 +352,6 @@ components:
                 type: string
               end_date:
                 type: string
-    EmailFinderResult:
-      type: object
-      properties:
-        status:
-          type: string
-        data:
-          type: array
-          items:
-            type: object
-            properties:
-              first_name:
-                type: string
-              last_name:
-                type: string
-              domain:
-                type: string
-              email:
-                type: string
-                format: email
-              confidence:
-                type: integer
-                description: Confidence score 0-100
-              status:
-                type: string
-                description: Email status (valid/unknown/not_valid)
-    ProspectListResult:
-      type: object
-      properties:
-        status:
-          type: string
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/ProspectProfile'
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-          description: Error code
-        message:
-          type: string
-          description: Human-readable error message
   responses:
     Unauthorized:
       description: Unauthorized — missing or invalid Bearer token

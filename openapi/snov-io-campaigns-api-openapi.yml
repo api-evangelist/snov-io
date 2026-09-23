@@ -672,27 +672,6 @@ paths:
           $ref: '#/components/responses/Unauthorized'
 components:
   schemas:
-    Prospect:
-      type: object
-      properties:
-        id:
-          type: string
-        email:
-          type: string
-          format: email
-        first_name:
-          type: string
-        last_name:
-          type: string
-        position:
-          type: string
-        company:
-          type: string
-        location:
-          type: string
-        custom_fields:
-          type: object
-          additionalProperties: true
     EmailEvent:
       type: object
       properties:
@@ -760,6 +739,57 @@ components:
         sent_at:
           type: string
           format: date-time
+    EmailReply:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        first_name:
+          type: string
+        last_name:
+          type: string
+        reply_text:
+          type: string
+        replied_at:
+          type: string
+          format: date-time
+    CampaignCreate:
+      type: object
+      required:
+      - name
+      properties:
+        name:
+          type: string
+        schedule_id:
+          type: integer
+        sender_account_id:
+          type: string
+        track_opens:
+          type: boolean
+        track_clicks:
+          type: boolean
+    Prospect:
+      type: object
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+          format: email
+        first_name:
+          type: string
+        last_name:
+          type: string
+        position:
+          type: string
+        company:
+          type: string
+        location:
+          type: string
+        custom_fields:
+          type: object
+          additionalProperties: true
     RecipientActivity:
       type: object
       properties:
@@ -781,21 +811,15 @@ components:
         last_activity:
           type: string
           format: date-time
-    EmailReply:
+    Error:
       type: object
       properties:
-        email:
+        error:
           type: string
-          format: email
-        first_name:
+          description: Error code
+        message:
           type: string
-        last_name:
-          type: string
-        reply_text:
-          type: string
-        replied_at:
-          type: string
-          format: date-time
+          description: Human-readable error message
     Campaign:
       type: object
       properties:
@@ -817,30 +841,6 @@ components:
         updated_at:
           type: string
           format: date-time
-    CampaignCreate:
-      type: object
-      required:
-      - name
-      properties:
-        name:
-          type: string
-        schedule_id:
-          type: integer
-        sender_account_id:
-          type: string
-        track_opens:
-          type: boolean
-        track_clicks:
-          type: boolean
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-          description: Error code
-        message:
-          type: string
-          description: Human-readable error message
   responses:
     BadRequest:
       description: Bad request — missing or invalid parameters

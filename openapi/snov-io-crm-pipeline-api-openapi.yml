@@ -82,15 +82,6 @@ components:
           type: string
         position:
           type: integer
-    Pipeline:
-      type: object
-      properties:
-        id:
-          type: integer
-        name:
-          type: string
-        stages_count:
-          type: integer
     Error:
       type: object
       properties:
@@ -100,6 +91,15 @@ components:
         message:
           type: string
           description: Human-readable error message
+    Pipeline:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        stages_count:
+          type: integer
   responses:
     Unauthorized:
       description: Unauthorized — missing or invalid Bearer token
