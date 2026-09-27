@@ -141,104 +141,7 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
-  responses:
-    BadRequest:
-      description: Bad request — missing or invalid parameters
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Unauthorized — missing or invalid Bearer token
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    NotFound:
-      description: Resource not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-  parameters:
-    CampaignId:
-      name: id
-      in: path
-      required: true
-      schema:
-        type: integer
-      description: Campaign ID
   schemas:
-    WarmUpCampaign:
-      type: object
-      properties:
-        id:
-          type: integer
-        email_account_id:
-          type: string
-        status:
-          type: string
-        strategy:
-          type: string
-          enum:
-          - progressive
-          - steady
-        per_day:
-          type: integer
-        reply_rate:
-          type: integer
-        campaign_deadline:
-          type: string
-          format: date
-        deliverability_score:
-          type: number
-          format: float
-    WarmUpCampaignUpdate:
-      type: object
-      properties:
-        status:
-          type: string
-          enum:
-          - active
-          - paused
-          - stopped
-        strategy:
-          type: string
-          enum:
-          - progressive
-          - steady
-        per_day:
-          type: integer
-        from:
-          type: integer
-        increase:
-          type: integer
-        email_content:
-          type: string
-        reply_rate:
-          type: integer
-        campaign_deadline:
-          type: string
-          format: date
-        make_endless:
-          type: boolean
-        providers:
-          type: array
-          items:
-            type: string
-        enable_ctd:
-          type: boolean
-        enable_proxy:
-          type: boolean
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-          description: Error code
-        message:
-          type: string
-          description: Human-readable error message
     WarmUpCampaignCreate:
       type: object
       required:
@@ -291,6 +194,103 @@ components:
           type: integer
         template_name:
           type: string
+    WarmUpCampaignUpdate:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+          - active
+          - paused
+          - stopped
+        strategy:
+          type: string
+          enum:
+          - progressive
+          - steady
+        per_day:
+          type: integer
+        from:
+          type: integer
+        increase:
+          type: integer
+        email_content:
+          type: string
+        reply_rate:
+          type: integer
+        campaign_deadline:
+          type: string
+          format: date
+        make_endless:
+          type: boolean
+        providers:
+          type: array
+          items:
+            type: string
+        enable_ctd:
+          type: boolean
+        enable_proxy:
+          type: boolean
+    WarmUpCampaign:
+      type: object
+      properties:
+        id:
+          type: integer
+        email_account_id:
+          type: string
+        status:
+          type: string
+        strategy:
+          type: string
+          enum:
+          - progressive
+          - steady
+        per_day:
+          type: integer
+        reply_rate:
+          type: integer
+        campaign_deadline:
+          type: string
+          format: date
+        deliverability_score:
+          type: number
+          format: float
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error code
+        message:
+          type: string
+          description: Human-readable error message
+  responses:
+    Unauthorized:
+      description: Unauthorized — missing or invalid Bearer token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    BadRequest:
+      description: Bad request — missing or invalid parameters
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  parameters:
+    CampaignId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: Campaign ID
   securitySchemes:
     bearerAuth:
       type: http

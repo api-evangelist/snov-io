@@ -266,28 +266,20 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 components:
+  responses:
+    Unauthorized:
+      description: Unauthorized — missing or invalid Bearer token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   schemas:
-    EmailListResult:
-      type: object
-      properties:
-        status:
-          type: string
-        data:
-          type: array
-          items:
-            type: object
-            properties:
-              email:
-                type: string
-                format: email
-              first_name:
-                type: string
-              last_name:
-                type: string
-              position:
-                type: string
-              confidence:
-                type: integer
     DomainSearchResult:
       type: object
       properties:
@@ -312,7 +304,7 @@ components:
               type: array
               items:
                 type: string
-    ProspectListResult:
+    EmailListResult:
       type: object
       properties:
         status:
@@ -320,16 +312,19 @@ components:
         data:
           type: array
           items:
-            $ref: '#/components/schemas/ProspectProfile'
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-          description: Error code
-        message:
-          type: string
-          description: Human-readable error message
+            type: object
+            properties:
+              email:
+                type: string
+                format: email
+              first_name:
+                type: string
+              last_name:
+                type: string
+              position:
+                type: string
+              confidence:
+                type: integer
     TaskStarted:
       type: object
       properties:
@@ -339,6 +334,15 @@ components:
         status:
           type: string
           description: Current task status
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error code
+        message:
+          type: string
+          description: Human-readable error message
     ProspectProfile:
       type: object
       properties:
@@ -381,6 +385,15 @@ components:
                 type: string
               end_date:
                 type: string
+    ProspectListResult:
+      type: object
+      properties:
+        status:
+          type: string
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProspectProfile'
   parameters:
     TaskHash:
       name: task_hash
@@ -389,19 +402,6 @@ components:
       schema:
         type: string
       description: Task hash returned from the corresponding start endpoint
-  responses:
-    Unauthorized:
-      description: Unauthorized — missing or invalid Bearer token
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    NotFound:
-      description: Resource not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   securitySchemes:
     bearerAuth:
       type: http

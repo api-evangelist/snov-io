@@ -212,6 +212,15 @@ components:
         limitation:
           type: integer
           description: Daily sending limit
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error code
+        message:
+          type: string
+          description: Human-readable error message
     EmailAccountCreate:
       type: object
       required:
@@ -276,24 +285,15 @@ components:
             type: string
         timezoneId:
           type: string
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-          description: Error code
-        message:
-          type: string
-          description: Human-readable error message
   responses:
-    BadRequest:
-      description: Bad request — missing or invalid parameters
+    Unauthorized:
+      description: Unauthorized — missing or invalid Bearer token
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Unauthorized — missing or invalid Bearer token
+    BadRequest:
+      description: Bad request — missing or invalid parameters
       content:
         application/json:
           schema:

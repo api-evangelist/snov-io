@@ -232,14 +232,14 @@ paths:
           $ref: '#/components/responses/Unauthorized'
 components:
   responses:
-    BadRequest:
-      description: Bad request — missing or invalid parameters
+    Unauthorized:
+      description: Unauthorized — missing or invalid Bearer token
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Unauthorized — missing or invalid Bearer token
+    BadRequest:
+      description: Bad request — missing or invalid parameters
       content:
         application/json:
           schema:
@@ -251,6 +251,27 @@ components:
           schema:
             $ref: '#/components/schemas/Error'
   schemas:
+    ProspectList:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        count:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error code
+        message:
+          type: string
+          description: Human-readable error message
     Prospect:
       type: object
       properties:
@@ -272,27 +293,6 @@ components:
         custom_fields:
           type: object
           additionalProperties: true
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-          description: Error code
-        message:
-          type: string
-          description: Human-readable error message
-    ProspectList:
-      type: object
-      properties:
-        id:
-          type: integer
-        name:
-          type: string
-        count:
-          type: integer
-        created_at:
-          type: string
-          format: date-time
     ProspectCreate:
       type: object
       required:

@@ -68,6 +68,8 @@ apis:
   baseURL: https://api.snov.io
   tags:
   - Email Verification
+  tags_raw:
+  - Email Verification
   - Email Validation
   properties:
   - type: Documentation

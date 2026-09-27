@@ -672,17 +672,6 @@ paths:
           $ref: '#/components/responses/Unauthorized'
 components:
   schemas:
-    EmailEvent:
-      type: object
-      properties:
-        email:
-          type: string
-          format: email
-        occurred_at:
-          type: string
-          format: date-time
-        step_number:
-          type: integer
     CampaignAnalytics:
       type: object
       properties:
@@ -711,6 +700,42 @@ components:
         reply_rate:
           type: number
           format: float
+    CampaignCreate:
+      type: object
+      required:
+      - name
+      properties:
+        name:
+          type: string
+        schedule_id:
+          type: integer
+        sender_account_id:
+          type: string
+        track_opens:
+          type: boolean
+        track_clicks:
+          type: boolean
+    RecipientActivity:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        first_name:
+          type: string
+        last_name:
+          type: string
+        status:
+          type: string
+        opened:
+          type: boolean
+        clicked:
+          type: boolean
+        replied:
+          type: boolean
+        last_activity:
+          type: string
+          format: date-time
     EmailStepContent:
       type: object
       properties:
@@ -739,36 +764,15 @@ components:
         sent_at:
           type: string
           format: date-time
-    EmailReply:
+    Error:
       type: object
       properties:
-        email:
+        error:
           type: string
-          format: email
-        first_name:
+          description: Error code
+        message:
           type: string
-        last_name:
-          type: string
-        reply_text:
-          type: string
-        replied_at:
-          type: string
-          format: date-time
-    CampaignCreate:
-      type: object
-      required:
-      - name
-      properties:
-        name:
-          type: string
-        schedule_id:
-          type: integer
-        sender_account_id:
-          type: string
-        track_opens:
-          type: boolean
-        track_clicks:
-          type: boolean
+          description: Human-readable error message
     Prospect:
       type: object
       properties:
@@ -790,36 +794,6 @@ components:
         custom_fields:
           type: object
           additionalProperties: true
-    RecipientActivity:
-      type: object
-      properties:
-        email:
-          type: string
-          format: email
-        first_name:
-          type: string
-        last_name:
-          type: string
-        status:
-          type: string
-        opened:
-          type: boolean
-        clicked:
-          type: boolean
-        replied:
-          type: boolean
-        last_activity:
-          type: string
-          format: date-time
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-          description: Error code
-        message:
-          type: string
-          description: Human-readable error message
     Campaign:
       type: object
       properties:
@@ -841,15 +815,41 @@ components:
         updated_at:
           type: string
           format: date-time
+    EmailReply:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        first_name:
+          type: string
+        last_name:
+          type: string
+        reply_text:
+          type: string
+        replied_at:
+          type: string
+          format: date-time
+    EmailEvent:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        occurred_at:
+          type: string
+          format: date-time
+        step_number:
+          type: integer
   responses:
-    BadRequest:
-      description: Bad request — missing or invalid parameters
+    Unauthorized:
+      description: Unauthorized — missing or invalid Bearer token
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Unauthorized — missing or invalid Bearer token
+    BadRequest:
+      description: Bad request — missing or invalid parameters
       content:
         application/json:
           schema:
@@ -861,13 +861,6 @@ components:
           schema:
             $ref: '#/components/schemas/Error'
   parameters:
-    CampaignId:
-      name: id
-      in: path
-      required: true
-      schema:
-        type: integer
-      description: Campaign ID
     ResourceId:
       name: id
       in: path
@@ -875,6 +868,13 @@ components:
       schema:
         type: integer
       description: Resource ID
+    CampaignId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: Campaign ID
   securitySchemes:
     bearerAuth:
       type: http

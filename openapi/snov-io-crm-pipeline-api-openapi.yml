@@ -71,17 +71,6 @@ paths:
           $ref: '#/components/responses/Unauthorized'
 components:
   schemas:
-    PipelineStage:
-      type: object
-      properties:
-        id:
-          type: integer
-        pipeline_id:
-          type: integer
-        name:
-          type: string
-        position:
-          type: integer
     Error:
       type: object
       properties:
@@ -99,6 +88,17 @@ components:
         name:
           type: string
         stages_count:
+          type: integer
+    PipelineStage:
+      type: object
+      properties:
+        id:
+          type: integer
+        pipeline_id:
+          type: integer
+        name:
+          type: string
+        position:
           type: integer
   responses:
     Unauthorized:

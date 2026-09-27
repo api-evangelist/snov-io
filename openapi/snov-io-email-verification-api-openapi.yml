@@ -88,15 +88,6 @@ paths:
           $ref: '#/components/responses/Unauthorized'
 components:
   schemas:
-    TaskStarted:
-      type: object
-      properties:
-        task_hash:
-          type: string
-          description: Unique identifier for the async task; use to poll for results
-        status:
-          type: string
-          description: Current task status
     Error:
       type: object
       properties:
@@ -126,6 +117,15 @@ components:
           type: boolean
         gibberish:
           type: boolean
+    TaskStarted:
+      type: object
+      properties:
+        task_hash:
+          type: string
+          description: Unique identifier for the async task; use to poll for results
+        status:
+          type: string
+          description: Current task status
   responses:
     Unauthorized:
       description: Unauthorized — missing or invalid Bearer token

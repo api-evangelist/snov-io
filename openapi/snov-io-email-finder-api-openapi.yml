@@ -257,16 +257,32 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 components:
+  responses:
+    Unauthorized:
+      description: Unauthorized — missing or invalid Bearer token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   schemas:
-    ProspectListResult:
+    Error:
       type: object
       properties:
+        error:
+          type: string
+          description: Error code
+        message:
+          type: string
+          description: Human-readable error message
+    TaskStarted:
+      type: object
+      properties:
+        task_hash:
+          type: string
+          description: Unique identifier for the async task; use to poll for results
         status:
           type: string
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/ProspectProfile'
+          description: Current task status
     EmailFinderResult:
       type: object
       properties:
@@ -292,24 +308,6 @@ components:
               status:
                 type: string
                 description: Email status (valid/unknown/not_valid)
-    TaskStarted:
-      type: object
-      properties:
-        task_hash:
-          type: string
-          description: Unique identifier for the async task; use to poll for results
-        status:
-          type: string
-          description: Current task status
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-          description: Error code
-        message:
-          type: string
-          description: Human-readable error message
     ProspectProfile:
       type: object
       properties:
@@ -352,13 +350,15 @@ components:
                 type: string
               end_date:
                 type: string
-  responses:
-    Unauthorized:
-      description: Unauthorized — missing or invalid Bearer token
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
+    ProspectListResult:
+      type: object
+      properties:
+        status:
+          type: string
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProspectProfile'
   securitySchemes:
     bearerAuth:
       type: http
