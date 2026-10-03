@@ -671,7 +671,92 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 components:
+  parameters:
+    ResourceId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: Resource ID
+    CampaignId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: Campaign ID
   schemas:
+    EmailStepContent:
+      type: object
+      properties:
+        id:
+          type: integer
+        campaign_id:
+          type: integer
+        subject:
+          type: string
+        body:
+          type: string
+        step_number:
+          type: integer
+        delay_days:
+          type: integer
+    Campaign:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        status:
+          type: string
+          enum:
+          - draft
+          - active
+          - paused
+          - stopped
+          - finished
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    RecipientActivity:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        first_name:
+          type: string
+        last_name:
+          type: string
+        status:
+          type: string
+        opened:
+          type: boolean
+        clicked:
+          type: boolean
+        replied:
+          type: boolean
+        last_activity:
+          type: string
+          format: date-time
+    SentEmail:
+      type: object
+      properties:
+        id:
+          type: integer
+        recipient_email:
+          type: string
+          format: email
+        subject:
+          type: string
+        sent_at:
+          type: string
+          format: date-time
     CampaignAnalytics:
       type: object
       properties:
@@ -715,106 +800,6 @@ components:
           type: boolean
         track_clicks:
           type: boolean
-    RecipientActivity:
-      type: object
-      properties:
-        email:
-          type: string
-          format: email
-        first_name:
-          type: string
-        last_name:
-          type: string
-        status:
-          type: string
-        opened:
-          type: boolean
-        clicked:
-          type: boolean
-        replied:
-          type: boolean
-        last_activity:
-          type: string
-          format: date-time
-    EmailStepContent:
-      type: object
-      properties:
-        id:
-          type: integer
-        campaign_id:
-          type: integer
-        subject:
-          type: string
-        body:
-          type: string
-        step_number:
-          type: integer
-        delay_days:
-          type: integer
-    SentEmail:
-      type: object
-      properties:
-        id:
-          type: integer
-        recipient_email:
-          type: string
-          format: email
-        subject:
-          type: string
-        sent_at:
-          type: string
-          format: date-time
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-          description: Error code
-        message:
-          type: string
-          description: Human-readable error message
-    Prospect:
-      type: object
-      properties:
-        id:
-          type: string
-        email:
-          type: string
-          format: email
-        first_name:
-          type: string
-        last_name:
-          type: string
-        position:
-          type: string
-        company:
-          type: string
-        location:
-          type: string
-        custom_fields:
-          type: object
-          additionalProperties: true
-    Campaign:
-      type: object
-      properties:
-        id:
-          type: integer
-        name:
-          type: string
-        status:
-          type: string
-          enum:
-          - draft
-          - active
-          - paused
-          - stopped
-          - finished
-        created_at:
-          type: string
-          format: date-time
-        updated_at:
-          type: string
-          format: date-time
     EmailReply:
       type: object
       properties:
@@ -841,15 +826,39 @@ components:
           format: date-time
         step_number:
           type: integer
+    Prospect:
+      type: object
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+          format: email
+        first_name:
+          type: string
+        last_name:
+          type: string
+        position:
+          type: string
+        company:
+          type: string
+        location:
+          type: string
+        custom_fields:
+          type: object
+          additionalProperties: true
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error code
+        message:
+          type: string
+          description: Human-readable error message
   responses:
     Unauthorized:
       description: Unauthorized — missing or invalid Bearer token
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    BadRequest:
-      description: Bad request — missing or invalid parameters
       content:
         application/json:
           schema:
@@ -860,21 +869,12 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-  parameters:
-    ResourceId:
-      name: id
-      in: path
-      required: true
-      schema:
-        type: integer
-      description: Resource ID
-    CampaignId:
-      name: id
-      in: path
-      required: true
-      schema:
-        type: integer
-      description: Campaign ID
+    BadRequest:
+      description: Bad request — missing or invalid parameters
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   securitySchemes:
     bearerAuth:
       type: http

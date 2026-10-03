@@ -266,83 +266,7 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 components:
-  responses:
-    Unauthorized:
-      description: Unauthorized — missing or invalid Bearer token
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    NotFound:
-      description: Resource not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   schemas:
-    DomainSearchResult:
-      type: object
-      properties:
-        status:
-          type: string
-        data:
-          type: object
-          properties:
-            domain:
-              type: string
-            company_name:
-              type: string
-            industry:
-              type: string
-            size:
-              type: string
-            prospect_count:
-              type: integer
-            email_count:
-              type: integer
-            related_domains:
-              type: array
-              items:
-                type: string
-    EmailListResult:
-      type: object
-      properties:
-        status:
-          type: string
-        data:
-          type: array
-          items:
-            type: object
-            properties:
-              email:
-                type: string
-                format: email
-              first_name:
-                type: string
-              last_name:
-                type: string
-              position:
-                type: string
-              confidence:
-                type: integer
-    TaskStarted:
-      type: object
-      properties:
-        task_hash:
-          type: string
-          description: Unique identifier for the async task; use to poll for results
-        status:
-          type: string
-          description: Current task status
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-          description: Error code
-        message:
-          type: string
-          description: Human-readable error message
     ProspectProfile:
       type: object
       properties:
@@ -385,6 +309,51 @@ components:
                 type: string
               end_date:
                 type: string
+    EmailListResult:
+      type: object
+      properties:
+        status:
+          type: string
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              email:
+                type: string
+                format: email
+              first_name:
+                type: string
+              last_name:
+                type: string
+              position:
+                type: string
+              confidence:
+                type: integer
+    DomainSearchResult:
+      type: object
+      properties:
+        status:
+          type: string
+        data:
+          type: object
+          properties:
+            domain:
+              type: string
+            company_name:
+              type: string
+            industry:
+              type: string
+            size:
+              type: string
+            prospect_count:
+              type: integer
+            email_count:
+              type: integer
+            related_domains:
+              type: array
+              items:
+                type: string
     ProspectListResult:
       type: object
       properties:
@@ -394,6 +363,37 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ProspectProfile'
+    TaskStarted:
+      type: object
+      properties:
+        task_hash:
+          type: string
+          description: Unique identifier for the async task; use to poll for results
+        status:
+          type: string
+          description: Current task status
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error code
+        message:
+          type: string
+          description: Human-readable error message
+  responses:
+    Unauthorized:
+      description: Unauthorized — missing or invalid Bearer token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   parameters:
     TaskHash:
       name: task_hash
