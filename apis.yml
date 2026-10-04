@@ -338,6 +338,9 @@ apis:
   - type: Authentication
     url: authentication/snov-io-authentication.yml
 common:
+- type: CapabilityMap
+  url: capabilities/snov-io-capability-edges.yml
+  name: Snov.io Business Capability Map
 - type: AgenticAccess
   url: agentic-access/snov-io-agentic-access.yml
 - type: DomainSecurity
