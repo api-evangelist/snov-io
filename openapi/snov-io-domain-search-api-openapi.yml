@@ -267,6 +267,69 @@ paths:
           $ref: '#/components/responses/Unauthorized'
 components:
   schemas:
+    EmailListResult:
+      type: object
+      properties:
+        status:
+          type: string
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              email:
+                type: string
+                format: email
+              first_name:
+                type: string
+              last_name:
+                type: string
+              position:
+                type: string
+              confidence:
+                type: integer
+    ProspectListResult:
+      type: object
+      properties:
+        status:
+          type: string
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProspectProfile'
+    DomainSearchResult:
+      type: object
+      properties:
+        status:
+          type: string
+        data:
+          type: object
+          properties:
+            domain:
+              type: string
+            company_name:
+              type: string
+            industry:
+              type: string
+            size:
+              type: string
+            prospect_count:
+              type: integer
+            email_count:
+              type: integer
+            related_domains:
+              type: array
+              items:
+                type: string
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error code
+        message:
+          type: string
+          description: Human-readable error message
     ProspectProfile:
       type: object
       properties:
@@ -309,60 +372,6 @@ components:
                 type: string
               end_date:
                 type: string
-    EmailListResult:
-      type: object
-      properties:
-        status:
-          type: string
-        data:
-          type: array
-          items:
-            type: object
-            properties:
-              email:
-                type: string
-                format: email
-              first_name:
-                type: string
-              last_name:
-                type: string
-              position:
-                type: string
-              confidence:
-                type: integer
-    DomainSearchResult:
-      type: object
-      properties:
-        status:
-          type: string
-        data:
-          type: object
-          properties:
-            domain:
-              type: string
-            company_name:
-              type: string
-            industry:
-              type: string
-            size:
-              type: string
-            prospect_count:
-              type: integer
-            email_count:
-              type: integer
-            related_domains:
-              type: array
-              items:
-                type: string
-    ProspectListResult:
-      type: object
-      properties:
-        status:
-          type: string
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/ProspectProfile'
     TaskStarted:
       type: object
       properties:
@@ -372,28 +381,6 @@ components:
         status:
           type: string
           description: Current task status
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-          description: Error code
-        message:
-          type: string
-          description: Human-readable error message
-  responses:
-    Unauthorized:
-      description: Unauthorized — missing or invalid Bearer token
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    NotFound:
-      description: Resource not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   parameters:
     TaskHash:
       name: task_hash
@@ -402,6 +389,19 @@ components:
       schema:
         type: string
       description: Task hash returned from the corresponding start endpoint
+  responses:
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Unauthorized — missing or invalid Bearer token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   securitySchemes:
     bearerAuth:
       type: http

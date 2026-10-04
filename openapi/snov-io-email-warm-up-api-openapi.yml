@@ -141,25 +141,6 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
-  responses:
-    Unauthorized:
-      description: Unauthorized — missing or invalid Bearer token
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    NotFound:
-      description: Resource not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    BadRequest:
-      description: Bad request — missing or invalid parameters
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   schemas:
     WarmUpCampaignCreate:
       type: object
@@ -213,6 +194,39 @@ components:
           type: integer
         template_name:
           type: string
+    WarmUpCampaign:
+      type: object
+      properties:
+        id:
+          type: integer
+        email_account_id:
+          type: string
+        status:
+          type: string
+        strategy:
+          type: string
+          enum:
+          - progressive
+          - steady
+        per_day:
+          type: integer
+        reply_rate:
+          type: integer
+        campaign_deadline:
+          type: string
+          format: date
+        deliverability_score:
+          type: number
+          format: float
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error code
+        message:
+          type: string
+          description: Human-readable error message
     WarmUpCampaignUpdate:
       type: object
       properties:
@@ -250,39 +264,25 @@ components:
           type: boolean
         enable_proxy:
           type: boolean
-    WarmUpCampaign:
-      type: object
-      properties:
-        id:
-          type: integer
-        email_account_id:
-          type: string
-        status:
-          type: string
-        strategy:
-          type: string
-          enum:
-          - progressive
-          - steady
-        per_day:
-          type: integer
-        reply_rate:
-          type: integer
-        campaign_deadline:
-          type: string
-          format: date
-        deliverability_score:
-          type: number
-          format: float
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-          description: Error code
-        message:
-          type: string
-          description: Human-readable error message
+  responses:
+    BadRequest:
+      description: Bad request — missing or invalid parameters
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Unauthorized — missing or invalid Bearer token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   parameters:
     CampaignId:
       name: id

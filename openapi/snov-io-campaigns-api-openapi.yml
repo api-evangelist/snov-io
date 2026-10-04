@@ -671,92 +671,7 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 components:
-  parameters:
-    ResourceId:
-      name: id
-      in: path
-      required: true
-      schema:
-        type: integer
-      description: Resource ID
-    CampaignId:
-      name: id
-      in: path
-      required: true
-      schema:
-        type: integer
-      description: Campaign ID
   schemas:
-    EmailStepContent:
-      type: object
-      properties:
-        id:
-          type: integer
-        campaign_id:
-          type: integer
-        subject:
-          type: string
-        body:
-          type: string
-        step_number:
-          type: integer
-        delay_days:
-          type: integer
-    Campaign:
-      type: object
-      properties:
-        id:
-          type: integer
-        name:
-          type: string
-        status:
-          type: string
-          enum:
-          - draft
-          - active
-          - paused
-          - stopped
-          - finished
-        created_at:
-          type: string
-          format: date-time
-        updated_at:
-          type: string
-          format: date-time
-    RecipientActivity:
-      type: object
-      properties:
-        email:
-          type: string
-          format: email
-        first_name:
-          type: string
-        last_name:
-          type: string
-        status:
-          type: string
-        opened:
-          type: boolean
-        clicked:
-          type: boolean
-        replied:
-          type: boolean
-        last_activity:
-          type: string
-          format: date-time
-    SentEmail:
-      type: object
-      properties:
-        id:
-          type: integer
-        recipient_email:
-          type: string
-          format: email
-        subject:
-          type: string
-        sent_at:
-          type: string
-          format: date-time
     CampaignAnalytics:
       type: object
       properties:
@@ -800,32 +715,6 @@ components:
           type: boolean
         track_clicks:
           type: boolean
-    EmailReply:
-      type: object
-      properties:
-        email:
-          type: string
-          format: email
-        first_name:
-          type: string
-        last_name:
-          type: string
-        reply_text:
-          type: string
-        replied_at:
-          type: string
-          format: date-time
-    EmailEvent:
-      type: object
-      properties:
-        email:
-          type: string
-          format: email
-        occurred_at:
-          type: string
-          format: date-time
-        step_number:
-          type: integer
     Prospect:
       type: object
       properties:
@@ -847,6 +736,17 @@ components:
         custom_fields:
           type: object
           additionalProperties: true
+    EmailEvent:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        occurred_at:
+          type: string
+          format: date-time
+        step_number:
+          type: integer
     Error:
       type: object
       properties:
@@ -856,9 +756,94 @@ components:
         message:
           type: string
           description: Human-readable error message
+    SentEmail:
+      type: object
+      properties:
+        id:
+          type: integer
+        recipient_email:
+          type: string
+          format: email
+        subject:
+          type: string
+        sent_at:
+          type: string
+          format: date-time
+    RecipientActivity:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        first_name:
+          type: string
+        last_name:
+          type: string
+        status:
+          type: string
+        opened:
+          type: boolean
+        clicked:
+          type: boolean
+        replied:
+          type: boolean
+        last_activity:
+          type: string
+          format: date-time
+    EmailReply:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        first_name:
+          type: string
+        last_name:
+          type: string
+        reply_text:
+          type: string
+        replied_at:
+          type: string
+          format: date-time
+    Campaign:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        status:
+          type: string
+          enum:
+          - draft
+          - active
+          - paused
+          - stopped
+          - finished
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    EmailStepContent:
+      type: object
+      properties:
+        id:
+          type: integer
+        campaign_id:
+          type: integer
+        subject:
+          type: string
+        body:
+          type: string
+        step_number:
+          type: integer
+        delay_days:
+          type: integer
   responses:
-    Unauthorized:
-      description: Unauthorized — missing or invalid Bearer token
+    BadRequest:
+      description: Bad request — missing or invalid parameters
       content:
         application/json:
           schema:
@@ -869,12 +854,27 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    BadRequest:
-      description: Bad request — missing or invalid parameters
+    Unauthorized:
+      description: Unauthorized — missing or invalid Bearer token
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+  parameters:
+    ResourceId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: Resource ID
+    CampaignId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: Campaign ID
   securitySchemes:
     bearerAuth:
       type: http
