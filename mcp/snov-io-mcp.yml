@@ -165,3 +165,18 @@ x-evidence:
 - fetched: '2026-08-13'
   url: https://snov.io/knowledgebase/how-to-use-snov-io-mcp-with-your-ai-assistant/
   http_status: 200
+rfc9728:
+  endpoint: https://mcp.snov.io/mcp
+  metadata_url: https://mcp.snov.io/.well-known/oauth-protected-resource
+  discovered_via: WWW-Authenticate resource_metadata on an anonymous POST initialize
+  fetched: '2026-09-25'
+  http_status: 200
+  content_type: application/json
+  document:
+    resource: https://mcp.snov.io/mcp
+    authorization_servers:
+    - https://app.snov.io
+    scopes_supported:
+    - mcp
+    bearer_methods_supported:
+    - header

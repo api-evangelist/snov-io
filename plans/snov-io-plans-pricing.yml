@@ -208,3 +208,52 @@ api_access:
       the same credit, recipient and LinkedIn slot quotas as the rest of the platform, so the
       agent surface is metered but not gated.
     source: https://snov.io/mcp
+x-canonical:
+  generated: '2026-10-08'
+  vocabulary: all/0-working/economics/plans-canonical.yml
+  models:
+  - negotiated
+  units: []
+  plans:
+  - name: Trial
+    access: other
+    model: unstated
+    model_how: derived
+    units: []
+    periods: []
+  - name: Starter
+    access: other
+    model: unstated
+    model_how: derived
+    units: []
+    periods: []
+  - name: Pro S
+    access: other
+    model: unstated
+    model_how: derived
+    units: []
+    periods: []
+  - name: Pro M
+    access: other
+    model: unstated
+    model_how: derived
+    units: []
+    periods: []
+  - name: Pro L
+    access: other
+    model: unstated
+    model_how: derived
+    units: []
+    periods: []
+  - name: Pro Ultra
+    access: other
+    model: unstated
+    model_how: derived
+    units: []
+    periods: []
+  - name: Custom Ultra
+    access: other
+    model: negotiated
+    model_how: derived
+    units: []
+    periods: []
