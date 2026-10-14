@@ -1,5 +1,5 @@
 generated: '2026-10-12'
-method: none
+method: searched
 source:
 - https://zapier.com/apps/snov-io/integrations
 - https://zapier.com/apps/snov/integrations
@@ -12,9 +12,41 @@ checked:
 - https://monid.ai/tools/snov-io
 - https://n8n.io/integrations/snov-io/
 - https://n8n.io/integrations/snov/
+- https://registry.modelcontextprotocol.io/v0/servers
 - https://zapier.com/apps/snov-io/integrations
 - https://zapier.com/apps/snov/integrations
 summary: null
 marketplace_apps: []
-edges: []
+edges:
+- partner_name: MCP Registry
+  partner: mcp
+  partner_match: register
+  type: register
+  channel: standard-directory
+  relationship: standard-participant
+  direction: partner-built
+  evidence: https://registry.modelcontextprotocol.io/v0/servers?search=io.snov
+  contract_reference:
+    register: registry.modelcontextprotocol.io
+    spec_file: null
+    role: mcp-server-listing
+    registered_name: io.snov/snov-mcp-server
+    register_id: io.snov/snov-mcp-server
+    detected_by: sweep-agent-tools.py
+    detected: '2026-10-14'
+  mcp_registry:
+    servers:
+    - io.snov/snov-mcp-server
+    hosted_remote: 1
+    local_package: 0
+    transports:
+      streamable-http: 1
+    auth_declared: 0
+    catalog_declared: false
+    namespace_domains:
+    - snov.io
+  matched_by:
+  - namespace-domain
+  detected_by: sweep-agent-tools.py
+  first_seen: '2026-10-14'
 templates: []
