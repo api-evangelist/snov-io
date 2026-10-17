@@ -238,14 +238,14 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    NotFound:
-      description: Resource not found
+    Unauthorized:
+      description: Unauthorized — missing or invalid Bearer token
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Unauthorized — missing or invalid Bearer token
+    NotFound:
+      description: Resource not found
       content:
         application/json:
           schema:
@@ -263,15 +263,6 @@ components:
         created_at:
           type: string
           format: date-time
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-          description: Error code
-        message:
-          type: string
-          description: Human-readable error message
     ProspectCreate:
       type: object
       required:
@@ -304,6 +295,15 @@ components:
         custom_fields:
           type: object
           additionalProperties: true
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error code
+        message:
+          type: string
+          description: Human-readable error message
     Prospect:
       type: object
       properties:

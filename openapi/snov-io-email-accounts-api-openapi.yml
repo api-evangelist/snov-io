@@ -152,94 +152,19 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    NotFound:
-      description: Resource not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
     Unauthorized:
       description: Unauthorized — missing or invalid Bearer token
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   schemas:
-    EmailAccountUpdate:
-      type: object
-      properties:
-        sender_name:
-          type: string
-        email_from:
-          type: string
-          format: email
-        password:
-          type: string
-        smtp:
-          type: object
-          properties:
-            host:
-              type: string
-            port:
-              type: integer
-            encryption:
-              type: string
-        imap:
-          type: object
-          properties:
-            host:
-              type: string
-            port:
-              type: integer
-            encryption:
-              type: string
-        delay:
-          type: integer
-        signature:
-          type: string
-        bcc_email:
-          type: string
-          format: email
-        tags:
-          type: array
-          items:
-            type: string
-    EmailAccount:
-      type: object
-      properties:
-        id:
-          type: string
-        email_from:
-          type: string
-          format: email
-        sender_name:
-          type: string
-        smtp_status:
-          type: string
-          enum:
-          - pending
-          - valid
-          - invalid
-        imap_status:
-          type: string
-          enum:
-          - pending
-          - valid
-          - invalid
-        provider:
-          type: string
-        limitation:
-          type: integer
-          description: Daily sending limit
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-          description: Error code
-        message:
-          type: string
-          description: Human-readable error message
     EmailAccountCreate:
       type: object
       required:
@@ -304,6 +229,81 @@ components:
             type: string
         timezoneId:
           type: string
+    EmailAccount:
+      type: object
+      properties:
+        id:
+          type: string
+        email_from:
+          type: string
+          format: email
+        sender_name:
+          type: string
+        smtp_status:
+          type: string
+          enum:
+          - pending
+          - valid
+          - invalid
+        imap_status:
+          type: string
+          enum:
+          - pending
+          - valid
+          - invalid
+        provider:
+          type: string
+        limitation:
+          type: integer
+          description: Daily sending limit
+    EmailAccountUpdate:
+      type: object
+      properties:
+        sender_name:
+          type: string
+        email_from:
+          type: string
+          format: email
+        password:
+          type: string
+        smtp:
+          type: object
+          properties:
+            host:
+              type: string
+            port:
+              type: integer
+            encryption:
+              type: string
+        imap:
+          type: object
+          properties:
+            host:
+              type: string
+            port:
+              type: integer
+            encryption:
+              type: string
+        delay:
+          type: integer
+        signature:
+          type: string
+        bcc_email:
+          type: string
+          format: email
+        tags:
+          type: array
+          items:
+            type: string
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error code
+        message:
+          type: string
+          description: Human-readable error message
   securitySchemes:
     bearerAuth:
       type: http

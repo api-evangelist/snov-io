@@ -671,140 +671,26 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 components:
+  responses:
+    BadRequest:
+      description: Bad request — missing or invalid parameters
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Unauthorized — missing or invalid Bearer token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   schemas:
-    CampaignAnalytics:
-      type: object
-      properties:
-        total_recipients:
-          type: integer
-        sent:
-          type: integer
-        delivered:
-          type: integer
-        opened:
-          type: integer
-        clicked:
-          type: integer
-        replied:
-          type: integer
-        bounced:
-          type: integer
-        unsubscribed:
-          type: integer
-        open_rate:
-          type: number
-          format: float
-        click_rate:
-          type: number
-          format: float
-        reply_rate:
-          type: number
-          format: float
-    CampaignCreate:
-      type: object
-      required:
-      - name
-      properties:
-        name:
-          type: string
-        schedule_id:
-          type: integer
-        sender_account_id:
-          type: string
-        track_opens:
-          type: boolean
-        track_clicks:
-          type: boolean
-    Prospect:
-      type: object
-      properties:
-        id:
-          type: string
-        email:
-          type: string
-          format: email
-        first_name:
-          type: string
-        last_name:
-          type: string
-        position:
-          type: string
-        company:
-          type: string
-        location:
-          type: string
-        custom_fields:
-          type: object
-          additionalProperties: true
-    EmailEvent:
-      type: object
-      properties:
-        email:
-          type: string
-          format: email
-        occurred_at:
-          type: string
-          format: date-time
-        step_number:
-          type: integer
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-          description: Error code
-        message:
-          type: string
-          description: Human-readable error message
-    SentEmail:
-      type: object
-      properties:
-        id:
-          type: integer
-        recipient_email:
-          type: string
-          format: email
-        subject:
-          type: string
-        sent_at:
-          type: string
-          format: date-time
-    RecipientActivity:
-      type: object
-      properties:
-        email:
-          type: string
-          format: email
-        first_name:
-          type: string
-        last_name:
-          type: string
-        status:
-          type: string
-        opened:
-          type: boolean
-        clicked:
-          type: boolean
-        replied:
-          type: boolean
-        last_activity:
-          type: string
-          format: date-time
-    EmailReply:
-      type: object
-      properties:
-        email:
-          type: string
-          format: email
-        first_name:
-          type: string
-        last_name:
-          type: string
-        reply_text:
-          type: string
-        replied_at:
-          type: string
-          format: date-time
     Campaign:
       type: object
       properties:
@@ -841,33 +727,140 @@ components:
           type: integer
         delay_days:
           type: integer
-  responses:
-    BadRequest:
-      description: Bad request — missing or invalid parameters
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    NotFound:
-      description: Resource not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Unauthorized — missing or invalid Bearer token
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
+    CampaignAnalytics:
+      type: object
+      properties:
+        total_recipients:
+          type: integer
+        sent:
+          type: integer
+        delivered:
+          type: integer
+        opened:
+          type: integer
+        clicked:
+          type: integer
+        replied:
+          type: integer
+        bounced:
+          type: integer
+        unsubscribed:
+          type: integer
+        open_rate:
+          type: number
+          format: float
+        click_rate:
+          type: number
+          format: float
+        reply_rate:
+          type: number
+          format: float
+    EmailEvent:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        occurred_at:
+          type: string
+          format: date-time
+        step_number:
+          type: integer
+    CampaignCreate:
+      type: object
+      required:
+      - name
+      properties:
+        name:
+          type: string
+        schedule_id:
+          type: integer
+        sender_account_id:
+          type: string
+        track_opens:
+          type: boolean
+        track_clicks:
+          type: boolean
+    EmailReply:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        first_name:
+          type: string
+        last_name:
+          type: string
+        reply_text:
+          type: string
+        replied_at:
+          type: string
+          format: date-time
+    SentEmail:
+      type: object
+      properties:
+        id:
+          type: integer
+        recipient_email:
+          type: string
+          format: email
+        subject:
+          type: string
+        sent_at:
+          type: string
+          format: date-time
+    RecipientActivity:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        first_name:
+          type: string
+        last_name:
+          type: string
+        status:
+          type: string
+        opened:
+          type: boolean
+        clicked:
+          type: boolean
+        replied:
+          type: boolean
+        last_activity:
+          type: string
+          format: date-time
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error code
+        message:
+          type: string
+          description: Human-readable error message
+    Prospect:
+      type: object
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+          format: email
+        first_name:
+          type: string
+        last_name:
+          type: string
+        position:
+          type: string
+        company:
+          type: string
+        location:
+          type: string
+        custom_fields:
+          type: object
+          additionalProperties: true
   parameters:
-    ResourceId:
-      name: id
-      in: path
-      required: true
-      schema:
-        type: integer
-      description: Resource ID
     CampaignId:
       name: id
       in: path
@@ -875,6 +868,13 @@ components:
       schema:
         type: integer
       description: Campaign ID
+    ResourceId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: Resource ID
   securitySchemes:
     bearerAuth:
       type: http
